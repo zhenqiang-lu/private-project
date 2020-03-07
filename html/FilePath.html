@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.ContentDiv{
+	left:0px;
+	right:0px;
+	height:150px;
+}
+
+.DivLable{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:16px;
+	color:#1c1d22;
+	height:23px;
+	cursor: pointer;
+}   
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+#id_txtSnappath{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+<script  type="text/javascript"> 
+function init()
+{	
+	document.getElementById("vidview").OnInitParam();
+	document.getElementById("id_Localrecordpath").value =document.getElementById("vidview").szRecPath;
+	document.getElementById("id_Snappath").value = document.getElementById("vidview").szSnapPath;
+}
+
+function submit()
+{		
+	var var_ConfigRecPath=document.getElementById("id_Localrecordpath").value;
+	var var_ConfigPreview=document.getElementById("id_Snappath").value;
+	if(var_ConfigRecPath=="" || var_ConfigPreview=="")
+	{
+		alert(txtIsEmpty);
+	}else if(var_ConfigRecPath.length>64 || var_ConfigPreview.length>64)
+	{
+		alert(str_SaveFaild);	
+	}else{
+		document.getElementById("vidview").SetRecPath(document.getElementById("id_Localrecordpath").value);
+		document.getElementById("vidview").SetSnapPath(document.getElementById("id_Snappath").value);
+		alert(str_SaveSuccess);
+	}
+	setLocal();
+}
+
+function OnBrowseFolder(value)
+{
+	document.getElementById("vidview").OnBrowseFolder();
+	if(value==1)
+	{
+		document.getElementById("id_Localrecordpath").value =document.getElementById("vidview").szFolderName;
+		if(document.getElementById("vidview").szFolderName=="")
+		{
+			document.getElementById("id_Localrecordpath").value =document.getElementById("vidview").szRecPath;
+		}
+	}
+	else if(value==2)
+	{
+		document.getElementById("id_Snappath").value =document.getElementById("vidview").szFolderName;
+		
+		if(document.getElementById("vidview").szFolderName=="")
+		{
+			document.getElementById("id_Snappath").value =document.getElementById("vidview").szSnapPath;
+		}
+	}
+}
+function setLocal(){
+	var IEVer = IEVersion();
+	if (IEVer == 8) return;
+	var  text_path=document.getElementById("id_Localrecordpath").value;
+	var  text_path2=document.getElementById("id_Snappath").value;
+	if (typeof(Storage) !== "undefined") {
+		// Store
+		localStorage.setItem("text1",text_path);
+		localStorage.setItem("text2",text_path2);
+	} else {
+		alert( "Please use the IE9 version of the browser or a higher version");
+	}
+}
+
+
+</script>
+<body>   
+<div class="ContentBg ContentDiv"  style="min-width:600px;">
+	<div style="width:100px;height:30px;"></div>
+	<div style="height:100%;margin:auto;width:600px;">
+		<div class="DivLable" id="id_txtLocalrecordpath">Local Record Path:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Localrecordpath" value="" readonly="readonly"></input>
+		<div class="DivButton" style="float:left;margin-left:10px;" onclick="OnBrowseFolder(1)" id="id_RecordBrowse">Browse</div>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable" id="id_txtSnappath">Local Snap Path:</div>
+		<input class="DivInput DivInputAtLoacalRecord" value="" id="id_Snappath" readonly="readonly"></input>
+		<div class="DivButton" style="float:left;margin-left:10px;" onclick="OnBrowseFolder(2)"  id="id_SnapBrowse">Browse</div>
+		<div style="clear:both"></div>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+<object id="vidview" classid="clsid:d02afdec-ab71-428c-88b6-b9f1419bc04c" codebase="view.cab#version=1,0,0,1" hspace="0" vspace="0" width="0" height="0"></object>
+</body> 
+<script  type="text/javascript"> 
+function InitLang()
+{
+	SetLang('id_txtLocalrecordpath',str_LocalRecord);
+	SetLang('id_txtSnappath',str_LocalSnap);
+	SetLang('id_SnapBrowse',str_btnBrowse);
+	SetLang('id_RecordBrowse',str_btnBrowse);
+	SetLang('id_submit',str_btnSnapSave);
+	setLocal();
+};
+$(function(){
+	BindEvent('id_submit','onmousedown',submit,null);
+	init();
+	InitLang();
+	setLocal();
+})
+</script>
+</html>  

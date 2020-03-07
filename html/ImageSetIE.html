@@ -1,0 +1,1285 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/pluginIE.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.ImageSetDiv{
+	left:0px;
+	right:0px;
+	height:780px;
+}
+ 
+.DivLableImage{
+	width:130px;
+	float:left;
+}
+
+.DivInputImage{
+	width:26px;
+	float:left;
+}
+
+.DivTime{
+	width:74px;
+	height:23px;
+	float:left;
+}
+
+.DivLableSelectImage{
+	width:143px;
+	float:left;
+}
+
+.DivSelectImage{
+	width:166px;
+	float:left;
+}
+
+</style> 
+
+<body>   
+<div class="ContentBg ImageSetDiv" style="min-width:1200px;">
+	<div style="height:100%;margin:auto;width:1200px;">
+	<div style="clear:both;height:15px;"></div>
+	<div id="id_BoxImage">
+		 <div style="height:100%;margin:auto;width:850px;" id="id_BoxPIC">
+			<div  style="width:428px;height:365px;display:block;z-index:99;background:black;opacity:1;float:left;" id="id_plugin_img" >
+				<object
+					id="vidview"
+					classid="clsid:d02afdec-ab71-428c-88b6-b9f1419bc04c"
+					width=428
+					height=365
+					align=center
+					hspace=0
+					vspace=0>
+				</object>
+			</div>
+			
+			
+			<div style="width:28px;height:365px;float:left;"></div>
+			<div style="width:358px;height:365px;float:left;" id="id_ImageSetBox">
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtHueSet">色度:</div>
+				<div style="float:left;margin-top:10px; width: 130px">
+					<div class="DivSliderBarLine" id="id_HueSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_HueSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px">
+					<div id = "id_HueSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+					
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtBrightnessSet">亮度:</div>
+				<div style="float:left;margin-top:10px; width: 130px">
+					<div class="DivSliderBarLine" id="id_BrightnessSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_BrightnessSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px">
+					<div id = "id_BrightnessSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+					
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtContrastSet">对比度:</div>
+				<div style="float:left;margin-top:10px; width: 130px">
+					<div class="DivSliderBarLine" id="id_ContrastSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_ContrastSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px">
+					<div id = "id_ContrastSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+					
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtSaturationSet">饱和度:</div>
+				<div style="float:left;margin-top:10px; width: 130px">
+					<div class="DivSliderBarLine" id="id_SaturationSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_SaturationSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px">
+					<div id = "id_SaturationSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+					
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtSharpnessSet">锐度:</div>
+				<div style="float:left;margin-top:10px; width: 130px">
+					<div class="DivSliderBarLine" id="id_SharpnessSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_SharpnessSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px">
+					<div id = "id_SharpnessSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtMirrorSet">镜像:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_MirrorSet">Left</div>
+				<div class="DivContentSelectIco" id="id_MirrorSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_MirrorSet_option" style="margin-top:0px;" id="id_txtLeft">Left</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_MirrorSet_option" style="margin-top:24px;" id="id_txtRight">Right</div>
+				</div>
+
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtTurnSet">翻转:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_TurnSet">Up</div>
+				<div class="DivContentSelectIco" id="id_TurnSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_TurnSet_option" style="margin-top:0px;" id="id_txtUp">Up</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_TurnSet_option" style="margin-top:24px;" id="id_txtDown">Down</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtCameraAngleSet">视角:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_CameraAngleSet">Normal</div>
+				<div class="DivContentSelectIco" id="id_CameraAngleSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_CameraAngleSet_option" style="margin-top:0px;" id="id_txtNormal">Normal</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_CameraAngleSet_option" style="margin-top:24px;" id="id_txtDown90">Corrider mode 90</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_CameraAngleSet_option" style="margin-top:48px;" id="id_txtDown270">Corrider mode 270</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_CameraAngleSet_option" style="margin-top:72px;" id="id_txtDownInvert">Invert</div>
+				</div> 
+				
+			</div>
+			<div style="clear:both;height:15px;float:left;"></div>
+			<div style="width:428px;height:400px;float:left;" id="ImageBoxID">
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txt3DDNRSet">3D降噪:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_3DDNRSet">Disable</div>
+				<div class="DivContentSelectIco" id="id_3DDNRSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:0px;" id="id_txtoffr">off</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:24px;" id="id_txtZero">0(Weak)</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:48px;" id="id_txtOne">1</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:72px;" id="id_txtTwo">2</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:96px;" id="id_txtThree">3(Normal)</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:120px;" id="id_txtFour">4</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:144px;" id="id_txtFive">5</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_3DDNRSet_option" style="margin-top:168px;" id="id_txtSix">6(Strong)</div>
+				</div>
+							
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtDewarpingSet">鱼眼校正:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_DewarpingSet">Disable</div>
+				<div class="DivContentSelectIco" id="id_DewarpingSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DewarpingSet_option" style="margin-top:0px;" id="id_txtDewarpingSetDisable">Disable</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DewarpingSet_option" style="margin-top:24px;" id="id_txtDewarpingSetEnable">Enable</div>
+				</div>	
+
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtSlowShutterSet">慢快门:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_SlowShutterSet">off</div>
+				<div class="DivContentSelectIco" id="id_SlowShutterSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:0px;" id="id_txtSlowShutteroff">off</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:24px;" id="id_txtSlowShutter">1/15 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:48px;" id="id_txtSlowShutter">1/7.5 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:72px;" id="id_txtSlowShutter">1/5 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:96px;" id="id_txtSlowShutter">1/4 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:120px;" id="id_txtSlowShutter">1/3 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:144px;" id="id_txtSlowShutter">1/2 Sec</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SlowShutterSet_option" style="margin-top:168px;" id="id_txtSlowShutter">1 Sec</div>
+				</div>				
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtExposureSet">曝光:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_ExposureSet">Auto</div>
+				<div class="DivContentSelectIco" id="id_ExposureSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ExposureSet_option" style="margin-top:0px;" id="id_txtExposureAuto">Auto</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ExposureSet_option" style="margin-top:24px;" id="id_txtExposureManual">Manual</div>
+				</div>
+								
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtBLCmodeSet">背光补偿:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_BLCmodeSet">Disable</div>
+				<div class="DivContentSelectIco" id="id_BLCmodeSet_selectico"></div>
+				<div style="clear:both"></div>   
+				<div class="ClassContentSelectOption DivSelectImage" name="id_BLCmodeSet_option" style="margin-top:0px;" id="id_txtBLCmode1">Disable</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_BLCmodeSet_option" style="margin-top:24px;" id="id_txtBLCmode2">BLC</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_BLCmodeSet_option" style="margin-top:48px;" id="id_txtBLCmode3">WDR</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_BLCmodeSet_option" style="margin-top:72px;" id="id_txtBLCmode4">HLC</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_BLCmodeSet_option" style="margin-top:96px;" id="id_txtBLCmode5">DWDR</div>
+				</div>
+							
+				<div style="clear:both"></div>	
+				<div style="width:28px;height:20px;" id="BLCValue1"></div>
+				<div style="float:left;margin-top:10px;margin-left:130px" id="BLCValue2">
+					<div class="DivSliderBarLine" id="id_BLCValueSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_BLCValueSetBar" />
+				</div>		
+				<div style="float:left;margin-left:20px" id="BLCValue3">
+					<div id = "id_BLCValueSetInput"  class="DivTime" style="width:26px;"></div>
+				</div>
+
+				
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtDayNightSet">Day/Night:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_DayNightSet">Disable</div>
+				<div class="DivContentSelectIco" id="id_DayNightSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DayNightSet_option" style="margin-top:0px;" id="id_txtColor">Color</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DayNightSet_option" style="margin-top:24px;" id="id_txtMono">Mono</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DayNightSet_option" style="margin-top:48px;" id="id_txtAuto">Auto</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DayNightSet_option" style="margin-top:72px;" id="id_txtTiming">Timing</div>
+				</div>
+				
+				
+				<div style="clear:both"></div>
+				<div id="id_LevelSelect" style="margin-left:130px;">
+				<div style="width:28px;height:20px;"></div>				
+					<div class="ClassContentSelect DivLableSelectImage" id="id_LeveSet">low leve</div>
+					<div class="DivContentSelectIco" id="id_LeveSet_selectico"></div>
+					<div style="clear:both"></div>
+					<div class="ClassContentSelectOption DivSelectImage" name="id_LeveSet_option" style="margin-top:0px;" id="id_txtLowleve">low leve</div>
+					<div class="ClassContentSelectOption DivSelectImage" name="id_LeveSet_option" style="margin-top:24px;" id="id_txtHeightleve">height leve</div>
+					<div style="clear:both"></div>
+				</div>
+				
+				<div style="clear:both"></div>
+				
+				<div id ="BlackToColor">
+				<div id ="BlackToColor" style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtBlackToColorSet">Black To Color:</div>
+				<div id="id_BlackToColorHourSet"  class="DivTime"></div>
+				<div class="DivLable" style="width:10px;height:23px; float:left;margin-left:10px"> : </div>
+				<div id="id_BlackToColorMinSet"  class="DivTime" style="margin-left:0px;"></div>
+				<div style="clear:both"></div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div id ="ColorToBlack">
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtColorToBlackSet">Color To Black:</div>
+				<div id="id_ColorToBlackHourSet"  class="DivTime"></div>
+				<div class="DivLable" style="width:10px;height:23px; float:left;margin-left:10px"> : </div>
+				<div id="id_ColorToBlackMinSet"  class="DivTime" style="margin-left:0px;"></div>
+				<div style="clear:both"></div>
+				</div>
+			</div>
+			
+			<div style="width:28px;height:365px;float:left;"></div>
+			<div style="width:365px;height:400px;float:left;"id="ImageBoxID2">
+				<!--
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtLuxSet">LUX:</div>
+				<div style="float:left" id="id_select_LuxBox"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_LuxSet">0</div>
+				<div class="DivContentSelectIco" id="id_LuxSet_selectico"></div>
+				<div style="clear:both"></div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>
+				<div class="DivLable DivLableImage" id="id_txtLedIntensitySet">LED强度:</div>
+				<div style="float:left" id="id_select_LedIntensityBox"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_LedIntensitySet">0</div>
+				<div class="DivContentSelectIco" id="id_LedIntensitySet_selectico"></div>
+				<div style="clear:both"></div>
+				</div> 
+				-->
+				<div id="ShutterEnable">
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>			
+				<div class="DivLable DivLableImage" id="id_txtShutterSet">快门调节:</div>
+				<div style="float:left" id="id_select_ShutterBox"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_ShutterSet">1/25</div>
+				<div class="DivContentSelectIco" id="id_ShutterSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:0px;" id="id_txtShutter">1/25</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:24px;" id="id_txtShutter">1/30</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:48px;" id="id_txtShutter">1/50</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:72px;" id="id_txtShutter">1/60</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:96px;" id="id_txtShutter">1/100</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:120px;" id="id_txtShutter">1/120</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:144px;" id="id_txtShutter">1/250</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:168px;" id="id_txtShutter">1/500</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:192px;" id="id_txtShutter">1/1000</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:216px;" id="id_txtShutter">1/2000</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:240px;" id="id_txtShutter">1/4000</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:264px;" id="id_txtShutter">1/10000</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:288px;" id="id_txtShutter">1/30000</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_ShutterSet_option" style="margin-top:312px;" id="id_txtShutter">1/100000</div>
+				</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>	
+				<div class="DivLable DivLableImage" id="id_txtFlcSet">防闪烁:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_FlcSet">Disable</div>
+				<div class="DivContentSelectIco" id="id_FlcSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FlcSet_option" style="margin-top:0px;" id="id_txtOutdoor">Outdoor</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FlcSet_option" style="margin-top:24px;" id="id_txt50HZ">50HZ</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FlcSet_option" style="margin-top:48px;" id="id_txt60HZ">60HZ</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>	
+				<div class="DivLable DivLableImage" id="id_txtDefogSet">去雾:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_DefogSet">Off</div>
+				<div class="DivContentSelectIco" id="id_DefogSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DefogSet_option" style="margin-top:0px;" id="id_txtOff">Off</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_DefogSet_option" style="margin-top:24px;" id="id_txtOn">On</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>	
+				<div class="DivLable DivLableImage" id="id_txtWhiteBlaSet">白平衡:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_WhiteBlaSet">Auto</div>
+				<div class="DivContentSelectIco" id="id_WhiteBlaSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_WhiteBlaSet_option" style="margin-top:0px;" id="id_txtWhiteBlaAuto">Auto</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_WhiteBlaSet_option" style="margin-top:24px;" id="id_txtWhiteBlaManual">Manual</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;" id="RedGain"></div>
+				<div class="DivLable DivLableImage" id="id_txtRedGainSet">红色增益:</div>
+				<div style="float:left;margin-top:10px;" id ="RedGain1">
+					<div class="DivSliderBarLine" id="id_RedGainSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_RedGainSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px"id ="RedGain2">
+					<input class="DivInput DivInputImage" disabled="disabled" id="id_RedGainSetInput" value="50"></input>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"  id="BlueGain"></div>
+				<div class="DivLable DivLableImage" id="id_txtBlueGainSet">蓝色增益:</div>
+				<div style="float:left;margin-top:10px;"id="BlueGain1">
+					<div class="DivSliderBarLine" id="id_BlueGainSet"></div>
+					<input type="button" class="DivSliderBarButton" id="id_BlueGainSetBar" />
+				</div>
+				<div style="float:left;margin-left:20px" id="BlueGain2">
+					<input class="DivInput DivInputImage" disabled="disabled" id="id_BlueGainSetInput" value="50"></input>
+				</div>	
+				
+				<div id ="SetDayNight">
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>	
+				<div class="DivLable DivLableImage" id="id_txtFitModeSet">FIT Mode:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_FitModeSet">Auto</div>
+				<div class="DivContentSelectIco" id="id_FitModeSet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FitModeSet_option" style="margin-top:0px;" id="id_txtON">ON</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FitModeSet_option" style="margin-top:24px;" id="id_txtOFF">OFF</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FitModeSet_option" style="margin-top:48px;" id="id_txtAuto">Auto</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_FitModeSet_option" style="margin-top:72px;" id="id_txtIntensifier">Intensifier</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				<div style="width:28px;height:20px;"></div>	
+				<div class="DivLable DivLableImage" id="id_txtSensitivitySet">Sensitivity Auto:</div>
+				<div style="float:left"> 
+				<div class="ClassContentSelect DivLableSelectImage" id="id_SensitivitySet">LOW</div>
+				<div class="DivContentSelectIco" id="id_SensitivitySet_selectico"></div>
+				<div style="clear:both"></div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SensitivitySet_option" style="margin-top:0px;" id="id_txtLow">LOW</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SensitivitySet_option" style="margin-top:24px;" id="id_txtMid">MID</div>
+				<div class="ClassContentSelectOption DivSelectImage" name="id_SensitivitySet_option" style="margin-top:48px;" id="id_txtHigh">HIGH</div>
+				</div>
+				</div>
+				
+			</div>
+		 </div>
+	</div>
+	</div>
+</div>
+</body>
+<script>
+
+
+function ipcam_OnLoginResponse(result)
+{
+	if (result == 0) {
+		document.getElementById("vidview").OnRealPlay();
+	}
+}
+
+function ipcam_OnRealPlayResponse(result)
+{	
+}
+
+function ipcam_OnDisconnect()
+{
+	//alert("设备已断开连接");
+	//document.getElementById("vidview").OnStopTalk();
+}
+</script>  
+<script for="vidview" event="OnLoginResponse(result)" type="text/javascript">
+	ipcam_OnLoginResponse(result)
+</script>
+<script for="vidview" event="OnRealPlayResponse(result)" type="text/javascript">
+	ipcam_OnRealPlayResponse(result)
+</script>
+<script for="vidview" event="OnDisconnect()" type="text/javascript">
+	ipcam_OnDisconnect()
+</script>
+
+
+<script  type="text/javascript"> 
+
+function InitLang(){
+	SetLang('id_txtHueSet', str_PreSharpness);
+	SetLang('id_txtBrightnessSet',str_PreBrightness);
+	SetLang('id_txtContrastSet',str_PreContrant);
+	//$(id_txtMainStreamType)[0].value = str_VedioMain;
+	//$(id_txtSubStreamType)[0].value = str_VedioSub;
+	SetLang('id_txtSaturationSet',str_PreSaturation);
+	SetLang('id_txtSharpnessSet',str_PreSharpen);
+	
+	SetLang('id_txtMirrorSet',str_PreMirror);
+	SetLang('id_txtTurnSet',str_PreTurn);
+	SetLang('id_txtCameraAngleSet',str_view);
+	SetLang('id_txt3DDNRSet',str_PreNosie);
+	SetLang('id_txtFlcSet',str_PreFlashing);
+	SetLang('id_txtWhiteBlaSet',str_WhiteBalance);
+	SetLang('id_txtRedGainSet',str_RedGainSet);
+	SetLang('id_txtBlueGainSet',str_BlueGainSet);
+	SetLang('id_txtDewarpingSet',str_Fisheye);
+	SetLang('id_txtSlowShutterSet',str_SlowShutter);
+	SetLang('id_txtDefogSet',str_Defog);
+	SetLang('id_txtOff',str_Off);
+	SetLang('id_txtOn',str_On);
+	
+	//SetLang('id_txtLedIntensitySet',str_led);
+	SetLang('id_txtExposureSet',str_expose);
+	SetLang('id_txtShutterSet',str_shutter);
+	SetLang('id_txtBLCmodeSet',str_BlackLight);
+	
+	SetLang('id_txtLeft',str_MirrorLeftRight);
+	SetLang('id_txtRight',str_MirrorUpDown);
+	
+	SetLang('id_txtUp',str_Pre_Up);
+	SetLang('id_txtDown',str_Pre_Down);
+	
+	//SetLang('id_txt3DDNRSetDisable',str_Disable);
+	//SetLang('id_txt3DDNRSetEnable',str_Enable);
+	SetLang('id_txtDewarpingSetDisable',str_Disable);
+	SetLang('id_txtDewarpingSetEnable',str_Enable);
+	
+	SetLang('id_txtOutdoor',str_Outdoor);
+	
+	SetLang('id_txtNormal',str_nomal);
+	SetLang('id_txtDown90',str_Corridor_mode1);
+	SetLang('id_txtDown270',str_Corridor_mode2);
+	SetLang('id_txtDownInvert',str_Reflection);
+
+	SetLang('id_txtBLCmode1',str_Disable);
+	SetLang('id_txtBLCmode2',str_BLC);
+	SetLang('id_txtBLCmode3',str_WDR);
+	SetLang('id_txtBLCmode4',str_HLC);
+	SetLang('id_txtBLCmode5',str_DWDR);
+	
+	SetLang('id_txtDayNightSet',str_PreDayNight);
+    SetLang('id_LeveSet',str_LowLevel);
+    SetLang('id_txtLowleve',str_LowLevel);
+    SetLang('id_txtHeightleve',str_HighLevel);
+	SetLang('id_txtColor',str_Color);
+	SetLang('id_txtMono',str_BlackWith);
+	SetLang('id_txtAuto',str_External);
+	SetLang('id_txtTiming',str_Internal);
+	SetLang('id_txtBlackToColorSet',str_NightToDay);
+	SetLang('id_txtColorToBlackSet',str_DayToNight);
+	
+	SetLang('id_txtExposureAuto',str_Auto);
+	SetLang('id_txtExposureManual',str_Manual);
+	SetLang('id_txtWhiteBlaAuto',str_Auto);
+	SetLang('id_txtWhiteBlaManual',str_Manual);
+	
+	SetLang('id_txtFitModeSet',str_FitModeSet);
+	SetLang('id_txtON',str_FitModeON);
+	SetLang('id_txtOFF',str_FitModeOFF);
+	SetLang('id_txtAuto',str_FitModeAuto);
+	SetLang('id_txtIntensifier',str_FitModeIntensifier);
+	SetLang('id_txtSensitivitySet',str_Sensitivity);
+	SetLang('id_txtLow',str_SensitivityLow);
+	SetLang('id_txtMid',str_SensitivityMid);
+	SetLang('id_txtHigh',str_SensitivityHigh);
+
+}
+</script> 
+
+<script  type="text/javascript"> 
+
+var HueSetBar, BrightnessSetBar, ContrastSetBar, SaturationSetBar, SharpnessSetBar, BLCValueSetBar,BlueGainValueSetBar,RedGainValueSetBar;
+var HueSetValue, BrightnessSetValue, ContrastSetValue, SaturationSetValue, SharpnessSetValue, BLCValueSetValue;
+var BlackToColorHour, BlackToColorMin, ColorToBlackHour, ColorToBlackMin;
+var msg;
+
+function SendMsg()
+{
+	var resp = $.sendMsg("ImageChannel",msg,"/ISAPI/Preview/ImageConfig","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		//alert("submit submit msg fail");
+	}else{
+		//alert("设置成功");
+	}	
+}
+
+function addSelectLedIntensity(id,num,name)
+{
+	for(var i =0;i < num; i ++){
+		var addstr = '<div class="ClassContentSelectOption DivSelectImage" name="id_'+name+'_option" style="margin-top:'+i*24+'px;">'+i+'</div>';
+		$("#"+id).append(addstr);
+	}
+}
+
+
+function HueSetBarDrag(id,value){
+	$("#id_HueSetInput_input")[0].value = value;
+	//console.log('$("#id_HueSetInput")[0].value ='+$("#id_HueSetInput")[0].value);
+	msg = [
+			{"xtype":"color","items":
+				[
+					{"xtype":"huelevel","text":$("#id_HueSetInput_input")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function BrightnessSetBarDrag(id,value){
+	$("#id_BrightnessSetInput_input")[0].value = value;
+	msg = [
+			{"xtype":"color","items":
+				[
+					{"xtype":"brightnesslevel","text":$("#id_BrightnessSetInput_input")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function ContrastSetBarDrag(id,value){
+	$("#id_ContrastSetInput_input")[0].value = value;
+	msg = [
+			{"xtype":"color","items":
+				[
+					{"xtype":"contrastlevel","text":$("#id_ContrastSetInput_input")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function SaturationSetBarDrag(id,value){
+	$("#id_SaturationSetInput_input")[0].value = value;
+	msg = [
+			{"xtype":"color","items":
+				[
+					{"xtype":"saturationlevel","text":$("#id_SaturationSetInput_input")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function SharpnessSetBarDrag(id,value){
+	$("#id_SharpnessSetInput_input")[0].value = value;
+	msg = [
+			{"xtype":"color","items":
+				[
+					{"xtype":"sharpness","text":$("#id_SharpnessSetInput_input")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function BLCValueSetBarDrag(id,value){
+	$("#id_BLCValueSetInput_input")[0].value = value;
+	//console.log('id_BLCValueSetInput =' +$("#id_BLCValueSetInput")[0].value);
+	
+		//console.log(JSON.stringify(msg));
+	
+	if(GetSelectionOption('id_BLCmodeSet') == 0){
+		msg = [
+				{"xtype":"blc","items":
+					[
+						{"xtype":"blcmode","text":""+(GetSelectionOption('id_BLCmodeSet'))}
+					]
+				}
+			];
+	}else if(GetSelectionOption('id_BLCmodeSet') == 1){
+		msg = [
+					{"xtype":"blc","items":
+						[
+							{"xtype":"blcmode","text":""+(GetSelectionOption('id_BLCmodeSet'))},
+							{"xtype":"blcintensity","text":$("#id_BLCValueSetInput_input")[0].value}
+						]
+					}
+				];
+	}else if(GetSelectionOption('id_BLCmodeSet') == 2){
+			msg = [
+					{"xtype":"blc","items":
+						[
+							{"xtype":"blcmode","text":""+(GetSelectionOption('id_BLCmodeSet'))},
+							{"xtype":"wdrintensity","text":$("#id_BLCValueSetInput_input")[0].value}
+						]
+					}
+				];
+	}else if(GetSelectionOption('id_BLCmodeSet') == 3){
+	msg = [
+			{"xtype":"blc","items":
+				[
+							{"xtype":"blcmode","text":""+(GetSelectionOption('id_BLCmodeSet'))},
+							{"xtype":"hlcintensity","text":$("#id_BLCValueSetInput_input")[0].value}
+						]
+					}
+				];
+	}else if(GetSelectionOption('id_BLCmodeSet') == 4){
+		msg = [
+					{"xtype":"blc","items":
+						[
+							{"xtype":"blcmode","text":""+(GetSelectionOption('id_BLCmodeSet'))},
+							{"xtype":"dwdrintensity","text":$("#id_BLCValueSetInput_input")[0].value}
+				]
+			}
+		];
+	}
+	
+	if(msg != null)
+		SendMsg();
+}
+function BlueGainValueSetBarDrag(id,value){
+	$("#id_BlueGainSetInput")[0].value = value;
+	msg = [
+			{"xtype":"whitebalance","items":
+				[
+					{"xtype":"whitebalancemode","text":""+(GetSelectionOption('id_WhiteBlaSet'))},
+					{"xtype":"bluegain","text":$("#id_BlueGainSetInput")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+
+function RedGainValueSetBarDrag(id,value){
+	$("#id_RedGainSetInput")[0].value = value;
+	msg = [
+			{"xtype":"whitebalance","items":
+				[
+					{"xtype":"whitebalancemode","text":""+(GetSelectionOption('id_WhiteBlaSet'))},
+					{"xtype":"redgain","text":$("#id_RedGainSetInput")[0].value}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+var CameraAngleValue;
+function InitPageParam(){
+	var resp = $.sendMsg("ImageChannel",null,"/ISAPI/Preview/ImageConfig","POST");
+	if(resp.success == false){
+		alert("recv /Event/ImageConfig msg fail");
+		return;
+	}
+	var map = resp.data;
+	
+	//console.log( JSON.stringify(map));
+	//console.log('map.color.brightnesslevel ='+map.color.brightnesslevel);
+	//var map = {"imageflip":{"mirror":"0","turn":"0"},"vision":{"visionmode":"1"},"exposure":{"exposuremode":"0","shutter":"0"},"ircutfilter":{"ircutfiltermode":"3","hightlowlevel":"0"},"antiflash":{"antiflashmode":"0"},"blc":{"blcmode":"0"},"led":{"ledstrength":"9","lux":"1"},"noisereduce":{"noisereducemode":"0"},"ldc":{"enablemain":"0"},"color":{"brightnesslevel":"50","contrastlevel":"50","saturationlevel":"50","huelevel":"28","sharpness":"28"}};
+	HueSetBar.SetValue(map.color.huelevel);
+	BrightnessSetBar.SetValue(map.color.brightnesslevel);
+	ContrastSetBar.SetValue(map.color.contrastlevel);
+	SaturationSetBar.SetValue(map.color.saturationlevel);
+	SharpnessSetBar.SetValue(map.color.sharpness);
+	
+	HueSetValue.SetValue(map.color.huelevel);
+	BrightnessSetValue.SetValue(map.color.brightnesslevel);
+	ContrastSetValue.SetValue(map.color.contrastlevel);
+	SaturationSetValue.SetValue(map.color.saturationlevel);
+	SharpnessSetValue.SetValue(map.color.sharpness);
+	//console.log('map.color.img ='+map.imageflip.img);
+	//console.log('map.color.turn ='+map.imageflip.turn);
+	SetSelectionOptID('id_MirrorSet',map.imageflip.mirror);
+	SetSelectionOptID('id_TurnSet',map.imageflip.turn);
+	SetSelectionOptID('id_CameraAngleSet',map.vision.visionmode - 1);
+	CameraAngleValue = map.vision.visionmode - 1;
+	SetSelectionOptID('id_3DDNRSet',map.noisereduce.noisereducemode);
+	SetSelectionOptID('id_FlcSet',map.antiflash.antiflashmode);
+	SetSelectionOptID('id_DefogSet',map.defog.defogmode);
+	SetSelectionOptID('id_FitModeSet',map.fit.fitmode);
+	SetSelectionOptID('id_SensitivitySet',map.fit.sensitivity);
+	SetSelectionOptID('id_DewarpingSet',map.ldc.ldcenabled);  //鱼眼校正功能未添加
+	SetSelectionOptID('id_SlowShutterSet',map.slowshutter.slowshuttermode);  //鱼眼校正功能未添加
+	//SetSelectionOptID('id_LedIntensitySet',map.led.ledstrength);
+	SetSelectionOptID('id_ExposureSet',map.exposure.exposuremode);
+	
+	if('1' == map.exposure.exposuremode)
+	{
+		document.getElementById("ShutterEnable").style.display="block";
+		SetSelectionOptID('id_ShutterSet',map.exposure.shutter);
+	}
+	else
+	{
+		document.getElementById("ShutterEnable").style.display="none";
+	}
+	SetSelectionOptID('id_BLCmodeSet',map.blc.blcmode);
+	//console.log('blcmode='+map.blc.blcmode);
+	//console.log('blcintensity='+map.blc.blcintensity);
+	//console.log('wdrintensity='+map.blc.wdrintensity);
+	//console.log('hlcintensity='+map.blc.hlcintensity);
+	//console.log('dwdrintensity='+map.blc.dwdrintensity);
+	if(map.blc.blcmode == '0')
+	{
+		document.getElementById("BLCValue1").style.display="none";
+		document.getElementById("BLCValue2").style.display="none";
+		document.getElementById("BLCValue3").style.display="none";
+	}
+	else
+	{
+		document.getElementById("BLCValue1").style.display="block";
+		document.getElementById("BLCValue2").style.display="block";
+		document.getElementById("BLCValue3").style.display="block";
+	}
+	
+	switch (map.blc.blcmode)
+	{		
+		case '0':
+				BLCValueSetBar.SetValue('50');
+		break;
+		case '1':
+				BLCValueSetBar.SetValue(map.blc.blcintensity);
+		break;
+		case '2':
+				BLCValueSetBar.SetValue(map.blc.wdrintensity);
+		break;
+		case '3':
+				BLCValueSetBar.SetValue(map.blc.hlcintensity);
+		break;
+		
+		case '4':
+				BLCValueSetBar.SetValue(map.blc.dwdrintensity);
+		break;
+		default:	break;
+	}
+	//SetSelectionOptID('id_LuxSet',map.led.lux);
+	//alert(map.ircutfilter.ircutfiltermode);
+	SetSelectionOptID('id_DayNightSet',map.ircutfilter.ircutfiltermode - 1);
+		var startTime,endTime;
+	if('4' == map.ircutfilter.ircutfiltermode){
+		document.getElementById("ColorToBlack").style.display="block";
+		document.getElementById("BlackToColor").style.display="block";
+		document.getElementById("id_LevelSelect").style.display="none";
+		startTime = (map.ircutfilter.begintime).split(":");
+		endTime =  (map.ircutfilter.endtime).split(":");
+		BlackToColorHour.SetValue(startTime[0]);
+		BlackToColorMin.SetValue(startTime[1]);
+		ColorToBlackHour.SetValue(endTime[0]);
+		ColorToBlackMin.SetValue(endTime[1]);
+	}
+	else if('3' == map.ircutfilter.ircutfiltermode){		
+		document.getElementById("id_LevelSelect").style.display="block";
+		document.getElementById("ColorToBlack").style.display="none";
+		document.getElementById("BlackToColor").style.display="none";		
+		//LowHeightValue.SetValue(map.ircutfilter.highlowlevel);
+		SetSelectionOptID('id_LeveSet',map.ircutfilter.highlowlevel);
+	}
+	else
+	{
+		document.getElementById("ColorToBlack").style.display="none";
+		document.getElementById("BlackToColor").style.display="none";
+		document.getElementById("id_LevelSelect").style.display="none";
+	}
+	SetSelectionOptID('id_WhiteBlaSet',map.whitebalance.whitebalancemode);
+	if('1' == map.whitebalance.whitebalancemode){
+		document.getElementById("id_txtRedGainSet").style.display="block";
+		document.getElementById("RedGain").style.display="block";
+		document.getElementById("RedGain1").style.display="block";
+		document.getElementById("RedGain2").style.display="block";
+		document.getElementById("id_txtBlueGainSet").style.display="block";
+		document.getElementById("BlueGain").style.display="block";
+		document.getElementById("BlueGain1").style.display="block";
+		document.getElementById("BlueGain2").style.display="block";
+		console.log('bluegain = '+parseInt(map.whitebalance.bluegain)+'redgain ='+parseInt(map.whitebalance.redgain));
+		BlueGainValueSetBar.SetValue(parseInt(map.whitebalance.bluegain));
+		RedGainValueSetBar.SetValue(parseInt(map.whitebalance.redgain));
+	}
+	else{
+		document.getElementById("id_txtRedGainSet").style.display="none";
+		document.getElementById("RedGain").style.display="none";
+		document.getElementById("RedGain1").style.display="none";
+		document.getElementById("RedGain2").style.display="none";
+		document.getElementById("id_txtBlueGainSet").style.display="none";
+		document.getElementById("BlueGain").style.display="none";
+		document.getElementById("BlueGain1").style.display="none";
+		document.getElementById("BlueGain2").style.display="none";
+	}
+	
+}
+
+function MirrorSet()
+{
+	msg = [
+			{"xtype":"imageflip","items":
+				[
+					{"xtype":"mirror","text":""+GetSelectionOption('id_MirrorSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function TurnSet()
+{
+	msg = [
+			{"xtype":"imageflip","items":
+				[
+					{"xtype":"turn","text":""+GetSelectionOption('id_TurnSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function CameraAngleSet()
+{
+	var flag;
+	
+	msg = [
+			{"xtype":"vision","items":
+				[
+					{"xtype":"visionmode","text":""+(GetSelectionOption('id_CameraAngleSet') + 1)}
+				]
+			}
+		];
+	if(msg != null){
+		flag = SendMsg();
+	location.reload();
+}
+}
+
+function DDNRSet()
+{
+	msg = [
+			{"xtype":"noisereduce","items":
+				[
+					{"xtype":"noisereducemode","text":""+GetSelectionOption('id_3DDNRSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function FlcSet()
+{
+	msg = [
+			{"xtype":"antiflash","items":
+				[
+					{"xtype":"antiflashmode","text":""+GetSelectionOption('id_FlcSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function DewarpingSet()
+{	
+	if(confirm(str_ConfirmContinue) == true){
+	msg = [
+			{"xtype":"ldc","items":
+				[
+					{"xtype":"ldcenabled","text":""+GetSelectionOption('id_DewarpingSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+	}else{
+		return false;
+	}
+}
+
+function ExposureSet()
+{
+	if(GetSelectionOption('id_ExposureSet') == '0')
+	{
+		//console.log('id_ExposureSet='+GetSelectionOption('id_ExposureSet')); 
+		document.getElementById("ShutterEnable").style.display="none";
+		//document.getElementById("ShutterEnable").style.visibility="visible";
+	}
+	else
+	{
+		//console.log('id_ExposureSet='+GetSelectionOption('id_ExposureSet'));
+		document.getElementById("ShutterEnable").style.display="block";
+		//document.getElementById("ShutterEnable").style.visibility="collapse";
+	}
+		
+	msg = [
+			{"xtype":"exposure","items":
+				[
+					{"xtype":"exposuremode","text":"" + GetSelectionOption('id_ExposureSet')}
+				]
+			}
+		];
+		
+	//console.log( JSON.stringify(msg));
+	if(msg != null)
+		SendMsg();
+		
+	var resp = $.sendMsg("ImageChannel",null,"/ISAPI/Preview/ImageConfig","POST");
+	if(resp.success == false){
+		//alert("recv /Event/ImageConfig msg fail");
+		return;
+	}
+	var map = resp.data;
+	if('1' == map.exposure.exposuremode)
+	{
+		SetSelectionOptID('id_ShutterSet',map.exposure.shutter);
+	}
+
+	
+}
+
+function ShutterSet()
+{
+	msg = [
+			{"xtype":"exposure","items":
+				[
+					{"xtype":"exposuremode", "text":"" + GetSelectionOption('id_ExposureSet')},
+					{"xtype":"shutter", "text":"" + GetSelectionOption('id_ShutterSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function BLCmodeSet()
+{
+
+	var resp = $.sendMsg("ImageChannel",null,"/ISAPI/Preview/ImageConfig","POST");
+	if(resp.success == false){
+		//alert("recv /Event/ImageConfig msg fail");
+		//return;
+	}
+	
+	var map = resp.data;
+	
+	if(GetSelectionOption('id_BLCmodeSet') == 0)
+	{
+		document.getElementById("BLCValue1").style.display="none";
+		document.getElementById("BLCValue2").style.display="none";
+		document.getElementById("BLCValue3").style.display="none";
+	}
+	else
+	{
+		document.getElementById("BLCValue1").style.display="block";
+		document.getElementById("BLCValue2").style.display="block";
+		document.getElementById("BLCValue3").style.display="block";
+	}
+		
+	switch (GetSelectionOption('id_BLCmodeSet'))
+	{
+		case 0:
+				BLCValueSetBar.SetValue('50');
+		case 1:
+				BLCValueSetBar.SetValue(map.blc.blcintensity);
+		break;
+		case 2:
+				BLCValueSetBar.SetValue(map.blc.wdrintensity);
+		break;
+		case 3:
+				BLCValueSetBar.SetValue(map.blc.hlcintensity);
+		break;
+		case 4:
+				BLCValueSetBar.SetValue(map.blc.dwdrintensity);
+		break;
+		default:	break;	
+	}
+}
+
+
+function LuxSet()
+{
+	msg = [
+			{"xtype":"led","items":
+				[
+					{"xtype":"lux","text":""+GetSelectionOption('id_LuxSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function DefogSet()
+{
+	msg = [
+			{"xtype":"defog","items":
+				[
+					{"xtype":"defogmode","text":""+GetSelectionOption('id_DefogSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function LedIntensitySet()
+{
+	msg = [
+			{"xtype":"led","items":
+				[
+					{"xtype":"ledstrength","text":""+GetSelectionOption('id_LedIntensitySet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+
+function DayNightSet()
+{
+	var StartTime,EndTime;
+	StartTime = BlackToColorHour.GetValue() +':'+ BlackToColorMin.GetValue();
+	EndTime = ColorToBlackHour.GetValue() +':'+ ColorToBlackMin.GetValue();
+	if(GetSelectionOption('id_DayNightSet') == '3')
+	{
+		//$("#ColorToBlack").hidden();
+		//$("#BlackToColor").hidden();
+		document.getElementById("ColorToBlack").style.display="block";
+		document.getElementById("BlackToColor").style.display="block";	
+		document.getElementById("id_LevelSelect").style.display="none";
+	}
+	else if (GetSelectionOption('id_DayNightSet') == '2') {
+		document.getElementById("id_LevelSelect").style.display="block";
+		document.getElementById("ColorToBlack").style.display="none";
+		document.getElementById("BlackToColor").style.display="none";
+	}
+	else
+	{		
+		document.getElementById("ColorToBlack").style.display="none";
+		document.getElementById("BlackToColor").style.display="none";
+		document.getElementById("id_LevelSelect").style.display="none";
+	}
+	msg = [
+			{"xtype":"ircutfilter","items":
+				[
+					{"xtype":"ircutfiltermode","text":""+(GetSelectionOption('id_DayNightSet') + 1)},
+					{"xtype":"begintime","text":StartTime},
+					{"xtype":"endtime","text":EndTime},
+					{"xtype":"highlowlevel","text":"" + GetSelectionOption('id_LeveSet')}			
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function SetHueValue()
+{
+	var value = HueSetValue.GetValue();
+	HueSetBar.SetValue(value);
+}
+
+function SetBrightnessValue()
+{
+	var value = BrightnessSetValue.GetValue();
+	BrightnessSetBar.SetValue(value);
+}
+
+function SetContrastValue()
+{
+	var value = ContrastSetValue.GetValue();
+	ContrastSetBar.SetValue(value);
+}
+
+function SetSaturationValue()
+{
+	var value = SaturationSetValue.GetValue();
+	SaturationSetBar.SetValue(value);
+}
+
+function SetSharpnessValue()
+{
+	var value = SharpnessSetValue.GetValue();
+	SharpnessSetBar.SetValue(value);
+}
+
+function SetBLCValue()
+{
+	var value = BLCValueSetValue.GetValue();
+	BLCValueSetBar.SetValue(value);
+}
+function WhiteBlaSet()
+{
+	var resp = $.sendMsg("ImageChannel",null,"/ISAPI/Preview/ImageConfig","POST");
+	if(resp.success == false){
+		//alert("recv /Event/ImageConfig msg fail");
+		//return;
+	}
+	
+	var map = resp.data;
+	
+	if(GetSelectionOption('id_WhiteBlaSet') == '1'){
+		//document.getElementById("WhiteBalance").style.display="block";
+		document.getElementById("id_txtRedGainSet").style.display="block";
+		document.getElementById("RedGain").style.display="block";
+		document.getElementById("RedGain1").style.display="block";
+		document.getElementById("RedGain2").style.display="block";
+		document.getElementById("id_txtBlueGainSet").style.display="block";
+		document.getElementById("BlueGain").style.display="block";
+		document.getElementById("BlueGain1").style.display="block";
+		document.getElementById("BlueGain2").style.display="block";
+		BlueGainValueSetBar.SetValue(parseInt(map.whitebalance.bluegain));
+		RedGainValueSetBar.SetValue(parseInt(map.whitebalance.redgain));
+	}
+	else{
+		//document.getElementById("WhiteBalance").style.display="none";
+		document.getElementById("id_txtRedGainSet").style.display="none";
+		document.getElementById("RedGain").style.display="none";
+		document.getElementById("RedGain1").style.display="none";
+		document.getElementById("RedGain2").style.display="none";
+		document.getElementById("id_txtBlueGainSet").style.display="none";
+		document.getElementById("BlueGain").style.display="none";
+		document.getElementById("BlueGain1").style.display="none";
+		document.getElementById("BlueGain2").style.display="none";
+		BlueGainValueSetBar.SetValue(50);
+		RedGainValueSetBar.SetValue(50);
+	}
+}
+
+function FitModeSet(){
+	msg = [
+			{"xtype":"fit","items":
+				[
+					{"xtype":"fitmode","text":""+GetSelectionOption('id_FitModeSet')},
+					{"xtype":"Sensitivity","text":""+GetSelectionOption('id_SensitivitySet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+
+function SlowShutterSet(){
+	msg = [
+			{"xtype":"slowshutter","items":
+				[
+					{"xtype":"slowshuttermode","text":""+GetSelectionOption('id_SlowShutterSet')}
+				]
+			}
+		];
+	if(msg != null)
+		SendMsg();
+}
+$(function(){
+	PluginStreamPlay(0);
+	InitLang();
+	HueSetValue = new SelectInput("id_HueSetInput", 0, 100, 0, SetHueValue);
+	BrightnessSetValue = new SelectInput("id_BrightnessSetInput", 0, 100, 0, SetBrightnessValue);
+	ContrastSetValue = new SelectInput("id_ContrastSetInput", 0, 100, 0, SetContrastValue);
+	SaturationSetValue = new SelectInput("id_SaturationSetInput", 0, 100, 0, SetSaturationValue);
+	SharpnessSetValue = new SelectInput("id_SharpnessSetInput", 0, 100, 0, SetSharpnessValue);
+	BLCValueSetValue = new SelectInput("id_BLCValueSetInput", 0, 100, 0, SetBLCValue);
+	
+	HueSetBar = new SliderBar("id_HueSet", 0, 100, 50, HueSetBarDrag);
+	BrightnessSetBar = new SliderBar("id_BrightnessSet", 0, 100, 50, BrightnessSetBarDrag);
+	ContrastSetBar = new SliderBar("id_ContrastSet", 0, 100, 50, ContrastSetBarDrag);
+	SaturationSetBar = new SliderBar("id_SaturationSet", 0, 100, 50, SaturationSetBarDrag);
+	SharpnessSetBar = new SliderBar("id_SharpnessSet",0,100,50,SharpnessSetBarDrag);
+	BLCValueSetBar = new SliderBar("id_BLCValueSet",0,100,50,BLCValueSetBarDrag);
+	BlueGainValueSetBar = new SliderBar("id_BlueGainSet",0,100,50,BlueGainValueSetBarDrag);
+	RedGainValueSetBar = new SliderBar("id_RedGainSet",0,100,50,RedGainValueSetBarDrag);
+
+	InitUdfSelect('id_MirrorSet',MirrorSet);
+	InitUdfSelect('id_TurnSet',TurnSet);
+	InitUdfSelect('id_CameraAngleSet',CameraAngleSet);
+	InitUdfSelect('id_3DDNRSet',DDNRSet);
+	InitUdfSelect('id_FlcSet',FlcSet);
+	InitUdfSelect('id_FitModeSet',FitModeSet);
+	InitUdfSelect('id_SensitivitySet',FitModeSet);
+	InitUdfSelect('id_DefogSet',DefogSet);
+	InitUdfSelect('id_DewarpingSet',DewarpingSet);
+	InitUdfSelect('id_SlowShutterSet',SlowShutterSet);
+	InitUdfSelect('id_ExposureSet',ExposureSet);
+
+	addSelectLedIntensity('id_select_LedIntensityBox','10','LedIntensitySet');
+	//InitUdfSelect('id_LedIntensitySet',LedIntensitySet);
+
+	InitUdfSelect('id_ShutterSet',ShutterSet);
+	InitUdfSelect('id_BLCmodeSet',BLCmodeSet);
+	InitUdfSelect('id_DayNightSet',DayNightSet);
+	InitUdfSelect('id_LeveSet',DayNightSet);
+	
+	//addSelectLedIntensity('id_select_LuxBox','10','LuxSet');
+	//InitUdfSelect('id_LuxSet',LuxSet);
+	InitUdfSelect('id_WhiteBlaSet',WhiteBlaSet);
+	
+	BlackToColorHour = new SelectInput("id_BlackToColorHourSet",07,23,0,DayNightSet);
+	BlackToColorMin = new SelectInput("id_BlackToColorMinSet",00,59,0,DayNightSet);
+	
+	ColorToBlackHour = new SelectInput("id_ColorToBlackHourSet",18,23,0,DayNightSet);
+	ColorToBlackMin = new SelectInput("id_ColorToBlackMinSet",00,59,0,DayNightSet);
+	
+	InitPageParam();
+})
+
+</script> 
+
+
+ 
+</html>  

@@ -1,0 +1,378 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/plugin.js"></script>
+	<script src="js/videomask.js"></script>
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.DivLableMotion{
+	width:150px;
+	float:left;
+}
+
+.ContentDiv{
+	left:0px;
+	right:0px;
+	height:410px;
+}
+.DivTime{
+	width:30px;
+	height:23px;
+	float:left;
+}
+
+</style> 
+<body>   
+<div class="ContentBg ContentDiv"  style="min-width:800px;">
+	<div style="height:100%;margin:auto;width:800px;">
+		<div style="clear:both;height:15px;"></div>
+		<div id="id_BoxPICArea">
+			 <div style="height:100%;margin:auto;width:850px;" id="id_BoxPIC">
+				<div  style="width:440px;height:360px;display:block;z-index:99;background:black;opacity:1;float:left;" id="id_plugin_img" >
+					<img  style="width:440px;height:360px;z-index:1;position:absolute;margin-top:0px;" src="" id="id_pic" ondragstart="return false;"></img>
+				</div>
+				<div style="width:28px;height:350px;float:left;"></div>
+				<div style="width:358px;height:350px;float:left;" id="id_MotionSetBox">
+					<div class="DivLable DivLableMotion" id="id_txtSensitivity">侦测灵敏度:</div>
+					<div style="float:left"> 
+					<div class="ClassContentSelect" id="id_Sensitivity" style="width:136px;">中</div>
+					<div class="DivContentSelectIco" id="id_Sensitivity_selectico"></div>
+					<div style="clear:both"></div>
+					<div class="ClassContentSelectOption" name="id_Sensitivity_option"  id="id_txtSensitivityLow" style="margin-top:0px;width:135px;">低</div>
+					<div class="ClassContentSelectOption" name="id_Sensitivity_option"  id="id_txtSensitivityMiddle" style="margin-top:24px;width:135px;">中</div>
+					<div class="ClassContentSelectOption" name="id_Sensitivity_option"  id="id_txtSensitivityHight" style="margin-top:48px;width:135px;">高</div>
+					</div>
+					<div style="clear:both"></div>
+					<div style="width:28px;height:20px;"></div>
+					<div class="DivLable DivLableMotion" id="id_txtThreshold">阈值:</div>
+					<div style="float:left;margin-top:10px;">
+						<div class="DivSliderBarLine" id="id_Threshold"></div>
+						<input type="button" class="DivSliderBarButton" id="id_ThresholdBar" />
+					</div>
+					<div style="float:left;margin-left:20px">						
+						<div id = "id_ThresholdInput"  class="DivTime" style = "width:30px; margin-left:-10px"></div>
+						
+					</div>
+					<div style="clear:both;"/>
+					<div style="height:20px;"></div>
+					<div class="DivButton" style="float:left;" id="id_FullScreen" >全屏</div>
+					<div class="DivButton" style="float:left;margin-left:20px;" id="id_ClearScreen">清屏</div>
+					<div style="clear:both"></div>
+					<div style="height:20px;"></div>
+					<div class="DivButton" style="float:left;" id="id_MotionMaskSave" >保存</div>
+					<div class="DivButton" style="float:left;margin-left:20px;" id="id_MotionBack">返回</div>
+					<div style="clear:both"></div>
+					<div style="height:20px;"></div>
+					
+					<div id="id_TimeSequentiaWaveform">
+						<div style="background:green; width:240px;height:3px;position:absolute;margin-top:100px;margin-left:27px;" id="id_ThresholdLine"></div>
+					</div>
+				</div>
+				<div style="clear:both"></div>
+			</div> 
+		</div>
+	</div>
+</div>
+<script  type="text/javascript"> 
+var drag_sx;
+var drag_sy;
+var g_firstValue;
+var ThresholdBar;
+var Thresholdvalue;
+function InitLang(){
+	SetLang('id_txtSensitivity',str_MotionSensitivity);
+	SetLang('id_txtSensitivityLow',str_MotionLower);
+	SetLang('id_txtSensitivityMiddle',str_MotionMiddle);
+	SetLang('id_txtSensitivityHight',str_MotionHigh);
+	SetLang('id_txtThreshold',Str_Threshold)
+	
+	SetLang('id_FullScreen',str_FullScreen);
+	SetLang('id_ClearScreen',str_ClearScreen);
+	SetLang('id_MotionMaskSave',str_Save);
+	SetLang('id_MotionBack',str_back);
+}
+
+function EventCall_MouseOver(ev)
+{
+	var xx = ev.pageX; 
+	var yy = ev.pageY;  
+	document.getElementById('id_plugin_img').style.display = "block";
+}
+
+function EventCall_Mouseout(ev)
+{
+	var drage = false;
+}
+
+var drage = false;
+$("#id_plugin_img").mousedown(function (ev)
+{
+	var xx = ev.pageX; 
+	var yy = ev.pageY;  
+	drage = true;
+	drag_sx = xx;
+	drag_sy = yy;
+	var top = document.getElementById('id_plugin_img').getBoundingClientRect().top; 
+	var left = document.getElementById('id_plugin_img').getBoundingClientRect().left; 
+	g_firstValue =  GetPositionMaskValue(top,left,xx,yy);
+	ChangeBoxDivState(top,left,xx,yy);
+})
+
+$("#id_plugin_img").mouseup(function (ev)
+{
+	var xx = ev.pageX; 
+	var yy = ev.pageY;  
+	drage = false;
+	var top = document.getElementById('id_plugin_img').getBoundingClientRect().top; 
+	var left = document.getElementById('id_plugin_img').getBoundingClientRect().left; 
+	ChangeBoxAreaDivState(top,left,drag_sx,drag_sy,xx,yy,!g_firstValue);
+})
+
+$("#id_plugin_img").mousemove(function (ev)
+{
+	if(drage == false) return;
+	var xx = ev.pageX; 
+	var yy = ev.pageY;  
+	var top = document.getElementById('id_plugin_img').getBoundingClientRect().top; 
+	var left = document.getElementById('id_plugin_img').getBoundingClientRect().left; 
+	ChangeBoxAreaDivState(top,left,drag_sx,drag_sy,xx,yy,!g_firstValue);
+})
+
+
+
+var i = 0;
+var httpport = 80;
+function GetPort()
+{
+	var resp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		//alert("recv ThirdServer msg fail");
+		return;  
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	return  Number(map.option_1.port);
+}
+	
+
+function updateBgPic()
+{
+	var ip = GetIp();  
+	var usr = $.GetCookie('usrname');
+	var passwd = $.GetCookie('password');
+	//var str = 'http://'+usr+':'+passwd+'@'+ip+'/ISAPI/Snap/GetImg'+Math.random();
+	var str = 	'http://'+ip+':'+httpport+'/ISAPI/Snap/GetImg'+Math.random();
+	//console.log(str);
+	document.getElementById('id_pic').src = str;
+}
+
+
+function ChangeThresLine(value)
+{
+	value = 100 - value;
+	//console.log(value);
+	document.getElementById("id_ThresholdLine").style.marginTop = Number(value * 2 * 0.75) + 'px';
+}
+function ThresholdBarDrag(id,value)
+{
+	Thresholdvalue.SetValue(value);
+	//console.log(paresInt(value * 2 * 0.78));
+	ChangeThresLine(value);
+}
+
+function MotionBack()
+{
+	self.location='MotionPage.html';
+}
+
+function SubmitMask()
+{
+	var maskstr = "";
+	var mask = GetMask();
+	//alert(ThresholdBar.GetValue());
+	for(var j = 0;j < coh;j++){
+		for(var i = 0; i < cow;i++){
+			if(0 == mask[j][i]){
+				maskstr += '0';
+			}else{
+				maskstr += '1';
+			}
+		}
+	}
+	//console.log("maskstr ="+maskstr);
+	var msg=[
+			{
+				xtype:"ZoneSetting",
+				items:[{xtype:"AreaMask",text:maskstr}]
+			},
+			{xtype:"Sensitivity",text:""+GetSelectionOption('id_Sensitivity')},
+			{xtype:"AlarmThreshold",text:""+ThresholdBar.GetValue()}
+	];	
+	var resp = $.sendMsg("MotionDetectionParam",msg,"/ISAPI/Event/MotionDetectionParam","PUT");
+	if(resp.success == false){
+		alert("Set fail");
+		return ;
+	}else{
+		alert(str_SetSuccess);
+		return ;
+	}
+}
+
+function GetNetMap()
+{
+	var resp = $.sendMsg("MotionDetectionParam",null,"/ISAPI/Event/MotionDetectionParam","POST");
+	if(resp.success == false){
+		//alert("Get MotionDetectionParam fail");
+		return ;
+	}
+	
+	var map = resp.data;
+	//console.log("map.areamask ="+map);
+	return map;
+}
+
+function GetNetMotionBlock()
+{
+	var resp = $.sendMsg("MotionChange",null,"/ISAPI/Event/MotionChange","POST");
+	if(resp.success == false){
+		//alert("Get MotionChange fail");
+		return ;
+	}
+	var map = resp.data;
+	return map;
+}
+
+function InitParam()
+{
+	
+	 var map = GetNetMap();
+	 var maskstr = map.areamask;
+	 var mask = GetMask();
+	 var k = 0;
+	 for(var j = 0;j < coh;j++){
+		for(var i = 0; i < cow;i++){
+			mask[j][i] = maskstr[k];
+			k++;
+		}
+	 }
+	SetMask(mask);
+	UpdateBoxLine(mask);
+	//console.log(map.sensitivity);
+	SetSelectionOptID('id_Sensitivity',map.sensitivity);
+	ThresholdBar.SetValue(map.alarmthreshold);
+	//console.log('map.alarmthreshold'+map.alarmthreshold);
+	Thresholdvalue.SetValue(map.alarmthreshold);
+}
+var box;
+function CalculateMaskCount(mask)
+{
+	var count = 0;
+	for(var i = 0;i < 18*22; i++){
+		if(mask[i] == 1){
+			count++;
+		}
+	}
+	return count;
+}
+
+
+function GetMotionMaskPer()
+{
+	var g_areachangednum = 0;
+	//return 50;
+	 var mask = GetMask();
+	 var colorblock = GetColorBlock();
+	 var cntmask = 0;
+	 for(var j = 0;j < coh;j++){
+		for(var i = 0; i < cow;i++){
+			if(mask[j][i] == 1){
+				cntmask++;
+				if(colorblock[j][i] == 1){
+					g_areachangednum++;
+				}
+			}
+		}
+	 }
+
+	 if(cntmask == 0 || g_areachangednum == 0){
+		return 0;
+	 }
+	 var per = g_areachangednum*100/cntmask;
+	 //console.log("motion per ="+per);
+	 return per;
+}
+
+function timeOut()
+{
+	//获取网络动态mask
+	var k = 0;
+	var colorblock = GetColorBlock();
+	var map = GetNetMotionBlock();
+	var maskstr = map.motionarea;
+	//g_areachangednum = map.areachangednum;
+	
+	for(var j = 0;j < coh;j++){
+		for(var i = 0; i < cow;i++){
+			colorblock[j][i] = maskstr[k];
+			k++;
+		}
+	 }
+	BoxDivChangeColor(colorblock);
+	box.UpdateBox(); 
+}
+
+
+function SetThresholdValue()
+{
+	var value = Thresholdvalue.GetValue();
+	//console.log("GetValue=" + value);
+	ThresholdBar.SetValue(value);
+	//console.log("value=" + value);
+	
+}
+
+
+$(function() {//页面初始化
+	Thresholdvalue = new SelectInput("id_ThresholdInput", 0, 100, 0, SetThresholdValue);
+	BindEvent("id_plugin_img",'onmouseout', EventCall_Mouseout, null);
+	drag_sx = document.getElementById('id_plugin_img').getBoundingClientRect().left;
+	drag_sy = document.getElementById('id_plugin_img').getBoundingClientRect().top;
+	CreateRoiMask(0);
+	CreateColorBlock();
+	InitBoxLine();
+	httpport = GetPort();
+	setInterval("updateBgPic()",200);
+	InitUdfSelect('id_Sensitivity');
+	ThresholdBar = new SliderBar("id_Threshold",0,100,5,ThresholdBarDrag);
+	box =  new SequentiaWaveform('id_TimeSequentiaWaveform',GetMotionMaskPer);
+	setInterval('timeOut()',500);
+	
+	BindEvent("id_FullScreen",'onmousedown', FullScreenBoxLine, null);
+	BindEvent("id_ClearScreen",'onmousedown', ClearScreenBoxLine, null);
+	BindEvent("id_MotionMaskSave",'onmousedown', SubmitMask, null);
+	BindEvent("id_MotionBack",'onmousedown', MotionBack, null);
+	BindEvent('id_ThresholdInput', 'onmouseup', SetThresholdValue, null);
+	
+	
+	InitLang();
+	InitParam();
+});
+
+</script>  
+</body>  
+</html>  

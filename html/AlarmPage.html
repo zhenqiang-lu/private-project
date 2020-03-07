@@ -1,0 +1,1028 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/network.js"></script>
+</head>
+
+<style type="text/css">
+.AlarmDiv{
+	left:0px;
+	right:0px;
+	height:580px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:60px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:90px;
+	float:left;
+}
+
+.txtAlarm{
+	width:112px;
+	float:left;
+}
+
+.txtSnap{
+	width:90px;
+	float:left;
+}
+
+.txtAlarmPage{
+	width:90px;
+	float:left;
+}
+
+.WeekRadio{
+	width:81px;
+	float:left;
+}
+
+
+.TimeLable{
+	width:50px;
+	float:left;
+}
+
+.StartTimeLable{
+	width:80px;
+	float:left;
+}
+
+.TimeSpaceLable{
+	width:10px;
+	float:left;
+}
+
+.StartSpaceEndLable{
+	width:20px;
+	float:left;
+}
+
+.TimeSelect{
+	width:81px;
+}
+
+.CopyButton{
+	width:100px;
+}
+
+.MarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.WeekMarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.DivTime{
+	width:40px;
+	height:23px;
+	float:left;
+}
+
+.DivInputMotionRecord{
+	width:77px;
+	float:left;
+}
+
+.DivInputMotionRecordico{
+	width:100px;
+	float:left;
+}
+
+
+
+</style> 
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtAlarmEnable',str_AlarmEnable);	
+	SetLang('id_txtAlarmOutput',str_AlarmOutPut);	
+	SetLang('id_txtAlarmRecord',str_AlarmRecordOutPut);
+	SetLang('id_txtAlarmSendEmail',str_MotionSendEmail);
+	
+	SetLang('id_txtAlarmTime',str_AlarmTime);	
+	SetLang('id_txtAlarmType',str_AlarmType);	
+	SetLang('id_AlarmType_NC',str_AlarmClose);
+	SetLang('id_AlarmType_NO',str_AlarmOpen);
+	
+	
+	SetLang('id_AlarmPara1',str_AlarmParaTime1); 
+	SetLang('id_AlarmPara2',str_AlarmParaTime2);
+	SetLang('id_AlarmPara3',str_AlarmParaTime3);
+	SetLang('id_AlarmPara4',str_AlarmParaTime4);
+	
+	
+	SetLang('id_txtAlarmday0',str_AlarmSunday);
+	SetLang('id_txtAlarmday1',str_AlarmMonday);
+	SetLang('id_txtAlarmday2',str_AlarmThrsday);
+	SetLang('id_txtAlarmday3',str_AlarmWensday);
+	SetLang('id_txtAlarmday4',str_AlarmThusday);
+	SetLang('id_txtAlarmday5',str_AlarmFriday);
+	SetLang('id_txtAlarmday6',str_AlarmSatDay);
+	
+	SetLang('id_AlarmCopyTo',str_SelectAll);
+	SetLang('id_AlarmSubmit',str_AlarmSave);
+	SetLang('id_button0',str_Setup);
+	SetLang('id_button1',str_Setup);
+	SetLang('id_button2',str_Setup);
+	SetLang('id_button3',str_Setup);
+	SetLang('id_button4',str_Setup);
+	SetLang('id_button5',str_Setup);
+	SetLang('id_button6',str_Setup);
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+var map;
+var time;
+var AllFlag = 0;
+var selectDay;
+var StartHour0,StartMin0,StartSec0,EndHour0,EndMin0,EndSec0,StartHour1,StartMin1,StartSec1,EndHour1,EndMin1,EndSec1;
+var StartHour2,StartMin2,StartSec2,EndHour2,EndMin2,EndSec2,StartHour3,StartMin3,StartSec3,EndHour3,EndMin3,EndSec3;
+
+function addSelectAlarmTime(id,num,streamtype)
+{
+	for(var i =0;i < num; i ++)
+	{
+		var addstr = '<div class="ClassContentSelectOption TimeSelect" name="id_' + streamtype + '_option" style="margin-top:' + i*24 + 'px;">' + i + '</div>';
+		$("#" + id).append(addstr);
+	}
+}
+
+function GetNetMap()
+{
+	var resolutionsavailable,begintime,endtime;
+	var resp = $.sendMsg("SensorList",null,"/ISAPI/Event/SensorAlarmParam","POST");
+	if(resp.success == false)
+	{
+		alert("recv /Event/Alarm msg fail");
+		return;
+	}
+	return resp.data;
+}
+
+function InitPageParam()
+{
+	var myDate = new Date();
+	var today = myDate.getDay();
+	selectDay = today;
+	SetCheckBox('id_AlarmEnable', TranslationStrAndBool(map.enabled));
+	SetCheckBox('id_AlarmOutput', TranslationStrAndBool(map.alarmoutput));
+	SetCheckBox('id_AlarmRecord', TranslationStrAndBool(map.videooutput));
+	SetCheckBox('id_AlarmSendEmail', TranslationStrAndBool(map.sendemail));
+	$("#id_AlarmTime")[0].value = map.alarmduration;
+	SetSelectionOptID('id_AlarmType', map.sensortype);
+	
+	
+	var startTime, startTimeHour, startTimeMin, startTimeSec;
+	var EndTime, endTimeHour, endTimeMin, endTimeSec;
+	
+	//SetRaioChanged('id_Alarmday'+today+'radio','AlarmRadioWeekDay');
+	SetCheckBox('id_Alarmday' + today + 'Enable','1');
+	
+	for(var i = 0; i < 7; i++)
+	{
+		if(today == i)
+		{
+			$("#id_txtAlarmday" + i + "").addClass("ButtonSelectedLable");
+		}
+		else
+		{
+			$("#id_txtAlarmday" + i + "").removeClass("ButtonSelectedLable");
+		}
+	}
+	for(i = 0 ; i < 4; i++)
+	{
+		var paraEnable = eval('map.weekday_' + today + '.section_' + i + '.plantimeenabled');		
+		StartTime = eval('map.weekday_'+today + '.section_' + i + '.begintime').split(":");
+		EndTime = eval('map.weekday_'+today + '.section_' + i + '.endtime').split(":");
+		
+		startTimeHour = StartTime[0];
+		startTimeMin = StartTime[1];
+		startTimeSec = StartTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_AlarmPara' + i + 'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour' + i + '').SetValue(startTimeHour);
+		eval('StartMin' + i + '').SetValue(startTimeMin);
+		eval('StartSec' + i + '').SetValue(startTimeSec);
+		eval('EndHour' + i + '').SetValue(endTimeHour);
+		eval('EndMin' + i + '').SetValue(endTimeMin);
+		eval('EndSec' + i + '').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			var paraEnable = eval('map.weekday_'+i+'.section_'+j+'.plantimeenabled');		
+			startTime = eval('map.weekday_'+i+'.section_'+j+'.begintime').split(":");
+			EndTime = eval('map.weekday_'+i+'.section_'+j+'.endtime').split(":");
+			startTimeHour = parseInt(startTime[0]);
+			startTimeMin = parseInt(startTime[1]);
+			startTimeSec = parseInt(startTime[2]);
+			
+			endTimeHour = parseInt(EndTime[0]);
+			endTimeMin = parseInt(EndTime[1]);
+			endTimeSec = parseInt(EndTime[2]);
+			
+			iEnable[i][j] = parseInt(paraEnable); 
+			iStartTime[i][j] = [startTimeHour, startTimeMin, startTimeSec];
+			iEndTime[i][j] = [endTimeHour, endTimeMin, endTimeSec];
+			
+			if(paraEnable == "1")
+			{
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec,
+					endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+	
+}
+
+function SetPlanTime(iEnable, iStartTime, iEndTime)
+{	
+	var startTimeHour, startTimeMin, startTimeSec;
+	var endTimeHour, endTimeMin, endTimeSec;
+	
+	for(var i = 0; i < 4; i++)
+	{
+		var paraEnable = iEnable[selectDay][i];
+		//console.log("InitPageParam StartHour=" + iStartTime[0][i][0] + ", EndHour=" + iEndTime[0][i][0]);
+		//console.log("InitPageParam StartMi=" + iStartTime[0][i][1] + ", EndMi=" + iEndTime[0][i][1]);
+		
+		startTimeHour = iStartTime[selectDay][i][0];
+		startTimeMin = iStartTime[selectDay][i][1];
+		startTimeSec = iStartTime[selectDay][i][2];			
+				
+		endTimeHour = iEndTime[selectDay][i][0];
+		endTimeMin = iEndTime[selectDay][i][1];
+		endTimeSec = iEndTime[selectDay][i][2];
+		
+		SetCheckBox('id_AlarmPara' + i + 'Enable', TranslationStrAndBool(paraEnable));
+		eval('StartHour' + i + '').SetValue(startTimeHour);
+		eval('StartMin' + i + '').SetValue(startTimeMin);
+		eval('StartSec' + i + '').SetValue(startTimeSec);
+		eval('EndHour' + i + '').SetValue(endTimeHour);
+		eval('EndMin' + i + '').SetValue(endTimeMin);
+		eval('EndSec' + i + '').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			startTimeHour = iStartTime[i][j][0];
+			startTimeMin = iStartTime[i][j][1];
+			startTimeSec = iStartTime[i][j][2];
+			
+			endTimeHour = iEndTime[i][j][0];
+			endTimeMin = iEndTime[i][j][1];
+			endTimeSec = iEndTime[i][j][2];
+								
+			if (iEnable[i][j] == 1)
+			{
+//				console.log("SetPlanTime i=" + i + ", j=" + j + ", StartTimeHour=" + startTimeHour + 
+//					", StartTimeMin=" + startTimeMin + ", EndTimeHour=" + endTimeHour + 
+//					", EndTimeMin=" + endTimeMin + " iEnable=" + iEnable[i][j]);
+//			
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec,
+					endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+}
+
+function time1(i, j){
+
+	var str_ParaEnable;
+	if (iEnable[i][j] == 1)
+	{
+		str_ParaEnable = "1";
+	}
+	else
+	{
+		str_ParaEnable = "0";
+	}
+	
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	
+	var Alarmmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return Alarmmap;	
+}
+
+function section(i, j)
+{
+	var Alarmmap = {"xtype":"section_" + j,"items":time1(i, j)};
+	return Alarmmap;
+}
+
+
+function week(i)
+{
+	var map0 = {"xtype":"weekday_" + i,"items":[section(i,0),section(i,1),section(i,2),section(i,3)]};	
+	return map0;
+	
+}
+
+function currenttime(i, j)
+{
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_AlarmPara'+j+'Enable') == "false")
+	{
+		str_ParaEnable = "0";
+	}
+	else
+	{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	var currentmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return currentmap;	
+}
+
+function currentsection(i, j)
+{
+	var Alarmmap = {"xtype":"section_"+j,"items":currenttime(i, j)};
+	return Alarmmap;
+}
+
+function submit()
+{
+	AlarmTimeCon();
+	var str_AlarmEnable, str_AlarmOutput, str_AlarmRecord,str_AlarmSendEmail, str_AlarmSensitivity;
+	if(GetCheckBoxValue('id_AlarmEnable') == "false")
+	{
+		str_AlarmEnable = "0";
+	}
+	else
+	{
+		str_AlarmEnable = "1";
+	}
+	if(GetCheckBoxValue('id_AlarmOutput') == "false")
+	{
+		str_AlarmOutput = "0";
+	}
+	else
+	{
+		str_AlarmOutput = "1";
+	}
+	if(GetCheckBoxValue('id_AlarmRecord') == "false")
+	{
+		str_AlarmRecord = "0";
+	}
+	else
+	{
+		str_AlarmRecord = "1";
+	}
+	
+	if(GetCheckBoxValue('id_AlarmSendEmail') == "false")
+	{
+		str_AlarmSendEmail = "0";
+	}
+	else
+	{
+		str_AlarmSendEmail = "1";
+	}
+	
+	if(GetSelectionVal('id_AlarmType') == str_AlarmClose)
+	{
+		str_AlarmSensitivity = "0";
+	}
+	else if(GetSelectionVal('id_AlarmType') == str_AlarmOpen)
+	{
+		str_AlarmSensitivity = "1";
+	}
+	
+	if (AllFlag == 1) // 表示选择全选，把选中那天的时间替换其它天
+	{
+		for(var i = 0; i < 7; i++)
+		{			
+			iStartTime[i] = iStartTime[selectDay];
+			iEndTime[i] = iEndTime[selectDay];				
+			iEnable[i] = iEnable[selectDay];
+		}
+	}
+	
+	EditSetPlanTime();
+	
+	//var myDate = new Date();
+	var respflag = 0;
+	//var today = myDate.getDay();
+	var msg =	[
+					{"xtype":"enabled","text":str_AlarmEnable},
+					{"xtype":"alarmoutput","text":str_AlarmOutput},
+					{"xtype":"videooutput","text":str_AlarmRecord},
+					{"xtype":"sendemail","text":str_AlarmSendEmail},
+					{"xtype":"alarmduration","text":$("#id_AlarmTime")[0].value},
+					{"xtype":"sensortype","text":str_AlarmSensitivity},
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	
+	for(var i = 0; i < 7; i++)
+	{
+		var mapsend = [msg[0], msg[1], msg[2], msg[3], msg[4], msg[5], msg[i+6]];
+		var resp = $.sendMsg("SensorList", mapsend, "/ISAPI/Event/SensorAlarmParam", "PUT");
+		if(resp.success == false)
+		{
+			alert("submit submit msg fail");
+		}
+		else
+		{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+	{
+		AlarmTime();
+		map = GetNetMap();
+		alert(str_SetSuccess);
+		InitPlanTime();	
+		InitPageParam();
+	}
+}
+
+function copysubmit()
+{
+	var myDate = new Date();
+	var today = myDate.getDay();
+	var respflag = 0;
+	var msg =	[
+					week(0), week(1), week(2), week(3), week(4), week(5), week(6)
+				];
+	var todaymap = {"xtype":"weekday_"+today+"","items":[currentsection(today,0),currentsection(today,1),currentsection(today,2),currentsection(today,3)]};
+	msg[today] = todaymap;
+
+//	var resp = $.sendMsg("AlarmAlarmParam",msg,"/ISAPI/Event/AlarmAlarmParam","PUT");
+
+/*	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert("设置成功");
+	}*/
+	
+	for(var i = 0; i < 7; i++){
+		var mapsend = [msg[i]];
+		var resp = $.sendMsg("AlarmChannel",mapsend,"/ISAPI/Alarm","PUT");
+		if(resp.success == false){
+			alert("submit submit msg fail");
+		}else{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+		alert("设置成功");
+}
+
+function submitcurrenttime(j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_AlarmPara'+j+'Enable') == "false")
+	{
+		str_ParaEnable = "0";
+	}
+	else
+	{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = eval('StartHour'+j+'').GetValue()+':'+ eval('StartMin'+j+'').GetValue()+':'+eval('StartSec'+j+'').GetValue();
+	EndTime = eval('EndHour'+j+'').GetValue()+':'+ eval('EndMin'+j+'').GetValue()+':'+eval('EndSec'+j+'').GetValue();
+	var currentmap ={"plantimeenabled":str_ParaEnable,"begintime":StartTime,"endtime":EndTime};
+	return currentmap;	
+}
+
+function submitcurrentsection(i,j)
+{
+	var a = submitcurrenttime(j);
+	//var str = '{"section_'+j+'":'+JSON.stringify(a)+'}';
+	var str = '"section_'+j+'"'+':'+JSON.stringify(a);
+	//var Alarmmap = JSON.parse(str);
+	return str;
+}
+
+function CopyTo()
+{
+	//console.log('flag ='+AllFlag);
+	if(AllFlag == 0)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Alarmday'+i+'Enable','true');
+			AlarmTime();
+		}
+		AllFlag = 1;
+	}
+	else if(AllFlag == 1)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Alarmday'+i+'Enable','false');
+		}
+		AllFlag = 0;
+	}
+	
+	
+}
+
+function RadioEvent()
+{
+	var radiostr = GetRaioIndex('AlarmRadioWeekDay');
+	//console.log("111 = "+radiostr);
+	for(var i = 0;i < 7;i++)
+	{
+		if(i == radiostr)
+			SetCheckBox('id_Alarmday'+radiostr+'Enable','true');
+		else
+			SetCheckBox('id_Alarmday'+i+'Enable','false');
+	}
+	for(i = 0 ; i < 4; i++){
+		var paraEnable = eval('map.weekday_'+radiostr+'.section_'+i+'.plantimeenabled');		
+		startTime = eval('map.weekday_'+radiostr+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+radiostr+'.section_'+i+'.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_AlarmPara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+}
+
+
+function EditSetPlanTime()
+{
+	for (var i = 0; i < 7; i++)
+	{
+		if (GetCheckBoxValue('id_Alarmday' + i + 'Enable') == "true")
+		{		
+			for (var j = 0; j < 4; j++)
+			{
+				if (GetCheckBoxValue('id_AlarmPara' + j + 'Enable') == "true")
+					iEnable[i][j] = 1
+				else
+					iEnable[i][j] = 0;
+
+				iStartTime[i][j][0]	= parseInt(eval('StartHour' + j + '').GetValue());
+				iStartTime[i][j][1] = parseInt(eval('StartMin' + j + '').GetValue());
+				iStartTime[i][j][2] = parseInt(eval('StartSec' + j + '').GetValue());
+				iEndTime[i][j][0] = parseInt(eval('EndHour' + j + '').GetValue());
+				iEndTime[i][j][1] = parseInt(eval('EndMin' + j + '').GetValue());
+				iEndTime[i][j][2] = parseInt(eval('EndSec' + j + '').GetValue());			
+			}
+		}
+	}
+	
+	var MinIndex, OldStartTime; 
+	var StartTimeHour, StartTimeHour, EndTimeHour, EndTimeMin;
+	var tempStartTimeHour, tempStartTimeMin, tempEndTimeHour, tempEndTimeMin;
+	var tempEnable = 0;
+	for(var i = 0; i < 7; i++)
+	{	
+		if (GetCheckBoxValue('id_Alarmday' + i + 'Enable') == "true")
+		{
+			for(var j = 0; j < 4; j++)
+			{	
+				MinIndex = -1;
+				OldStartTime = 30 * 60 + 60;
+				for(var n = j; n < 4; n++)
+				{						
+					StartTimeHour = parseInt(iStartTime[i][n][0]);
+					StartTimeMin = parseInt(iStartTime[i][n][1]);
+					EndTimeHour = parseInt(iEndTime[i][n][0]);
+					EndTimeMin = parseInt(iEndTime[i][n][1]);
+					if (StartTimeHour * 60 + StartTimeMin > 0)
+					{
+						if (OldStartTime > StartTimeHour * 60 + StartTimeMin) // 找出最小的
+						{
+							MinIndex = n;
+							OldStartTime = StartTimeHour * 60 + StartTimeMin;
+							//console.log("1==== i=" + i + ", j=" + j + ", n=" + n + ", StartTimeHour=" + StartTimeHour);
+							tempStartTimeHour = StartTimeHour;
+							tempStartTimeMin = StartTimeMin;
+							tempEndTimeHour = EndTimeHour;
+							tempEndTimeMin = EndTimeMin;
+							tempEnable = iEnable[i][n];
+							iEnable[i][MinIndex] = iEnable[i][j];							
+						}
+					}				
+				}
+									
+				if (MinIndex >= 0)
+				{
+					iStartTime[i][MinIndex] = iStartTime[i][j];													
+					iEndTime[i][MinIndex] = iEndTime[i][j];
+					iStartTime[i][j] = [tempStartTimeHour, tempStartTimeMin, 0];					
+					iEndTime[i][j] = [tempEndTimeHour, tempEndTimeMin, 59];
+					iEnable[i][j] = tempEnable;
+					//console.log("2==== i=" + i + ", j=" + j + ", MinIndex=" + MinIndex + ", StartTimeHour=" + StartTimeHour);
+				}
+			}
+		}
+	}	
+}
+
+function AlarmTime()
+{
+	var STimeHour, STimeMin, STimeSec;
+	var ETimeHour, ETimeMin, ETimeSec;
+	var Temp1, Temp2;
+	var endTimeHour, endTimeMin, endTimeSec
+	for(var i = 0; i < 7; i++)
+	{
+		if(GetCheckBoxValue('id_Alarmday'+i+'Enable') == "true")
+		{		
+			for(var j = 0 ; j < 4; j++)
+			{
+				STimeHour = parseInt(eval('StartHour' + j + '').GetValue());
+				STimeMin = parseInt(eval('StartMin' + j + '').GetValue());
+				STimeSec = parseInt(eval('StartSec' + j + '').GetValue());
+				
+				ETimeHour = parseInt(eval('EndHour' + j + '').GetValue());
+				ETimeMin = parseInt(eval('EndMin' + j + '').GetValue());
+				ETimeSec = parseInt(eval('EndSec' + j + '').GetValue());
+				
+				Temp1 = STimeHour * 3600 + STimeMin * 60 + STimeSec; 
+				Temp2 = ETimeHour * 3600 + ETimeMin * 60 + ETimeSec;
+				if (Temp1 > Temp2)
+				{
+					eval('EndHour' + j + '').SetValue(eval('StartHour' + j + '').GetValue());
+					eval('EndMin' + j + '').SetValue(eval('StartMin' + j + '').GetValue());
+					eval('EndSec' + j + '').SetValue(eval('StartSec' + j + '').GetValue());;
+				}
+				
+				time.ClearSingle(i,j);
+				if(GetCheckBoxValue('id_AlarmPara'+j+'Enable') == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue()
+								,eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());
+				}else{
+					time.ClearSingle(i,j);
+				}
+			}
+		}
+	}
+}
+
+function AlarmTimeCon()
+{
+	if($('#id_AlarmTime')[0].value < 5){
+		$('#id_AlarmTime')[0].value = 5;
+	}
+	if($('#id_AlarmTime')[0].value > 300){
+		$('#id_AlarmTime')[0].value = 300;
+	}
+}
+
+function funbutton(id){
+	selectDay = id.substring(id.length - 1,id.length);
+	//console.log(selectDay);
+	for(var i = 0; i < 7; i++)
+	{
+		if(selectDay == i)
+		{
+			SetCheckBox('id_Alarmday'+i+'Enable','true');
+			$("#id_txtAlarmday" + i + "").addClass("ButtonSelectedLable");
+			for(j = 0 ; j < 4; j++)
+			{
+				var paraEnable = iEnable[selectDay][j];
+//				var paraEnable = eval('map.weekday_'+selectDay+'.section_'+j+'.plantimeenabled');		
+//				startTime = eval('map.weekday_'+selectDay+'.section_'+j+'.begintime').split(":");
+//				EndTime = eval('map.weekday_'+selectDay+'.section_'+j+'.endtime').split(":");
+				
+				startTimeHour = iStartTime[selectDay][j][0];
+				startTimeMin = iStartTime[selectDay][j][1];
+				startTimeSec = iStartTime[selectDay][j][2];			
+				
+				endTimeHour = iEndTime[selectDay][j][0];
+				endTimeMin = iEndTime[selectDay][j][1];
+				endTimeSec = iEndTime[selectDay][j][2];
+				
+				SetCheckBox('id_AlarmPara'+j+'Enable',TranslationStrAndBool(paraEnable));
+				eval('StartHour'+j+'').SetValue(startTimeHour);
+				eval('StartMin'+j+'').SetValue(startTimeMin);
+				eval('StartSec'+j+'').SetValue(startTimeSec);
+				eval('EndHour'+j+'').SetValue(endTimeHour);
+				eval('EndMin'+j+'').SetValue(endTimeMin);
+				eval('EndSec'+j+'').SetValue(endTimeSec);
+				
+				if(TranslationStrAndBool(paraEnable) == "true")
+				{
+					time.SetTime(i,j, eval('StartHour' + j + '').GetValue(),eval('StartMin' + j + '').GetValue(),eval('StartSec' + j + '').GetValue()
+									, eval('EndHour' + j + '').GetValue(),eval('EndMin' + j + '').GetValue(),eval('EndSec' + j + '').GetValue());
+				}
+				else
+				{
+					time.ClearSingle(i,j);
+				}
+			}
+		}else{
+			SetCheckBox('id_Alarmday' + i + 'Enable', 'false');
+			$("#id_txtAlarmday" + i + "").removeClass("ButtonSelectedLable");
+		}
+	}
+}
+
+$(function(){
+	InitUdfSelect('id_AlarmType');
+	StartHour0 = new SelectInput("id_AlarmStartHour0",0,23,0,AlarmTime);
+	StartMin0 = new SelectInput("id_AlarmStartMin0",0,59,0,AlarmTime);
+	StartSec0 = new SelectInput("id_AlarmStartSec0",0,59,0,AlarmTime);
+
+	EndHour0 = new SelectInput("id_AlarmEndHour0",23,23,0,AlarmTime);
+	EndMin0 = new SelectInput("id_AlarmEndMin0",59,59,0,AlarmTime);
+	EndSec0 = new SelectInput("id_AlarmEndSec0",59,59,0,AlarmTime);
+	
+	StartHour1 = new SelectInput("id_AlarmStartHour1",0,23,0,AlarmTime);
+	StartMin1 = new SelectInput("id_AlarmStartMin1",0,59,0,AlarmTime);
+	StartSec1 = new SelectInput("id_AlarmStartSec1",0,59,0,AlarmTime);
+	
+	EndHour1 = new SelectInput("id_AlarmEndHour1",23,23,0,AlarmTime);
+	EndMin1 = new SelectInput("id_AlarmEndMin1",59,59,0,AlarmTime);
+	EndSec1 = new SelectInput("id_AlarmEndSec1",59,59,0,AlarmTime);
+	
+	StartHour2 = new SelectInput("id_AlarmStartHour2",0,23,0,AlarmTime);
+	StartMin2 = new SelectInput("id_AlarmStartMin2",0,59,0,AlarmTime);
+	StartSec2 = new SelectInput("id_AlarmStartSec2",0,59,0,AlarmTime);
+
+	EndHour2 = new SelectInput("id_AlarmEndHour2",23,23,0,AlarmTime);
+	EndMin2 = new SelectInput("id_AlarmEndMin2",59,59,0,AlarmTime);
+	EndSec2 = new SelectInput("id_AlarmEndSec2",59,59,0,AlarmTime);
+
+	StartHour3 = new SelectInput("id_AlarmStartHour3",0,23,0,AlarmTime);
+	StartMin3 = new SelectInput("id_AlarmStartMin3",0,59,0,AlarmTime);
+	StartSec3 = new SelectInput("id_AlarmStartSec3",0,59,0,AlarmTime);
+
+	EndHour3 = new SelectInput("id_AlarmEndHour3",23,23,0,AlarmTime);
+	EndMin3 = new SelectInput("id_AlarmEndMin3",59,59,0,AlarmTime);
+	EndSec3 = new SelectInput("id_AlarmEndSec3",59,59,0,AlarmTime);
+	time = new TimeTable('id_TimeTable');
+	time.ClearAll();
+	BindEvent('id_AlarmCopyTo','onmousedown',CopyTo,null);
+	BindEvent('id_AlarmSubmit','onmousedown',submit,null);
+	BindEvent('id_AlarmTime','onchange',AlarmTimeCon,null);
+	BindEvent('id_button0','onmousedown',funbutton,'id_button0');
+	BindEvent('id_button1','onmousedown',funbutton,'id_button1');
+	BindEvent('id_button2','onmousedown',funbutton,'id_button2');
+	BindEvent('id_button3','onmousedown',funbutton,'id_button3');
+	BindEvent('id_button4','onmousedown',funbutton,'id_button4');
+	BindEvent('id_button5','onmousedown',funbutton,'id_button5');
+	BindEvent('id_button6','onmousedown',funbutton,'id_button6');	
+	
+	map = GetNetMap();
+	InitLang();
+	InitPlanTime();
+	InitPageParam();	
+}
+)
+
+</script> 
+
+<body>   
+<div class="AlarmDiv ContentBg" style="min-width:950px;">
+	<div style="height:100%;margin:auto;width:950px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_AlarmEnable"><script>InitCheckBox('id_AlarmEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtAlarmEnable">Enable</div>
+		
+		<div class="DivCheckBox" style="float:left;margin-left:85px;"id="id_AlarmOutput"><script>InitCheckBox('id_AlarmOutput','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtAlarmOutput">Output</div>
+		
+		<div class="DivCheckBox" style="float:left;margin-left:85px;"id="id_AlarmRecord"><script>InitCheckBox('id_AlarmRecord','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtAlarmRecord">Record</div>
+		
+		<div class="DivCheckBox" style="float:left;margin-left:40px;"id="id_AlarmSendEmail"><script>InitCheckBox('id_AlarmSendEmail','true')</script></div>
+		<div class="DivLable divbox" style="float:left;margin-left:10px;" id="id_txtAlarmSendEmail">SendEmail</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtAlarm" id="id_txtAlarmTime">Alarm Time:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_AlarmTime" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Sec)(5-300)</div>
+
+		<div class="DivLable txtAlarm" id="id_txtAlarmType" style="float:left;margin-left:65px;">Type:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect DivInputMotionRecord" id="id_AlarmType">NC</div>
+		<div class="DivContentSelectIco" id="id_AlarmType_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption DivInputMotionRecordico" name="id_AlarmType_option" style="margin-top:0px;" id="id_AlarmType_NC">NC</div>
+		<div class="ClassContentSelectOption DivInputMotionRecordico" name="id_AlarmType_option" style="margin-top:24px;" id="id_AlarmType_NO">NO</div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		 
+		<div id="id_TimeTable" style="float:left" oncontextmenu="return false"></div>
+		<div style="float:left;width:200px;height:227px;">
+			<div style="width:28px;height:16px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button0">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button1">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button2">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button3">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button4">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button5">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button6">设置</div>
+		</div>
+		<div style="clear:both;"></div>
+		<div style="clear:both;height:15px;"></div>
+		
+		
+		<div class="DivCheckBox" style="float:left;"id="id_AlarmPara0Enable"><script>InitCheckBox('id_AlarmPara0Enable','flase',AlarmTime)</script></div>
+		<div class="DivLable" id="id_AlarmPara1" style="float:left;margin-left:10px;">Para1:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_AlarmStartTime1">Start Time</div> -->
+		<div style="float:left;margin-left:20px;">
+		<div id="id_AlarmStartHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartSec0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_AlarmEndTime1">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_AlarmEndHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndSec0"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+			
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_AlarmPara1Enable"><script>InitCheckBox('id_AlarmPara1Enable','flase',AlarmTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_AlarmPara2">Para2:</div>
+	
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_AlarmStartTime2">Start Time</div> -->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_AlarmStartHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartSec1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_AlarmEndTime2">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_AlarmEndHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndSec1"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_AlarmPara2Enable"><script>InitCheckBox('id_AlarmPara2Enable','flase',AlarmTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_AlarmPara3">Para3:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_AlarmStartTime3">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_AlarmStartHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartSec2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_AlarmEndTime3">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_AlarmEndHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndSec2"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_AlarmPara3Enable"><script>InitCheckBox('id_AlarmPara3Enable','flase',AlarmTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_AlarmPara4">Para4:</div>	
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_AlarmStartTime4">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_AlarmStartHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmStartSec3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_AlarmEndTime4">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_AlarmEndHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_AlarmEndSec3"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+				
+		<div class="DivAllBtn CopyButton" style="float:left;" id="id_AlarmCopyTo">All</div>
+		
+
+		<div class="DivCheckBox" style="float:left;margin-left:20px;"id="id_Alarmday0Enable"><script>InitCheckBox('id_Alarmday0Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday0">Sunday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Alarmday1Enable"><script>InitCheckBox('id_Alarmday1Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday1">Monday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Alarmday2Enable"><script>InitCheckBox('id_Alarmday2Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft"  id="id_txtAlarmday2">Tuesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Alarmday3Enable"><script>InitCheckBox('id_Alarmday3Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday3">Wednesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Alarmday4Enable"><script>InitCheckBox('id_Alarmday4Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday4">Thursday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Alarmday5Enable"><script>InitCheckBox('id_Alarmday5Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday5">Friday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Alarmday6Enable"><script>InitCheckBox('id_Alarmday6Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtAlarmday6">Saturday</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_AlarmSubmit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+</html>  

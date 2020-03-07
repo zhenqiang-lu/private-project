@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/plugin.js"></script>
+	<script src="js/videomask.js"></script>
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<body>   		 
+<div class="ContentBg ContentDiv"  style="min-width:600px;">	
+	<div  id="id_TopBox"style="height:30px;"></div>			
+	
+	 <div style="height:100%;margin:auto;width:800px;" id="id_BoxPIC">	
+	 	<div id="id_LeftBox" style="float: left; width:10.3%;height:288px;"></div>
+		<div  style="width:352px;height:288px;display:block;z-index:99;background:black;opacity:1;float:left;overflow:hidden;position:relative" id="id_plugin_img">		   
+			<img  style="width:352px;height:288px;z-index:1;position:absolute;margin-top:0px;" src="" id="id_pic" ondragstart="return false;"></img>
+			<div class="osdPositonBox"  id="id_timeosdPositonBox" onselectstart="return false";>时间</div>
+			<div class="osdPositonBox"  id="id_fpsosdPositonBox" onselectstart="return false";>帧率码率</div>
+			<div class="osdPositonBox"  id="id_chnnameosdPositonBox" onselectstart="return false";>通道名称</div>
+			<div class="osdPositonBox"  id="id_usrdefosdPositonBox" onselectstart="return false";>用户自定义消息</div>
+		</div>		
+		<div style="width:220px;height:288px;float:left;z-index:100" id="id_ImageSetBox"></div>
+		<div style="clear:both;margin-left:10%" id="id_BottomBox"/>
+		<div style="height:20px;"></div>
+		<div class="DivCheckBox" style="float:left;margin-top:5px;" id="id_OsdTimeEnable"><script>InitCheckBox('id_OsdTimeEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtDisplayTime">显示时间</div>
+		<div style="clear:both;"/>
+		<div style="height:5px;"></div>
+		<div class="DivCheckBox" style="float:left;margin-top:5px;" id="id_OsdFpsEnable"><script>InitCheckBox('id_OsdFpsEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtDisplayFps">显示帧率</div>
+		<div style="clear:both;"/>
+		<div style="height:5px;"></div>
+		<div class="DivCheckBox" style="float:left;margin-top:5px;" id="id_OsdChnNameEnable"><script>InitCheckBox('id_OsdChnNameEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;width:200px; " id="id_txtChnAndName">显示通道名称</div>
+		<input class="DivInput" id="id_OsdChnName"  maxlength="16"  oninput="ChnAndName()"></input>		
+		<div style="clear:both;"/>
+		<div style="height:5px;"></div>
+		<div class="DivCheckBox" style="float:left;margin-top:5px;" id="id_OsdUsrDefineEnable"><script>InitCheckBox('id_OsdUsrDefineEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;width:200px;" id="id_txtUsrdef">显示用户自定义消息</div>
+		<input class="DivInput" id="id_UsrDefineMsg" value="用户自定义消息" maxlength="16"  oninput="Usrdef()"></input>
+		<div style="clear:both;"/>
+		<div style="height:20px;"></div>
+		<div>
+		<div class="DivButton" style="margin-left:200px;" id="id_SubmitOsd">提交</div>
+		</div>
+	</div> 
+</div>
+</body>   
+
+<style type="text/css">
+.ContentDiv{
+	left:0px;
+	right:0px;
+	height:510px;
+}
+.osdPositonBox{
+	width:200px;
+	height:15px;
+	z-index:2;
+	position:absolute;
+	border:1px solid yellow; 
+	font-family:arial;
+	font-size:14px;
+	line-height: 15px;
+	color:red;
+	-moz-user-select:none;
+    -webkit-user-select:none;
+    user-select:none;
+	background-image:url(about:blank);
+}
+.osdPositonBox:hover{
+	cursor: pointer;
+}
+</style> 
+
+
+
+<script  type="text/javascript"> 
+	
+var ClassDrag = function(id){  
+		this.id = id;
+		var fatherObjID;
+        var drageState = false;
+		var mouseStartX = 0;
+		var mouseStartY = 0;
+		var posStartX = 0;
+		var posStartY = 0;
+		var OrgRelationX = 0,OrgRelationY = 0;
+		var ValueChanged = 0;
+		
+		$("#id_ImageSetBox, #id_LeftBox, #id_BottomBox, #id_TopBox").mouseout(function(ev)
+		{
+			drageState = false;
+		})
+		$("#" + id).mouseup(function(ev)
+		{
+			drageState = false;
+		})
+		
+		$("#" + id).mousedown(function(ev)
+		{
+			mouseStartX = ev.pageX;
+			mouseStartY = ev.pageY;
+			posStartX = parseInt(document.getElementById(id).style.marginLeft);
+			posStartY = parseInt(document.getElementById(id).style.marginTop);
+			//console.log('Start Mouse: [' + mouseStartX + ', ' + mouseStartY + '], Pos[' + posStartX + ', ' + posStartY + ']');
+			drageState = true;
+		})
+		
+		this.initBox = function initBox(fatherID,x,y)
+		{
+			//alert("fatherID = "+fatherID+"RelationX = "+RelationX+"RelationY = "+RelationY);
+			var fatherObj = document.getElementById(fatherID);
+			var RelationX,RelationY;
+			
+			OrgRelationX = x;
+			OrgRelationY = y;
+			RelationX = translateWidthToPosLocal(x);
+			RelationY = translateHeightToPosLocal(y);
+			var x = RelationX+ fatherObj.getBoundingClientRect().left +  $("#"+id).width()/2;
+			var y =RelationY+ fatherObj.getBoundingClientRect().top +  $("#"+id).height()/2;
+			fatherObjID = fatherID;
+			
+			if(false == DragRuls(fatherID,id,x,y)) return ;
+			
+			document.getElementById(id).style.marginLeft = RelationX + 'px';
+			document.getElementById(id).style.marginTop = RelationY + 'px';
+		}
+		
+		this.Reset = function Reset(){
+			
+			if (ValueChanged != 0)
+			{
+				OrgRelationX = GetX();
+				OrgRelationY = GetY();
+			}
+			//console.log('ValueChanged ='+ValueChanged + 'this.id='+this.id);
+			//console.log('OrgRelationX ='+OrgRelationX + 'OrgRelationY ='+OrgRelationY);
+			ValueChanged = 0;
+		}
+		
+		this.GetX = function GetX(){
+			//alert(document.getElementById(id).style.marginLeft);
+			if (ValueChanged == 0)
+			{
+				return OrgRelationX;
+			}
+			
+			if(document.getElementById(id).style.marginLeft == "0px"){
+				return 0;
+			}
+			return translateWidthToPos1000(parseInt(document.getElementById(id).style.marginLeft));
+		}
+		this.GetY = function GetY(){
+			if (ValueChanged == 0)
+			{
+				return OrgRelationY;
+			}
+			if(document.getElementById(id).style.marginTop == "0px"){
+				return 0;
+			}
+			return translateHeightToPos1000(parseInt(document.getElementById(id).style.marginTop));
+		}
+		$("#id_plugin_img").mousemove(function(ev)
+		{
+			if(drageState == false) 
+			{
+				return;
+			}
+			
+			ValueChanged = 1;
+			
+			var xNewPos = ClipVal(posStartX + (ev.pageX - mouseStartX), 0, $("#"+fatherObjID).width()-20);
+			var yNewPos = ClipVal(posStartY + (ev.pageY - mouseStartY), 0, $("#"+fatherObjID).height()-15);
+			//console.log('FatherID:' + this.id + ', ID:' + id + ', Drag Move NewPos: x=' + xNewPos + ', y=' + yNewPos
+			//				+ ', ParentSize[' + $("#"+fatherObjID).width() + ', ' + $("#"+fatherObjID).height() + ']');
+			
+			document.getElementById(id).style.marginLeft = xNewPos + 'px';
+			document.getElementById(id).style.marginTop =  yNewPos + 'px';
+		})
+		
+		function DragRuls(fatherWindID,id,x,y)
+		{
+			var fatherObj = document.getElementById(fatherWindID);
+			var MaxW = fatherObj.getBoundingClientRect().left + $("#"+fatherWindID).width() + $("#"+id).width()/2 - 10;
+			var MaxH = fatherObj.getBoundingClientRect().top +  $("#"+fatherWindID).height() - $("#"+id).height()/2;
+			var MinW = fatherObj.getBoundingClientRect().left + $("#"+id).width()/2;
+			var MinH = fatherObj.getBoundingClientRect().top +  $("#"+id).height()/2;
+			//console.log("MaxW = "+MaxW+"MaxH ="+MaxH);	
+			if(x > MaxW || x < MinW){
+				return false;
+			}
+			
+			if(y > MaxH || y < MinH){
+				return false;
+			}
+			return true;
+		}
+}
+
+var timeosdPositonBox;
+var fpsosdPositonBox;
+var chnnameosdPositonBox;
+var usrdefosdPositonBox;
+  
+
+function ReSizeWondow(OsdMap)
+{
+	timeosdPositonBox.initBox('id_plugin_img',1,1);
+	fpsosdPositonBox.initBox('id_plugin_img',1,1);
+	chnnameosdPositonBox.initBox('id_plugin_img',1,1);
+	usrdefosdPositonBox.initBox('id_plugin_img',1,1);
+}
+
+var httpport = 80;
+function GetPort()
+{
+	var resp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		//alert("recv ThirdServer msg fail");
+		return;  
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	return  Number(map.option_1.port);
+}
+	
+
+function updateBgPic()
+{
+	var ip = GetIp();  
+	var usr = $.GetCookie('usrname');
+	var passwd = $.GetCookie('password');
+	//var str = 'http://'+usr+':'+passwd+'@'+ip+'/ISAPI/Snap/GetImg'+Math.random();
+	var str = 	'http://'+ip+':'+httpport+'/ISAPI/Snap/GetImg'+Math.random();
+	//console.log(str);
+	document.getElementById('id_pic').src = str;
+}
+
+function SubmitOsd()
+{
+	var map = [{"xtype":"osdparam_0","items":[{"xtype":"osdtype","text":"0"},{"xtype":"position","items":[{"xtype":"osdtext","text":document.getElementById('id_OsdChnName').value},{"xtype":"enabled","text":CheckboxToInt(GetCheckBoxValue('id_OsdChnNameEnable'))},{"xtype":"x","text":""+chnnameosdPositonBox.GetX()},{"xtype":"y","text":""+chnnameosdPositonBox.GetY()}]}]},
+			   {"xtype":"osdparam_1","items":[{"xtype":"osdtype","text":"1"},{"xtype":"position","items":[{"xtype":"enabled","text":CheckboxToInt(GetCheckBoxValue('id_OsdTimeEnable'))},{"xtype":"x","text":""+timeosdPositonBox.GetX()},{"xtype":"y","text":""+timeosdPositonBox.GetY()}]}]},
+			   {"xtype":"osdparam_2","items":[{"xtype":"osdtype","text":"2"},{"xtype":"position","items":[{"xtype":"enabled","text":CheckboxToInt(GetCheckBoxValue('id_OsdFpsEnable'))},{"xtype":"x","text":""+fpsosdPositonBox.GetX()},{"xtype":"y","text":""+fpsosdPositonBox.GetY()}]}]},
+			   {"xtype":"osdparam_3","items":[{"xtype":"osdtype","text":"3"},{"xtype":"position","items":[{"xtype":"osdtext","text":document.getElementById('id_UsrDefineMsg').value},{"xtype":"enabled","text":CheckboxToInt(GetCheckBoxValue('id_OsdUsrDefineEnable'))},{"xtype":"x","text":""+usrdefosdPositonBox.GetX()},{"xtype":"y","text":""+usrdefosdPositonBox.GetY()}]}]}];
+
+    document.getElementById('id_chnnameosdPositonBox').innerHTML  = document.getElementById('id_OsdChnName').value;      
+	document.getElementById('id_usrdefosdPositonBox').innerHTML  =  document.getElementById('id_UsrDefineMsg').value;	
+	ResizeAllImgBox();		
+	var resp = $.sendMsg("OSDInfo",map,"/ISAPI/OSD/OSDInfo","PUT");
+	if(resp.success == false){
+		alert("Set fail");
+		return ;
+	}else{
+		alert(str_SetSuccess);
+		timeosdPositonBox.Reset();
+		fpsosdPositonBox.Reset();
+		chnnameosdPositonBox.Reset();
+		usrdefosdPositonBox.Reset();
+		return ;
+	}
+	 
+}
+
+function ClipVal(val, min, max)
+{
+	if (val <= min) 
+		return min;
+	else if (val >= max)
+		return max;
+	else
+		return val;
+}
+
+function getTextWidth(str) {  
+      var w = $('body').append($('<span stlye="display:none;" id="textWidth"/>')).find('#textWidth').html(str).width();  
+      $('#textWidth').remove();  
+      return w;  
+}  
+
+function ResizeOneImgBox(boxID)
+{
+	var strWidth = getTextWidth(document.getElementById(boxID).innerHTML);
+	document.getElementById(boxID).style.width = ClipVal(strWidth, 120, 352) + 'px';
+	if(boxID == 'id_chnnameosdPositonBox')
+	{
+		document.getElementById(boxID).innerHTML = document.getElementById('id_OsdChnName').value;		
+	}
+	if(boxID == 'id_usrdefosdPositonBox')
+	{
+		document.getElementById(boxID).innerHTML = document.getElementById('id_UsrDefineMsg').value;
+	}
+	//console.log('StrLength of ' + boxID + ':' + strWidth + ', SetNewSize=' + $("#"+boxID).width());
+}
+
+function ResizeAllImgBox()
+{
+	ResizeOneImgBox('id_timeosdPositonBox');
+	ResizeOneImgBox('id_fpsosdPositonBox');
+	ResizeOneImgBox('id_chnnameosdPositonBox');
+	ResizeOneImgBox('id_usrdefosdPositonBox');
+}
+
+function SetParamAvalible(map)
+{
+	var obj;
+	//console.log("osd osd osd !!!--type=" + map.osdtype);
+	switch(map.osdtype){
+		case "0":
+			obj = chnnameosdPositonBox;
+			document.getElementById('id_OsdChnName').value  = map.position.osdtext;
+			document.getElementById('id_chnnameosdPositonBox').innerHTML  = map.position.osdtext;
+			SetCheckBox('id_OsdChnNameEnable',TranslationStrAndBool(map.position.enabled));
+			break;
+		case "1":
+			obj = timeosdPositonBox;
+			SetCheckBox('id_OsdTimeEnable',TranslationStrAndBool(map.position.enabled));
+			break;
+		case "2":
+			obj = fpsosdPositonBox;
+			SetCheckBox('id_OsdFpsEnable',TranslationStrAndBool(map.position.enabled));
+			break;
+		case "3":
+			obj = usrdefosdPositonBox;
+			document.getElementById('id_UsrDefineMsg').value  = map.position.osdtext;
+			document.getElementById('id_usrdefosdPositonBox').innerHTML  =  map.position.osdtext;
+			SetCheckBox('id_OsdUsrDefineEnable',TranslationStrAndBool(map.position.enabled));
+			break;
+		default: return;
+	}
+	//console.log("osd osd osd !!!");
+	//console.log("positionx="+Number(map.position.x)+" positiony="+Number(map.position.y));
+	//console.log("x="+x+" y="+y);
+	obj.initBox('id_plugin_img',Number(map.position.x),Number(map.position.y));
+}
+function InitParam()
+{
+	var resp = $.sendMsg("OSDInfo",null,"/ISAPI/OSD/OSDInfo","POST");
+	if(resp.success == false){
+		alert("Get OSDInfo fail");
+		return ;
+	}
+	var map = resp.data;
+	//var map ={"osdparam":{"osdtype":"3","position":{"x":"0","y":"141"}}};
+	//console.log("map ="+JSON.stringify(map));
+	//map ={"osdparam_0":{"osdtype":"0","position":{"x":"0","y":"0"}},"osdparam_1":{"osdtype":"1","position":{"x":"0","y":"43"}},"osdparam_2":{"osdtype":"2","position":{"x":"0","y":"92"}},"osdparam_3":{"osdtype":"3","position":{"x":"0","y":"141"}}};
+	//console.log("osd osd osd !!!");
+	if(map.osdparam_0 != undefined){
+		SetParamAvalible(map.osdparam_0);
+	}
+	if(map.osdparam_1 != undefined){ 
+		SetParamAvalible(map.osdparam_1);
+	}
+	if(map.osdparam_2 != undefined){
+		SetParamAvalible(map.osdparam_2);
+	}
+	if(map.osdparam_3 != undefined){
+		SetParamAvalible(map.osdparam_3);
+	}
+	
+	ResizeAllImgBox();
+}
+
+$(window).resize(function() {    
+	//ReSizeWondow();
+});
+
+function InitLang(){
+	SetLang('id_timeosdPositonBox',str_ShowTime);
+	SetLang('id_fpsosdPositonBox',str_ShowFps);
+	SetLang('id_chnnameosdPositonBox',str_ShowChannel);
+	SetLang('id_usrdefosdPositonBox',str_ShowUserInfo);
+	SetLang('id_txtDisplayTime',str_ShowTime);
+	SetLang('id_txtDisplayFps',str_ShowFps);
+	SetLang('id_txtChnAndName',str_ShowChannel);
+	SetLang('id_txtUsrdef',str_ShowUserInfo);
+	SetLang('id_SubmitOsd',str_Save);
+}
+
+function ChnAndName(){
+	//console.log('11111111');
+	ResizeAllImgBox();
+}
+
+function Usrdef(){
+	//console.log('22222222');
+	ResizeAllImgBox();
+}
+
+$(function() {//页面初始化
+	drag_sx = document.getElementById('id_plugin_img').getBoundingClientRect().left;
+	drag_sy = document.getElementById('id_plugin_img').getBoundingClientRect().top;
+	
+	timeosdPositonBox = new ClassDrag('id_timeosdPositonBox');
+	fpsosdPositonBox = new ClassDrag("id_fpsosdPositonBox");
+	chnnameosdPositonBox = new ClassDrag("id_chnnameosdPositonBox");
+	usrdefosdPositonBox = new ClassDrag("id_usrdefosdPositonBox");
+	
+	BindEvent("id_SubmitOsd",'onmousedown', SubmitOsd, null);
+	//BindEvent('id_OsdChnName','oninput',ChnAndName,null);
+	//BindEvent('id_UsrDefineMsg','oninput',Usrdef,null);
+	InitLang();
+	InitParam();
+	httpport = GetPort();
+	setInterval("updateBgPic()",200);
+	//ReSizeWondow();
+	updateBgPic();
+ 	<!-- $("#id_OsdChnName").blur(function(){ -->
+ 		<!-- var id_OsdChnText=document.getElementById('id_OsdChnName').value; 		 -->
+		<!-- var reg =  /^[^\u4e00-\u9fa5]+$/; -->
+        <!-- if(!reg.test(id_OsdChnText)){ -->
+        	<!-- document.getElementById("OsdNameMessage").style.display="block"; -->
+        	<!-- $("#OsdNameMessage").html(str_OsdNameMessage);       	 -->
+        	<!-- return; -->
+        <!-- }    -->
+        <!-- else{ -->
+        	<!-- document.getElementById("OsdNameMessage").style.display="none"; -->
+        <!-- } -->
+ 	<!-- });		 -->
+});
+</script>
+
+</html>  

@@ -1,0 +1,2877 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/plugin.js"></script>
+	<script src="js/glDatePicker.min.js"></script>
+	<link href="css/glDatePicker.default.css" rel="stylesheet" type="text/css" />
+	<link href="css/glDatePicker.darkneon.css" rel="stylesheet" type="text/css" />
+	<link href="css/glDatePicker.flatwhite.css" rel="stylesheet" type="text/css" />
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+body {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.PreviewHead {
+	background: #DCDCDC;
+	height: 37px;
+}
+
+.TimeBarText:first-child {
+	text-align: left;
+	margin-left: 0pt;
+	width: 21.4pt;
+	text-indent:-1em;
+}
+
+.StreamButton {
+	width: 90px;
+	height: 23px;
+	line-height: 23px;
+	background: #1e3b56;
+	margin-top: 7px;
+	margin-left: 15px;
+	float: left;
+	border-radius: 5px;
+}
+
+.StreamButton:hover {
+	background: #64b9fa;
+}
+
+.StreamButtonSelected {
+	background: #64b9fa;
+}
+
+.HeadButtonIco {
+	width: 43px;
+	height: 36px;
+	cursor: pointer;
+	float: left;
+	/*border:1px solid black;*/
+}
+
+/*
+.VideoArea{
+	background:#000000;
+	float:right;
+	width:1000px;
+	height:600px;
+	left:5px;
+}*/
+
+.VideoArea {
+	background: #000000;
+	left: 5px;
+	position: absolute;
+	right: 270px;
+	min-width: 930px;
+}
+
+.ParamArea {
+	background: #c7c7c7;
+	float: right;
+	width: 265px;
+	height: 600px;
+}
+
+.Lable {
+	width: 110px;
+	float: left;
+	font-family: arial;
+	font-style: regular;
+	margin-left:5px;
+}
+
+.IcoOptPtz {
+	background: url(./img/normal.png) -402px -256px;
+}
+
+.IcoOptBack {
+	background: url(./img/normal.png) -2px -256px;
+}
+
+.IcoOptNext {
+	background: url(./img/normal.png) -52px -256px;
+}
+
+.IcoOptPlay {
+	background: url(./img/normal.png) -102px -256px;
+}
+
+.IcoOptStop {
+	background: url(./img/normal.png) -152px -256px;
+}
+
+.IcoOptSlow {
+	background: url(./img/slow-play1.png) 0px;
+}
+
+.IcoOptUP {
+	background: url(./img/normal.png) -152px -256px;
+}
+
+.IcoOptFront {
+	background: url(./img/normal.png) -202px -256px;
+}
+
+.IcoOptSnap {
+	background: url(./img/normal.png) -252px -256px;
+}
+
+.IcoOptVoice {
+	background: url(./img/normal.png) -302px -256px;
+}
+
+.TimeBarText {
+	margin-left: 8pt;
+	width: 13.4pt;
+	height: 20px;
+	float: left;
+	font-size: 12px;
+	/*color: #fff;*/
+	text-align: center;
+}
+
+.TimeBarGop {
+	width: 34px;
+	height: 7px;
+	border-right: 1px solid #000;
+	float: left;
+}
+
+.TimeBarNoGop {
+	width: 22px;
+	height: 5px;
+	float: left;
+}
+
+.TimeBarLine {
+	width: 1.14pt;
+	height: 10px;
+	background: #BBBDBF;
+	/*border-right:1px solid #000000;*/
+	float: left;
+	cursor: text;
+	color: #000;
+}
+
+.TimeBarLineRecordTimed {
+	width: 1.14pt;
+	height: 10px;
+	background: blue;
+	/*border-right:1px solid #000000;*/
+	float: left;
+	z-index: 99;
+}
+
+.TimeBarLineRecordAlarm {
+	width: 1.14pt;
+	height: 10px;
+	background: red;
+	/*border-right:1px solid #000000;*/
+	float: left;
+}
+
+.TimeBarLineRecordManual {
+	width: 1.14pt;
+	height: 10px;
+	background: green;
+	/*border-right:1px solid #000000;*/
+	float: left;
+}
+
+.TimeBarLineCurrent {
+	width: 1.14pt;
+	height: 10px;
+	background: #000;
+	float: left;
+	font-size: 12px; 
+	line-height: 275%;
+	font-family: arial;
+    font-size: small;
+    color: #000;
+    text-indent: -2em;
+	z-index:99;
+
+
+}
+
+. {	
+    line-height: 255%;
+    color: #fff;
+    font-family: arial;
+    font-size: 12px;
+    font-weight: 100; 
+}
+
+
+.DivBox {
+	width: 10px;
+	height: 10px;
+	background: red;
+	float: left;
+	margin-top: 7px;
+}
+
+.DivBoxTxt {
+	font-family: arial;
+	margin-left: 18px;
+	float: left;
+	font-size: 13px;
+	/*color: #fff;*/
+	margin-top: 5px;
+}
+
+.DivDateBox {
+	background: #1E3B56;
+}
+
+.DivDateBoxBase {
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin: 5px 0px 5px 5px;
+	text-align: center;
+	line-height: 30px;
+	font-family: arial;
+	font-style: regular;
+	font-size: 14px;
+	color: #fff;
+}
+
+.DivDateBox:hover {
+	background: #64B9FA;
+	cursor: pointer;
+}
+
+.DivDateSelected {
+	background: #64B9FA;
+	border: 2px solid #64B9FA;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+}
+
+.DivWeek {
+	width: 30px;
+	height: 20px;
+	line-height: 20px;
+	font-family: arial;
+	font-style: regular;
+	font-size: 70%;
+	float: left;
+	text-align: center;
+	margin-left: 5px;
+	/*color: #fff;*/
+}
+
+.ContentSelectEx {
+	width: 80px;
+	
+}
+
+.ContentSelectOptionEx {
+	width: 103px;
+}
+
+.DivInputTime {
+	width: 125px;
+	float: left;
+	border: 0px solid #ffffff;
+}
+
+.DivSelectInputIco {
+	width: 23px;
+	height: 23px;
+	cursor: pointer;
+	border-right: 1px solid #1e3b56;
+	border-bottom: 1px solid #1e3b56;
+	border-top: 1px solid #1e3b56;
+	border-left: 1px solid #1e3b56;
+	background: url(./img/normal.png) -169px -21px;
+	float: left;
+	margin-top: }
+.DivSelectInputIcoLeft{
+	border-top:0px solid #1e3b56;
+	transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+ /* IE 9 */
+	-webkit-transform: rotate(90deg);
+ /* Safari and Chrome */
+	-o-transform: rotate(90deg);
+ /* Opera */
+	-moz-transform: rotate(90deg);
+ /* Firefox  */
+}
+
+.DivSelectInputIcoRight {
+	border-top: 0px solid #1e3b56;
+	transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+ /* IE 9 */
+	-webkit-transform: rotate(270deg);
+ /* Safari and Chrome */
+	-o-transform: rotate(270deg);
+ /* Opera */
+	-moz-transform: rotate(270deg);
+ /* Firefox */
+}
+
+.DivContentSelectRightIco {
+	width: 23px;
+	height: 23px;
+	float: left;
+	cursor: pointer;
+	border-right: 1px solid #1e3b56;
+	border-bottom: 1px solid #1e3b56;
+	border-left: 1px solid #1e3b56;
+	border-top: 1px solid #1e3b56;
+	background: url(./img/normal.png) -163px -12px;
+	transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+ /* IE 9 */
+	-webkit-transform: rotate(270deg);
+ /* Safari and Chrome */
+	-o-transform: rotate(270deg);
+ /* Opera */
+	-moz-transform: rotate(270deg);
+ /* Firefox */
+}
+
+.DivContentSelectLeftIco {
+	width: 23px;
+	height: 23px;
+	float: left;
+	cursor: pointer;
+	border-right: 1px solid #1e3b56;
+	border-bottom: 1px solid #1e3b56;
+	border-left: 1px solid #1e3b56;
+	background: url(./img/normal.png) -163px -12px;
+	transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+ /* IE 9 */
+	-webkit-transform: rotate(90deg);
+ /* Safari and Chrome */
+	-o-transform: rotate(90deg);
+ /* Opera */
+	-moz-transform: rotate(90deg);
+ /* Firefox */
+}
+
+.DivTimeButton {
+	float: right;
+	width: 66px;
+	height: 17px;
+	text-align: center;
+	line-height: 17px;
+	font-family: arial;
+	font-style: regular;
+	font-size: 14px;
+	color: #fff;
+	cursor: pointer;
+	background: #646464;
+	border-bottom: 1px solid #1e3b56;
+	border-left: 1px solid #1e3b56;
+	border-right: 1px solid #1e3b56;
+}
+
+.DivTimeButton:active {
+    width: 66px;
+	height: 17px;
+	background: #343434;
+}
+
+.DivTimeButtonSelect {
+	background: #DC0000;
+	width: 66px;
+	height: 17px;
+}
+
+.classFilename {
+	font-size: 14px;
+	float: left;
+	width: 100px;
+	border-right: 1px solid #1e3856;
+	border-bottom: 1px solid #1e3856;
+	border-left: 1px solid #1e3856;
+	/*11.13*/
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	font-family: arial;
+}
+
+.classFilenames {
+	font-size: 14px;
+	float: left;
+	width: 100px;
+	border-right: 1px solid #1e3856;
+	/*11.13*/
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	font-family: arial;
+}
+.classFileType {
+	float: left;
+	width: 76px;
+	border-right: 1px solid #1e3856;
+	border-bottom: 1px solid #1e3856;
+	text-align: center;
+	font-size: 14px;
+	text-align: center;
+}
+
+.classFileTypes {
+	float: left;
+	width: 69px;	
+	font-size: 14px;
+	text-align: center;
+	border-right: 1px solid #1e3856;
+}
+
+.classFileDownloads {
+	float: left;
+	width: 45px;		
+	font-size: 14px;
+	text-align: right;
+}
+.classFileDownload {
+	float: left;
+	width: 45px;
+	border-bottom: 1px solid #1e3856;
+	border-right: 1px solid #1e3856;
+	font-size: 14px;
+	text-align: center;
+}
+
+.classCheckBox {
+	margin-left: 16px;
+}
+
+.classDispalyNone {
+	display: none
+}
+
+.css_YaHei {
+   margin-top:6%;
+	float: left;
+	font-family: "arial";
+	margin-left: 10px;
+	width: 42%;
+	display: none;
+}
+
+.css_radio {
+	display: inline-block;
+	/*color: #fff;*/
+	cursor: pointer;
+	font-family: arial;
+	font-size: 14px;
+}
+
+.css_ViodTitle{
+	width: 223px;
+	height: 23px;
+	margin-left: 5px;
+	border: 1px solid #1E3856;
+	
+}
+.css_downtext {
+	/*//color: #fff;*/
+	font-family: "arial";
+	font-size: 14px;
+	line-height: 23px;
+	margin-left:9px;
+}
+
+.css_pageGO {
+	position: absolute;
+	bottom: 0px;
+	background: url(img/download.png) no-repeat center 0;
+	color: #ffffff;
+	font-family: arial;
+	margin-left: 35%;
+	background-color: #1e3b56;
+	text-align: center;
+	font-size: 16px;
+}
+
+.TipBox_green {
+	width: 95%;
+	height: 23px;
+	margin-left: 65px;
+	font-family: Arial;
+	font-size: 15px;
+	position: absolute;
+	left: -60px;
+	top: 433px;
+}
+
+.TipColor_green {
+	width: 12px;
+	height: 12px;
+	background-color: green;
+	display: inline-block;
+	font-family: arial;
+	font-size: 12px;
+	line-height: 23px;
+}
+
+.TipBox_green1 {
+	width: 95%;
+	height: 23px;	
+	margin-left: 65px;
+	font-family: Arial;
+	font-size: 15px;
+	position: absolute;
+	left: -60px;
+	top: 410px;
+}
+
+.TipColor_green1 {
+	width: 12px;
+	height: 12px;
+	background-color: #64b9fa;
+	display: inline-block;
+	font-family: arial;
+	font-size: 12px;
+	line-height: 23px;
+}
+
+.green {
+	background-color: green;
+}
+
+.input_parent {
+	padding-left: 2px;
+	margin-left:5px;
+}
+
+.ui-input-box {
+	float: left;
+	height: 20px;
+	padding: 0 1px;
+	margin: 2px 1px 0 0;
+	line-height: 20px;
+	text-align: left;
+	border: 1px #1e3856 solid;
+	background: #1c1d22;
+}
+
+.ui-input-box input {
+	float: left;
+	display: block;
+	width: 27px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0;
+	text-align: center;
+	background: none;
+	border: 0 none;
+	font-size: 14px;
+	color: #fff;
+}
+
+.ui-input-box span {
+	float: left;
+	display: block;
+	width: 5px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	color: #fff;
+	font-weight: bold;
+}
+
+.btn-icon-search {
+	display: inline-block;
+	width: 27px;
+	height: 22px;
+	margin-top: 2px;
+	background: url(./img/normal.png) -65px -164px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.timesTip{	
+    width: auto;
+    height: 32px;
+    position: absolute;
+    bottom: 20%;
+    left: -24%;
+    line-height: 23px;
+   /* color: #fff;*/
+    font-family: arial;
+    font-size: 12px;
+   /* color: #323232;*/
+}
+.css_checkVlc{
+    background: #505050;
+    width: 100px;
+    height: 20px;
+    color: #000;
+    border-radius: 4px;
+    display: none;
+    position: absolute;
+    left: 46%;
+    top: 48%;
+    text-align: center;
+    font-family: arial;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.css_fileParent{
+    height: 78%;
+    width: 245px;
+    margin-left: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-base-color: #64b9fa;
+    -ms-scrollbar-darkshadow-color: ;
+    scrollbar-track-color: #1c1d22;
+    scrollbar-arrow-color: #fff;
+}
+
+.tip_yes {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	display: inline-block;
+	line-height: 40px;
+	width: 50%;
+	height: 40px;
+	text-align: center;
+	cursor: pointer;
+			}
+.tip_yes:hover{
+	background: #64B9FA;
+	font-weight:bolder;
+	color: #000;
+			}
+			
+.tip_no {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	display: inline-block;
+	line-height: 40px;
+	width: 50%;
+	height: 40px;
+	text-align: center;
+	cursor: pointer;
+		}
+			
+.tip_no:hover{
+	background: #64B9FA;
+	font-weight: bolder; 
+	color: #000;
+	}
+.tip_texts {
+	height: 42%;
+	line-height: 20px;
+	padding-left: 8%;
+	padding-top: 6%;
+	background-color:#BBBDBF;
+	color: #000; 
+	}
+			
+.tip_top {
+	display: inline-block;
+	width: 100%;
+	line-height: 23px;
+	text-indent: 1em;
+		}
+			
+.tip_vlc {
+	position: absolute;
+	display: none;
+	top: 42%;
+	left: 35%;
+	width: 400px;
+	height: 150px;
+	background-color: #fff;
+	border: solid 1px #000;
+	font-family: arial;
+	background-color: #2e3339;
+	color: #fff;
+
+		}
+	.css_SengMsg{
+	width: 300px;
+	height: 130px;
+	font-size: 14px;
+	text-align: center;
+	display: none;
+	z-index: 1;
+	top: 30%;
+	left: 40%;
+	position: absolute;
+}
+.css_SendTitle{
+	width: 100%;
+	height: 20%;	
+	line-height: 26px;
+	font-size: 16px;
+	text-align: left;
+	background: #2E3339;
+	color: white;	
+}
+.css_SendContent{
+	width: 100%;
+	height: 60%;
+	line-height: 78px;
+	background:#BBBDBF;
+	
+}
+.css_SendBtn{
+	width: 100%;	
+	height: 19%;
+	line-height: 26px;
+	background: white;
+}
+.DivcCssBtn{
+	width: 49%;
+	height: 26px;
+	text-align: center;
+	background: #2E3339;
+	color: white;
+	float: left;	
+	cursor: pointer;
+	
+}
+.css_Cover{
+	        position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #646464;
+           display: none;
+           z-index: 1;
+           top: 0;
+           left: 0;
+           bottom: 0;
+           opacity: 0.5;
+           
+}	
+		
+</style>
+
+<script>
+var RecType = 1;
+var calendar;
+var checkydm;
+var timebar;
+var searchflag = 0;
+var IsPlaying = 0;
+var timerUpdatePos = 0;
+var page_onoff = true;
+var selectAll_flag = true;
+var download_flag = true;
+var multiple = 0;//快进定义
+//随机生成8位数
+var rnd = Math.floor(Math.random() * 90000000 + 10000000);
+//alert(rnd);
+var play_onoff=true;
+
+function checkAppName(){
+    var userAgent = navigator.userAgent,  
+            rMsie = /(msie\s|trident.*rv:)([\w.]+)/,  
+            rFirefox = /(firefox)\/([\w.]+)/,  
+            rOpera = /(opera).+version\/([\w.]+)/,  
+            rChrome = /(chrome)\/([\w.]+)/,  
+            rSafari = /version\/([\w.]+).*(safari)/;  
+    var browser;  
+    var version;  
+    var ua = userAgent.toLowerCase();  
+    function uaMatch(ua) {  
+        var match = rMsie.exec(ua);  
+        if (match != null) {  
+            return { browser : "IE", version : match[2] || "0" };  
+        }  
+        var match = rFirefox.exec(ua);  
+        if (match != null) {  
+            return { browser : match[1] || "", version : match[2] || "0" };  
+        }  
+        var match = rOpera.exec(ua);  
+        if (match != null) {  
+            return { browser : match[1] || "", version : match[2] || "0" };  
+        }  
+        var match = rChrome.exec(ua);  
+        if (match != null) {  
+            return { browser : match[1] || "", version : match[2] || "0" };  
+        }  
+        var match = rSafari.exec(ua);  
+        if (match != null) {  
+            return { browser : match[2] || "", version : match[1] || "0" };  
+        }  
+        if (match != null) {  
+            return { browser : "", version : "0" };  
+        }  
+    }  
+    var browserMatch = uaMatch(userAgent.toLowerCase());  
+    if (browserMatch.browser) {  
+        browser = browserMatch.browser;  
+        version = browserMatch.version;  
+    }  
+    return browser+version;  
+
+}
+
+
+//搜索vlc插件
+function searchVLC(){
+	var appinfo = checkAppName();
+	if(appinfo.indexOf("IE")!=-1) { 
+	if(vlc.playlist==null){
+		document.getElementById("tip_checkVlc").style.display="block";
+		}
+	}
+
+}
+
+//显示提示框。
+function GoDown(){
+	document.getElementById("tipVLC").style.display = "block";		
+}
+//进入下载页
+function showDownPage(param){
+	if(param == 1) {
+			window.open('https://www.videolan.org/','newwindow','height=600,width=800,top=0,left=0,toolbar=yes,menubar=yes,scrollbars=auto, resizable=yes,location=yes, status=yes');
+			document.getElementById("tipVLC").style.display = "none";
+		
+	}else{
+		document.getElementById("tipVLC").style.display = "none";	
+		return;
+	}
+}
+
+
+
+
+//vlc插件的播放跟暂停
+function pauseVideo(){
+var vlc=document.getElementById("vlc");
+	if(play_onoff==true){
+		vlc.playlist.pause();
+		play_onoff=false;
+	}else if(play_onoff==false){
+		vlc.playlist.play();
+		play_onoff=true;
+	}
+}
+
+
+//vlc插件的截图到桌面
+function capture(){
+	var vlc=document.getElementById("vlc");
+	vlc.video.takesnapshot();
+}
+
+//vlc插件的静音和取消静音
+function toggleVoice(){
+	var vlc=document.getElementById("vlc");
+	vlc.audio.togglemute();
+	alert("静音");
+}
+
+
+function SecPerTimeDiv(iTimeType) {
+	switch (iTimeType) {
+	case 0:
+		return 96;
+	case 1:
+		return 8;
+	case 2:
+		return 4;
+	case 3:
+		return 2;
+	}
+	return 0;
+}
+
+function MakeTimeStamp(hour, min, sec) {
+	return hour * 3600 + min * 60 + sec;
+}
+
+function SwitchPlaying() {
+	if (IsPlaying == 1) {
+		StopPlayRecord();
+		document.getElementById("timesTip").textContent=str_timesTip;
+	} else {
+		FastPlay(3);
+		StartPlayRecord();
+		
+	}
+}
+
+function StartPlayRecord() {
+	StopPlayRecord();
+
+	if (timebar.GetFirstTimeOfRecord() < 0) return;
+
+	var curTime = timebar.GetPlayingTimeStamp();
+	if (curTime < 0) {
+		curTime = timebar.GetBaseTimeStamp();
+		if (curTime < 0) return;
+	}
+
+	LocateRecord(curTime);
+	document.getElementById("timesTip").textContent=str_playing;
+}
+
+function StopPlayRecord() {
+	if (timerUpdatePos != 0) {
+		clearInterval(timerUpdatePos);
+		timerUpdatePos = 0;
+		//console.log('Clear cur pos timer');
+		document.getElementById("timesTip").textContent=str_timesTip;
+	}
+
+	PluginStreamStop(); //停止视频
+	FastPlay(3);
+	IsPlaying = 0;
+	SetPlayBtnIcon("id_IcoOptPlay", IsPlaying);
+}
+
+
+
+//快进
+
+function FastPlay(type){
+	var div_tip = document.getElementById("timesTip");  
+	if(type==1){
+			
+            multiple++;
+            if(multiple>2){
+				multiple=0; 	
+				}
+				
+		if(multiple!=0){
+			if(multiple==1){
+				div_tip.textContent=fast_doubleTimes;
+			}else if(multiple==2){
+				div_tip.textContent=fast_fourTimes;
+			}
+		}else if(multiple==0){
+			div_tip.textContent=str_playing;
+		}	
+	}else if(type==2){
+			
+            multiple--;
+        if(multiple<-2){
+            	multiple=0; 	
+            }
+		if(multiple!=0){
+			if(multiple==-1){
+				div_tip.textContent=slow_doubleTimes;
+			}else if(multiple==-2){
+				div_tip.textContent=slow_fourTimes;
+			}
+			
+		}else if(multiple==0){
+			div_tip.textContent=str_playing;
+		}	
+
+	}else if(type==3){
+		multiple=0;
+		div_tip.textContent=str_playing;
+	}
+	
+	var msg = [{
+		"xtype": "htmlid",
+		"text": '' + rnd
+	},{
+		"xtype": "StateValue",
+		"text": ''+multiple
+	}];
+	
+
+	var resp = $.sendMsg("RecordRunState", msg, "/ISAPI/Record/RecordRunState", "POST");
+
+}
+
+
+function LocateRecord(iTimeStamp) {
+	var strTime = parseInt(iTimeStamp / 3600) + ':' + parseInt((iTimeStamp % 3600) / 60) + ':' + parseInt(iTimeStamp % 60);
+	var strDateTime = checkydm + "T" + strTime;
+	var msg = [{
+		"xtype": "htmlid",
+		"text": '' + rnd
+	}, // rnd随机数。
+	{
+		"xtype": "playing",
+		"text": '' + IsPlaying
+	},
+	{
+		"xtype": "Time",
+		"text": strDateTime
+	}];
+	var resp = $.sendMsg("TimePos", msg, "/ISAPI/Record/TimePos", "POST");
+	var map = resp.data; //发送当前时间给服务器 返回响应数据
+
+	//console.log('Locate Record: ' + strDateTime);
+	if (map.statuscode == "1") {
+		if(IsPlaying == 0)
+		{
+			PluginStreamPlay(3);
+			IsPlaying = 1;
+			timerUpdatePos = setInterval("UpdatePlayingPoistion()", 1000); //隔1秒钟 获得一次当前时间
+		}
+		
+	}
+	SetPlayBtnIcon("id_IcoOptPlay", IsPlaying);
+}
+
+function SetPlayBtnIcon(id, is_play) {
+	//console.log("Set Play Btn Icon " + is_play);
+	$("#" + id).removeClass("IcoOptStop");
+	$("#" + id).removeClass("IcoOptPlay");
+
+	if (0 == is_play) {
+		$("#" + id).addClass("IcoOptStop");
+	} else {
+		$("#" + id).addClass("IcoOptPlay");
+	}
+}
+
+
+
+
+function LoadRecord(obj) 
+{
+	if (IsPlaying != 0) {
+		StopPlayRecord();
+	}
+
+
+	$(".TimeBarLine").empty();//清空游标时间。
+	
+	
+	var year = parseInt(document.getElementById("id_SelectYear").innerHTML);
+	var month = GetSelectOptNum('id_SelectMoth') + 1; 
+	var day = obj.innerHTML; 
+	if (day == "") { 
+		return;
+	}
+	if (month < 10) {
+		month = "0" + month;
+	}
+	if (day < 10) { 
+		day = "0" + day;
+	}
+	calendar.SetSelectDay(obj.innerHTML); 
+	var str = "" + year + "-" + month + "-" + day;
+	checkydm = str; 
+	var RecType = "0" 
+	var msg = [{
+		"xtype": "Type",
+		"text": RecType
+	}, {
+		"xtype": "Time",
+		"text": str
+	}];
+	var resp = $.sendMsg("QueryBackUp", msg, "/ISAPI/Record/BackUp", "POST");
+	var map = resp.data;
+	timebar.SetRecordMap(map);
+	timebar.SetPlayingPosition(-1);
+	searchflag = 1;
+}
+
+var SelectInputLeftRight = function(id, value, max, min, ChanggeFun) {
+		var upid = id + "_selecticoup";
+		var downid = id + "_selecticodown";
+		var inputObj;
+		Init();
+
+
+		function ChangeCb() {
+			if (ChanggeFun != null) {
+				ChanggeFun(id, value);
+			}
+		}
+
+		function SetValue() {
+			if (value > max) {
+				value = max;
+			}
+			if (value < min) {
+				value = min;
+			}
+			inputObj.value = value;
+		}
+
+		function OnchangeEvent() {
+			var str = inputObj.value;
+			var r = /^\+?[1-9][0-9]*$/;　　 //正整
+			r.test(str);
+			if (r.test(str) == false) {
+				//alert("Please Input Number");
+				value = min;
+			} else {
+				value = inputObj.value;
+			}
+			SetValue();
+			if (ChanggeFun != null) {
+				ChanggeFun(id, value);
+			}
+		}
+
+		function CreateIco() {
+
+			var width = $("#" + id).width() - 52;
+			var height = $("#" + id).height();
+			var inputstyle = 'style="width:' + width + 'px;height:' + height + 'px;float:left;text-align:center;"';
+			var appendstr = '<div class="DivSelectInputIco DivSelectInputIcoLeft"  id="' + upid + '"></div>';
+			appendstr += '<input class="DivInput"  ' + inputstyle + 'id=' + id + '_input ></input>';
+			appendstr += '<div style="float:left">';
+			appendstr += '<div class="DivSelectInputIco DivSelectInputIcoRight" id="' + downid + '"></div>';
+			appendstr += '<div style="clear:both"></div>';
+			$("#" + id).append(appendstr);
+		}
+		var lastValue;
+
+		function Init() {
+			CreateIco();
+			inputObj = document.getElementById(id).firstChild;
+
+			inputObj.onchange = function() {
+				OnchangeEvent();
+			}
+
+			$("#" + id).on("mousewheel DOMMouseScroll", function(e) {
+				var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
+				(e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
+				if (delta > 0) {
+					value++;
+				} else if (delta < 0) {
+					value--;
+				}
+				SetValue();
+			});
+
+			SetValue();
+		}
+		this.GetValue = function() {
+			//return value;
+			return inputObj.value;
+		}
+
+		this.SetValue = function(val) {
+			value = parseInt(val);
+			SetValue();
+		}
+	}
+
+var Calendar = function(id) {
+		var weekLang = new Array();
+		weekLang = ["Sun", "Mon", "Tue", "Web", "Thu", "Fri", "Sat"];
+		Init();
+		var checked;
+
+		function CreateBox() {
+			var clearstr = '<div style="clear:both"></div>';
+			var i = 7;
+			var weekStr = "";
+			for (i = 0; i < 7; i++) {
+				weekStr += '<div class="DivWeek">' + weekLang[i] + '</div>';
+			}
+			weekStr += clearstr;
+			$("#" + id).append(weekStr); //添加 日历头信息。
+
+			var j = 0;
+			for (j = 0; j < 6; j++) {
+				var dateStr = "";
+				for (i = 0; i < 7; i++) {
+					dateStr += '<div class="DivDateBoxBase" onclick="LoadRecord(this)" id="id_day_' + (7 * j + i) + '"></div>';
+
+				}
+				dateStr += clearstr;
+				$("#" + id).append(dateStr);
+			}
+		}
+
+		function Clear() {
+			var i = 0;
+			var day = new Date().getDate();
+			
+			for (i = 0; i < 42; i++) {
+				$("#" + "id_day_" + (i)).removeClass('DivDateBox');
+				$("#" + "id_day_" + (i)).removeClass('green');
+				document.getElementById("id_day_" + (i)).innerHTML = "";
+				 
+
+
+			}
+		}
+
+		function SetYMD(year, month) {
+			var i = 1;
+			var week;
+			var date = new Date(year, month - 1, 1);
+			var firstWeek = date.getDay(); /*设置日历背景@颜色*/
+			var year = parseInt(document.getElementById("id_SelectYear").innerHTML);
+
+			var month = GetSelectOptNum('id_SelectMoth') + 1;
+			if (month != month) {
+				month = month;
+			}
+
+			var day = "1";
+			var str = "" + year + "-" + month + "-" + day;
+			//alert(month);
+			//发6给后台检查这一天是否有录像。
+			var RecType = "6"
+			var msg = [{
+				"xtype": "Type",
+				"text": RecType
+			}, {
+				"xtype": "Time",
+				"text": str
+			}];
+			var resp = $.sendMsg("QueryBackUp", msg, "/ISAPI/Record/BackUp", "POST");
+			var my_map = resp.data;
+			var my = JSON.stringify(my_map);
+
+			var mobj = eval("(" + my + ")");
+		
+
+			var strarr = [];
+			for (var i = 0; i < mobj.count; i++) {
+				var str = 'mobj.filepara' + i;
+				var obj = eval(str);
+				for (var x in obj.recordfileday) {
+					strarr.push(obj.recordfileday[x]);
+				}
+			}
+			var newMonth = (new Date().getMonth());
+			var newday=(new Date().getDate());
+			//var calendar=new Calendar();
+			for (i = 1; i <= 31; i++) {
+				date = new Date(year, month - 1, i);
+				week = date.getDay();
+				
+				if (date.getMonth() != month - 1) {
+					//console.log(weekLang[week]+' '+month+'.'+i+' '+week);
+					continue;
+				}
+				if(date.getMonth()!=newMonth){
+					$(".DivDateSelected").removeClass("DivDateSelected");
+				}else{
+				
+				setToday(newday);
+				
+				
+				}
+				$("#" + "id_day_" + (i + firstWeek - 1)).addClass('DivDateBox');
+				document.getElementById("id_day_" + (i + firstWeek - 1)).innerHTML = i;
+			}
+			for (var j = 0; j < strarr.length; j++) {
+
+				if (strarr[j] == "1") {
+					$(".DivDateBox").eq(j).addClass("green");
+
+				}
+			}
+
+		}
+
+		this.SetYMD = function(year, month) {
+			//console.log(param);
+			Clear();
+			SetYMD(year, month);
+		}
+
+		this.SetSelectDay = function(day) {//点击哪天，哪天加颜色。
+			var i = 0;
+			var month = GetSelectOptNum('id_SelectMoth') + 1;
+			
+			for (i = 0; i < 42; i++) {
+				$("#" + "id_day_" + (i)).removeClass('DivDateSelected');
+				//$(".DivDateSelected").removeClass('DivDateSelected');
+				if (document.getElementById("id_day_" + (i)).textContent== day) {
+					$("#" + "id_day_" + (i)).addClass('DivDateSelected');
+					
+				}
+			}
+		}
+
+		this.LoadDayAndRecord = function(day) {
+			var i = 0;
+			var obj;
+			for (i = 0; i < 42; i++) {
+				if (document.getElementById("id_day_" + (i)).innerHTML == day) {
+					obj = document.getElementById("id_day_" + (i));
+				}
+			}
+			LoadRecord(obj);
+		}
+
+		function Init() {
+			CreateBox();
+			var myDate = new Date();
+			var moon = myDate.getMonth() + 1;
+			SetYMD(2018, moon);
+		}
+	}
+
+
+function setToday(day) {
+			var i = 0;
+			var month = GetSelectOptNum('id_SelectMoth') + 1;
+			
+			for (i = 0; i < 42; i++) {
+				$("#" + "id_day_" + (i)).removeClass('DivDateSelected');
+				//$(".DivDateSelected").removeClass('DivDateSelected');
+				if (document.getElementById("id_day_" + (i)).textContent== day) {
+					$("#" + "id_day_" + (i)).addClass('DivDateSelected');
+					
+				}
+			}
+		}
+
+	
+	
+function changgeCalandar() {
+	var year = parseInt(document.getElementById("id_SelectYear").innerHTML);
+	var month = GetSelectOptNum('id_SelectMoth') + 1;
+
+	calendar.SetYMD(year, month);
+}
+
+function SelectYearSubfun() {
+	var i = parseInt(document.getElementById("id_SelectYear").innerHTML);
+	i--;
+	document.getElementById("id_SelectYear").innerHTML = i;
+	changgeCalandar();
+}
+
+function SelectYearAddfun() {
+	var i = parseInt(document.getElementById("id_SelectYear").innerHTML);
+	i++;
+	document.getElementById("id_SelectYear").innerHTML = i;
+	changgeCalandar();
+}
+
+
+function PageChange(id) {
+	var page0 = document.getElementById('id_page1');
+	var page1 = document.getElementById('id_page2');
+	if (id == 'id_PageBack') {
+		page0.style.display = "block";
+		page1.style.display = "none";
+	} else {
+		page0.style.display = "none";
+		page1.style.display = "block";
+
+	}
+}
+
+function InitLayOut() {
+	var height = document.body.clientHeight - 37 - 142;
+
+	//$("#id_VideoArea").width(width+"px");
+	$("#id_VideoArea").height(height + "px");
+	$("#id_ParamArea").height(height + "px");
+
+}
+
+function InitglDate() {
+	$('#id_date').glDatePicker( //引用日历插件
+	{
+		showAlways: true,
+		cssName: 'darkneon',
+		selectedDate: new Date(),
+		dowOffset: 0,
+		dowNames: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+		monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	});
+}
+
+function UpdatePlayingPoistion() {
+	if (IsPlaying == 0) { //1表示暂停 退出。不发送请求。
+		return;
+	}
+
+	var msg = [{
+		"xtype": "htmlid",
+		"text": '' + rnd
+	}];
+	var resp = $.sendMsg("GetPosTime", msg, "/ISAPI/Record/GetPosTime", "POST");
+	var map = resp.data;
+	var HtmlId = map.htmlid;
+	var PlayEndFlag = map.playend;
+	console.log('PlayEndFlag: ' + PlayEndFlag);
+	if (HtmlId == rnd) {
+		console.log('PlayEndFlag: ' + PlayEndFlag);
+		if (PlayEndFlag == 1){
+			StopPlayRecord();
+			document.getElementById("timesTip").textContent=str_timesTip;
+		}else{
+			var time = new Array();
+			time = (map.time).split(":"); //当前 获取到的 视频播放的时间
+			var timeStamp = MakeTimeStamp(parseInt(time[0]), parseInt(time[1]), parseInt(time[2]));
+			timebar.SetPlayingPosition(timeStamp);
+			//alert("timeStamp"+timeStamp);
+		}
+	}
+}
+
+//设置鼠标放到时间轴上（触发）面显示的时间。
+function showTime(i) {
+	var index=i;
+	var iPlayingDiv = timebar.GetPlayingDivIndex();
+	if ((index == iPlayingDiv) || (index == iPlayingDiv + 1))
+		return;
+	
+	var secpx = SecPerTimeDiv(timebar.GetTimeType());
+	var numberDiff = secpx * 2;
+	var startSeconds = timebar.GetBaseTimeStamp();
+	
+	//console.log("startSeconds"+startSeconds);
+	if (parseInt(startSeconds)>0) {
+		var times1 = (startSeconds+index*secpx+numberDiff);
+		
+		times1 >= 86400&&(times1=86400),
+		3552==times1&&(times1=3600),
+		10752==times1&&(times1=10800),
+		17952==times1&&(times1=18e3),
+		25152==times1&&(times1=25200),
+		32352==times1&&(times1=32400),
+		39552==times1&&(times1=39600),
+		46752==times1&&(times1=46800),
+		53952==times1&&(times1=54e3),
+		68352==times1&&(times1=68400),
+		75552==times1&&(times1=75600),
+		82752==times1&&(times1=82800);
+
+		var text = formatSeconds(times1);
+		document.getElementById("id_TimeDiv_" + index).style.cssText="position:relative;cursor:text;z-index:88";
+		document.getElementById("id_TimeDiv_" + index).innerHTML='<div style="position:absolute;top:-17px;font-family:arial;font-size:14px;"  id="id' + index + '">' + text + '</div>';
+	}else if(parseInt(startSeconds)==0) {
+		var times1 = (index * secpx + numberDiff);
+		//判断是否已经到头；		
+		times1>=86400&&(times1=86400),
+		3552==times1&&(times1=3600),
+		10752==times1&&(times1=10800),
+		17952==times1&&(times1=18e3),
+		25152==times1&&(times1=25200),
+		32352==times1&&(times1=32400),
+		39552==times1&&(times1=39600),
+		46752==times1&&(times1=46800),
+		53952==times1&&(times1=54e3),
+		68352==times1&&(times1=68400),
+		75552==times1&&(times1=75600),
+		82752==times1&&(times1=82800);
+
+		var text = formatSeconds(times1);
+		document.getElementById("id_TimeDiv_" + index).style.cssText="position:relative;cursor:text;z-index:88;border:1px;solid;#fff";
+		 document.getElementById("id_TimeDiv_" + index).innerHTML='<div style="position:absolute;top:-17px;font-family:arial;font-size:14px;"  id="id' + index + '">' + text + '</div>';
+	}
+}
+
+//设置鼠标离开时间轴上，清空掉之前的内容。
+function clearTimes(i) {
+	var index=i;
+	document.getElementById("id_TimeDiv_" + index).textContent ="";
+
+}
+
+//格式化时间。。。
+function formatSeconds(value) {
+        var secondTime = parseInt(value);
+        var minuteTime = 0;
+        var hourTime = 0;
+        if(secondTime >=60) {
+            minuteTime = parseInt(secondTime / 60);
+            secondTime = parseInt(secondTime % 60);
+            
+            if(minuteTime >= 60) {
+
+                hourTime = parseInt(minuteTime / 60);
+                minuteTime = parseInt(minuteTime % 60);
+
+            }
+        }
+        
+        
+       
+        if(hourTime<10){
+        	hourTime='0'+hourTime;
+        	
+        }
+        
+        if(minuteTime<10){
+        	minuteTime='0'+minuteTime;
+        }
+        
+        if(secondTime<10){
+        	secondTime='0'+secondTime;
+        }
+         result = hourTime +':'+minuteTime+':'+ secondTime;
+      	
+        return result;
+       
+    }
+
+
+var TimeLineBar = function(id, callBackfun) {
+		InitLineBar();
+		var timeType = 0; 
+		var baseTimestamp = 0;
+		var topTimestamp = 0;
+		var playingTimeStamp = 0;
+		var playingDivPos = 0;
+		var recodMap = "";
+		var firstRecordTimeStamp = -1;
+		var lastRecordTimeStamp = -1;
+
+		function InitLineBar() { 
+			var appendFontStr = "";
+			var appendTimeGopStr = "";
+			var appendTimeStr = "";
+
+			for (var i = 0; i < 24; i++) {
+				appendFontStr += '<div class="TimeBarText" style="" id="TimeBarTextFirst"></div>';
+				
+				appendFontStr += '<div class="TimeBarText" id="id_TimeText_' + i + '">' + (i + 1) * 2 + ':00</div>';
+				
+				appendTimeGopStr += '<div class="TimeBarNoGop" ></div>';
+				appendTimeGopStr += '<div class="TimeBarGop"></div>';
+			
+			}
+			for (var i = 0; i < 900; i++) { //组装时间轴html
+				appendTimeStr += '<div class="TimeBarLine" id="id_TimeDiv_' + i + '" ></div>';
+			}
+
+			$("#" + id).append(appendFontStr);
+			$("#" + id).append('<div style="clear:both;"></div>');
+			$("#" + id).append(appendTimeGopStr);
+			$("#" + id).append('<div style="clear:both;"></div>');
+			$("#" + id).append(appendTimeStr);
+			$("#" + id).append('<div style="clear:both;"></div>');
+
+			for (var i = 0; i < 900; i++) {
+				var ids = "id_TimeDiv_" + i;
+				BindEvent(ids, 'onmousedown', ClickTimeDiv, i); //鼠标点时间轴 。
+				BindEvent(ids, 'onmouseenter', showTime, i);
+				BindEvent(ids, 'onmouseleave', clearTimes, i);
+			}
+
+		}
+
+		function ClickTimeDiv(i) //鼠标点击时间轴
+		{	FastPlay(3);
+			//StopPlayRecord();
+			if (firstRecordTimeStamp < 0) return;
+
+			var secpx = SecPerTimeDiv(timeType);
+			var newTime = baseTimestamp + i * secpx;
+
+			SetPlayingPosition(newTime);
+			setTimeout(function() {
+				LocateRecord(newTime);
+			}, 50);
+		}
+
+		this.GetFirstTimeOfRecord = function() {
+			return firstRecordTimeStamp;
+		}
+
+		this.GetLastTimeOfRecord = function() {
+			return lastRecordTimeStamp;
+		}
+
+		this.GetBaseTimeStamp = function() {
+			return baseTimestamp;
+		}
+
+		this.GetTopTimeStamp = function() {
+			return topTimestamp;
+		}
+
+		this.SetPlayingPosition = function(iTimeStamp) {
+			SetPlayingPosition(iTimeStamp);
+		}
+		
+		
+		
+
+		function SetPlayingPosition(iTimeStamp) { //设置当前位置。
+			var divPos = playingDivPos;
+			if (divPos >= 0) {
+				var id = 'id_TimeDiv_' + divPos;
+				$("#" + id).removeClass("TimeBarLineCurrent");
+				id = 'id_TimeDiv_' + (divPos + 1);
+				$("#" + id).removeClass("TimeBarLineCurrent");
+			}
+
+			if ((iTimeStamp < 0) || (iTimeStamp < firstRecordTimeStamp) || (iTimeStamp > lastRecordTimeStamp)) {
+				playingTimeStamp = -1;
+				playingDivPos = -1;
+				return;
+			} else if (iTimeStamp >= topTimestamp) {
+				if (iTimeStamp < lastRecordTimeStamp) {
+					var newbaseHour = parseInt(topTimestamp / 3600);
+					var newbaseMin = parseInt((topTimestamp % 3600) / 60);
+					SetTimeType(timeType, newbaseHour, newbaseMin, 0);
+				} else {
+					StopPlayRecord();
+				}
+			}
+
+			var timeDiff = iTimeStamp - baseTimestamp;
+			var secpx = SecPerTimeDiv(timeType);
+			divPos = parseInt(timeDiff / secpx);
+			console.log(divPos);
+
+			id = 'id_TimeDiv_' + (divPos);
+			$("#" + id).addClass("TimeBarLineCurrent");
+			id = 'id_TimeDiv_' + (divPos + 1);
+			$("#" + id).addClass("TimeBarLineCurrent");
+			//显示播放时间。
+			$(".TimeBarLine").empty();
+			$("#" + id).text(formatSeconds(iTimeStamp));
+			//console.log("set new pos of div " + divPos);
+			playingTimeStamp = iTimeStamp;
+			playingDivPos = divPos;
+		}
+
+		this.GetPlayingTimeStamp = function() {
+			return playingTimeStamp;
+		}
+		
+		this.GetPlayingDivIndex = function() {
+			return playingDivPos;
+		}
+		
+		function addTimeLine(startTime, endTime, rec_type) {
+			if ((startTime > topTimestamp) || (endTime < baseTimestamp) || (endTime < startTime)) {
+				return;
+			}
+
+			var startTimeRef = startTime - baseTimestamp;
+			var endTimeRef = endTime - baseTimestamp;
+			var secpx = SecPerTimeDiv(timeType);
+			if (secpx == 0) {
+				return;
+			}
+
+			if (startTimeRef < 0) startTimeRef = 0;
+
+			var startpos = parseInt(startTimeRef / secpx);
+			var endpos = parseInt(endTimeRef / secpx);
+
+			if (endpos > 900) {
+				endpos = 900;
+			}
+
+			for (var i = startpos; i <= endpos; i++) {
+				var id = 'id_TimeDiv_' + i;
+				if (rec_type == 1) $("#" + id).addClass("TimeBarLineRecordManual");
+				else if (rec_type == 2) $("#" + id).addClass("TimeBarLineRecordTimed");
+				else $("#" + id).addClass("TimeBarLineRecordAlarm");
+			}
+		}
+
+
+		function UpDateTimeLine() {
+			firstRecordTimeStamp = -1;
+			lastRecordTimeStamp = -1;
+			if (recodMap == "") {
+				return;
+			}
+
+			for (var i = 0; i < recodMap.count; i++) {
+				var obj = eval("recodMap.timepara" + i);
+				var time = new Array();
+				time = obj.startime.split(":");
+				var st = MakeTimeStamp(parseInt(time[0]), parseInt(time[1]), parseInt(time[2]));
+				console.log("st="+st);
+				if ((firstRecordTimeStamp < 0) || (firstRecordTimeStamp > st)) {
+					firstRecordTimeStamp = st;
+				}
+
+				time = obj.endtime.split(":");
+				var et = MakeTimeStamp(parseInt(time[0]), parseInt(time[1]), parseInt(time[2]));
+
+				if (et==0){
+				et=86400;
+				}
+
+				if (lastRecordTimeStamp < et) {
+					lastRecordTimeStamp = et;
+				}
+
+				var rec_type = parseInt(obj.recordtype);
+				addTimeLine(st, et, rec_type);
+			}
+
+		}
+
+		this.SetTimeType = function(type, hour, min, sec) {
+			SetTimeType(type, hour, min, sec);
+		}
+
+		function SetTimeType(type, hour, min, sec) //设置显示时间，在不同时间状态下的
+		{
+			timeType = type;
+			baseTimestamp = MakeTimeStamp(hour, min, sec);
+
+			var id;
+			var iTimeLen = 0;
+			for (var i = 0; i < 24; i++) {
+				id = "id_TimeText_" + i;
+				document.getElementById(id).innerHTML = ""; //清空掉24个text格子中的内容
+			}
+
+			for (var i = 0; i <= 900; i++) {
+				var id = 'id_TimeDiv_' + i;
+				$("#" + id).removeClass("TimeBarLineRecordTimed");
+				$("#" + id).removeClass("TimeBarLineRecordManual");
+				$("#" + id).removeClass("TimeBarLineRecordAlarm");
+			}
+			//alert(baseTime);
+			var timetext = "";
+			if (timeType == 0) { //选中 24小时格式。
+				iTimeLen = 24 * 3600;
+				for (var i = 0; i < 24; i++) {
+
+					id = "id_TimeText_" + i;
+					if (i < 9) {
+						timetext = "" + 0 + (i + 1) + ":00";
+					} else {
+						timetext = "" + (i + 1) + ":00";
+					}
+					document.getElementById(id).innerHTML = timetext;
+
+				}
+				document.getElementById("TimeBarTextFirst").innerHTML = "00:00"; //选择24小时的时候开始时间是00:00
+
+			} else if (timeType == 1) {
+				iTimeLen = 2 * 3600;
+				var timeCount = 0;
+				var timeH = parseInt(hour);
+				if (parseInt(min) < 60) {
+					var timeM = parseInt(min / 30) * 30;
+				}
+				var firstPosTimeH = timeH;
+				var firstPosTimeM = timeM;
+				for (var i = 0; i < 24; i++) {
+					if (i % 3 != 0) {
+						continue;
+					}
+					id = "id_TimeText_" + (i + 2);
+					timeM += 120 / 8;
+					if (timeM >= 60) {
+						timeH++;
+						timeM = timeM - 60;
+					}
+					if (timeH > 0 && timeH < 10) {
+						timetext = "0" + timeH + ":";
+					} else if (timeH >= 10 && timeH < 24) {
+						timetext = timeH + ":";
+					} else {
+						timetext = "00:";
+					}
+
+					if (timeM < 10) {
+						timetext += "0";
+					}
+					var firstPosTime = timetext + '0' + firstPosTimeM;
+					//设置第一个位置的时间;
+					timetext += timeM;
+					document.getElementById(id).innerHTML = timetext;
+					if (i == 0) {
+						$('#id_TimeBarBox').find('div:first').html(firstPosTime)
+					}
+				}
+			} else if (timeType == 2) {
+				iTimeLen = 3600;
+				var timeCount = 0;
+				var timeH = parseInt(hour);
+				if (parseInt(min) < 60) {
+					var timeM = parseInt(min / 30) * 30;
+				}
+				var firstPosTimeH = timeH;
+				var firstPosTimeM = timeM;
+				for (var i = 0; i < 24; i++) {
+					if (i % 4 != 0) {
+						continue;
+					}
+					id = "id_TimeText_" + (i + 3);
+					timeM += 60 / 6;
+					if (timeM >= 60) {
+						timeH++;
+						timeM = timeM - 60;
+					}
+					if (timeH > 0 && timeH < 10) {
+						timetext = "0" + timeH + ":";
+					} else if (timeH >= 10 && timeH <= 24) {
+						timetext = timeH + ":";
+					} else {
+						timetext = "00:";
+					}
+					if (timeM < 10) {
+						timetext += "0";
+					}
+					var firstPosTime = timetext + '0' + firstPosTimeM;
+					timetext += timeM;
+					document.getElementById(id).innerHTML = timetext;
+					if (i == 0) {
+						$('#id_TimeBarBox').find('div:first').html(firstPosTime)
+					}
+				}
+			} else {
+				iTimeLen = 1800;
+				var timeCount = 0;
+				var timeH = parseInt(hour);
+				if (parseInt(min) < 60) {
+					var timeM = parseInt(min / 30) * 30;
+				}
+				var firstPosTimeH = timeH;
+				var firstPosTimeM = timeM;
+				for (var i = 0; i < 24; i++) {
+					if (i % 4 != 0) {
+						continue;
+					}
+					id = "id_TimeText_" + (i + 3);
+					timeM += 30 / 6;
+					if (timeM >= 60) {
+						timeH++;
+						timeM = timeM - 60;
+					}
+					if (timeH > 0 && timeH < 10) {
+						timetext = "0" + timeH + ":";
+					} else if (timeH >= 10 && timeH < 24) {
+						timetext = timeH + ":";
+					} else {
+						timetext = "00:";
+					}
+
+					if (timeM < 10) {
+						timetext += "0";
+					}
+					var firstPosTime = timetext + firstPosTimeM;
+					timetext += timeM;
+					document.getElementById(id).innerHTML = timetext;
+					if (i == 0) {
+						$('#id_TimeBarBox').find('div:first').html(firstPosTime)
+					}
+				}
+			}
+
+			topTimestamp = baseTimestamp + iTimeLen;
+			UpDateTimeLine();
+		}
+
+		this.GetTimeType = function() {
+			return timeType;
+		}
+
+		this.SetRecordMap = function(map) {
+			$("#id_TimeType30min").removeClass("DivTimeButtonSelect");
+			$("#id_TimeType1hr").removeClass("DivTimeButtonSelect");
+			$("#id_TimeType2hr").removeClass("DivTimeButtonSelect");
+			$("#id_TimeType24hr").addClass("DivTimeButtonSelect");
+			recodMap = map;
+			SetTimeType(0, 0, 0, 0); //设置时间类型 
+		}
+	}
+
+function TimeTypeChange(timeType) {
+	var curTime = timebar.GetPlayingTimeStamp();
+	if (curTime < 0) {
+		curTime = timebar.GetFirstTimeOfRecord();
+		if (curTime < 0) curTime = 0;
+	}
+
+	var baseHour = parseInt(curTime / 3600);
+	var baseMin = parseInt((curTime % 3600) / 60);
+	var baseSec = 0;
+
+	$("#id_TimeType30min").removeClass("DivTimeButtonSelect");
+	$("#id_TimeType1hr").removeClass("DivTimeButtonSelect");
+	$("#id_TimeType2hr").removeClass("DivTimeButtonSelect");
+	$("#id_TimeType24hr").removeClass("DivTimeButtonSelect");
+
+	switch (timeType) {
+	case 0:
+		$("#id_TimeType24hr").addClass("DivTimeButtonSelect");
+		baseHour = 0;
+		baseMin = 0;
+		break;
+	case 1:
+		$("#id_TimeType2hr").addClass("DivTimeButtonSelect");
+		if (baseHour > 22) {
+			baseHour = 22;
+		}
+		baseMin = 0;
+		break;
+	case 2:
+		baseMin = 0;
+		$("#id_TimeType1hr").addClass("DivTimeButtonSelect");
+		break;
+	case 3:
+		if (baseMin > 30) {
+			baseMin = 30;
+		} else {
+			baseMin = 0;
+		}
+
+		$("#id_TimeType30min").addClass("DivTimeButtonSelect");
+		break;
+	default:
+		return;
+	}
+
+	//console.log('Set Time Type-' + timeType + ': ' + baseHour + '-' + baseMin + '-' + baseSec);
+	timebar.SetTimeType(timeType, baseHour, baseMin, baseSec);
+	timebar.SetPlayingPosition(timebar.GetPlayingTimeStamp());
+}
+
+function ReSizePluginArea() {
+	PluginChanggeSize($("#id_VideoArea").width(), $("#id_VideoArea").height());
+}
+//返回今天刷新日历
+
+function DateTime(){
+	$("#id_Calendar").empty();
+	calendar = new Calendar('id_Calendar');
+	TimeHour = new SelectInputLeftRight("id_SelectYear",2017,2090,0,null);
+	var date = new Date(); //新建日期对象
+	var month = date.getMonth(); //获取月份
+	var strDate = date.getDate(); //获取当前日期
+	var year = date.getFullYear(); //获取年份	
+	//common.js147 	
+	
+	SetSelectionOptID('id_SelectMoth', month); //返回id_SelectMoth_option
+	document.getElementById("id_SelectYear").innerHTML = year; //把div内容换成year
+
+	calendar.LoadDayAndRecord(strDate); //设置日历的默认选中日期
+	month = month + 1; //月份是0-11变成1-12
+	if (month < 10) {
+		month = "" + 0 + month;
+	}
+	if (strDate < 10) {
+		strDate = "" + 0 + strDate; //日期前补0
+	}
+	InitglDate();
+}
+$(function() { //页面初始化
+
+	calendar = new Calendar('id_Calendar'); //新建日历历
+	InitUdfSelect('id_SelectMoth', changgeCalandar); //common.js 240行
+	//TimeHour = new SelectInputLeftRight("id_SelectYear",2017,2090,0,null);
+	var date = new Date(); //新建日期对象
+	var month = date.getMonth(); //获取月份
+	var strDate = date.getDate(); //获取当前日期
+	var year = date.getFullYear(); //获取年份	
+	//common.js147 
+
+	timebar = new TimeLineBar('id_TimeBarBox', null);
+
+	SetSelectionOptID('id_SelectMoth', month); //返回id_SelectMoth_option
+	document.getElementById("id_SelectYear").innerHTML = year; //把div内容换成year
+
+	calendar.LoadDayAndRecord(strDate); //设置日历的默认选中日期
+
+	month = month + 1; //月份是0-11变成1-12
+	if (month < 10) {
+		month = "" + 0 + month;
+	}
+	if (strDate < 10) {
+		strDate = "" + 0 + strDate; //日期前补0
+	}
+	document.getElementById("id_TodayStr").innerHTML = "Today:" + year + "-" + month + "-" + strDate; //生成今天的日期
+	//语言初始化
+	InitLang();
+	InitLayOut(); //初始化网页可见区域宽
+	InitUdfSelect('id_FileType'); //设置id为 id_FileType_option
+	InitUdfSelect('id_Datasource');
+	SetSelectionOptID('id_FileType', 0); //id_FileType_option
+	SetSelectionOptID('id_Datasource', 0); //返回第一个这个元素
+	InitglDate(); //初始化日历，貌似已经被注释
+	//common.js 25事件函数
+	BindEvent('id_TimeType30min', 'onmousedown', TimeTypeChange, 3);
+	//调用公共js中的事件绑定方法
+	BindEvent('id_TimeType1hr', 'onmousedown', TimeTypeChange, 2);
+	BindEvent('id_TimeType2hr', 'onmousedown', TimeTypeChange, 1);
+	BindEvent('id_TimeType24hr', 'onmousedown', TimeTypeChange, 0);
+	BindEvent('id_DataTime', 'onmousedown',DateTime,null);
+	//BindEvent('id_PageBack','onmousedown',TimeTypeChange,'id_PageBack');
+	
+	checkydm = year + "-" + month + "-" + strDate;
+	SetPlayBtnIcon("id_IcoOptPlay", IsPlaying);
+	PluginInit();
+	setTimeout("ReSizePluginArea();", 20); //延时拉取视频框
+	searchVLC();
+	
+});
+//当调整浏览器窗口的大小时，发生 resize 事件
+
+$(window).resize(function() {
+	InitLayOut();
+	ReSizePluginArea(); //打印宽高信息，同时设置vlc区域的宽高
+});
+
+
+function clearFileList(a) {
+
+	if (a == 1) {
+		$('div[myatt$="mp4"]').css("display", "none");
+		$('div[myatt$="jpg"]').css("display", "none");
+		$('div[myatt$="ivd"]').css("display", "block");
+		searchRecord();
+	} else if (a == 2) {
+		$('div[myatt$="ivd"]').css("display", "none");
+		$('div[myatt$="jpg"]').css("display", "none");
+		$('div[myatt$="mp4"]').css("display", "block");
+		
+	} else if (a == 3) {
+		$('div[myatt$="ivd"]').css("display", "none");
+		$('div[myatt$="mp4"]').css("display", "none");
+		$('div[myatt$="jpg"]').css("display", "block");
+		searchRecord();
+	} else if (a == 4) {
+		$('div[myatt$="ivd"]').remove();
+		$('div[myatt$="mp4"]').remove();
+		$('div[myatt$="jpg"]').remove();
+		countFile = 0;
+
+	}
+}
+
+
+
+function RecordAllChecked() {
+	var obj = self.frames[0];
+	obj.RecordAllChecked();
+}
+
+function RecordAllCancel() {
+	var obj = self.frames[0];
+	obj.RecordAllCancel();
+}
+
+function RecordDownLoad() {
+	var obj = self.frames[0];
+	obj.RecordDownLoad();
+}
+
+var countFile = 0;
+//@全选/取消全选
+
+function doSelect() {
+	if (selectAll_flag == true) {
+
+		RecordAllChecked();
+
+	} else {
+		selectAll_flag = true;
+		SetLang('id_allChecked', str_allChecked);
+		RecordAllCancel();
+	}
+
+}
+
+function RecordAllChecked() {
+	if (countFile == 0) {
+		return;
+	} else {
+		for (var i = 0; i < countFile; i++) {
+			var id = "id_CheckEnable" + i;
+			SetCheckBox(id, 'true');
+		}
+		selectAll_flag = false;
+		SetLang('id_allChecked', str_CheckedFalse);
+	}
+}
+
+function RecordAllCancel() {
+	for (var i = 0; i < countFile; i++) {
+		var id = "id_CheckEnable" + i;
+		SetCheckBox(id, 'false');
+	}
+}
+
+var filePath = window.location.host;
+var dwTaskHandle = 0;
+var fileNameIndex = 0;
+var iTimer;
+var selectFileName = []; //用来存放选中的文件名；
+var selectState = [];
+var stopDown = false;
+//下载/中止；
+
+function startEnd() {
+	if (download_flag) {
+
+
+		RecordDownLoad();
+	} else {
+		download_flag = true;
+		stopDown = true;
+
+		SetLang('id_allDownLoad', str_DownLoad);
+	}
+
+
+}
+
+
+
+
+function RecordDownLoad() //下载按钮绑定的方法
+{
+	selectState = [];
+	selectFileName = [];
+	fileNameIndex = 0;
+	for (var i = 0; i < countFile; i++) {
+		var id = "id_CheckEnable" + i;
+		if ('true' == GetCheckBoxValue(id)) { //GetCheckBoxValue(id)方法返回div中的值true
+			var idfile = "id_filename" + i;
+			selectState.push(i);
+			str = document.getElementById(idfile).getAttribute("myatt"); //循环得到字符串-文件名字符串。
+			selectFileName.push(str); //将名字保存到数组里面
+		}
+	}
+	//如果没有文件直接退出
+
+	//alert(selectFileName[0]);
+
+	//下载录像
+	startHttpDownloadToDirectory();
+
+
+}
+
+var iTaskProgress = 0;
+
+function RefreshDownloadTask() { /* 获取指定Handle所对应任务的状态 */
+	var iTaskFinished = 0;
+
+	var iTaskErrorCode = 0;
+
+	/* 获取任务是否已经结束的状态, 0-未结束, 1-已结束, -1表示错误的Handle */
+	iTaskFinished = document.getElementById("ViewCheck").CheckHttpDownloadFinished(dwTaskHandle); /* 获取当前进度: 0~100, -1表示错误的handle */
+	iTaskProgress = document.getElementById("ViewCheck").GetHttpDownloadProgress(dwTaskHandle); /* 获取任务的错误码, 当文件没有完整下载时，可获取相关信息，-1表示错误的Handle */
+	iTaskErrorCode = document.getElementById("ViewCheck").GetHttpDownloadError(dwTaskHandle);
+
+	//document.getElementById("txt_DownloadStatus").value = "ID[" + fileNameIndex + "],File: " + //szSrcList[fileNameIndex] + ", Handle: " + dwTaskHandle 
+	//	+ ", IsFinished[" + iTaskFinished + "]" + ", ErrorCode[" + iTaskErrorCode + //"]";	
+
+
+	document.getElementById("state" + selectState[fileNameIndex].toString()).textContent = iTaskProgress + "%";
+	if (iTaskProgress != 100) {
+
+		document.getElementById("id_CheckEnable" + selectState[fileNameIndex].toString() + "_value").textContent = 'false';
+		$("#id_CheckEnable" + selectState[fileNameIndex].toString()).removeClass("DivCheckBoxChecked");
+		//设置下载中，不能点击。
+		//document.getElementById("id_allDownLoad").setAttribute("disabled","true");
+		//document.getElementById("id_allDownLoad").style.backgroundColor="#404040";
+	} else if (iTaskProgress == 100) {
+		//document.getElementById("id_allDownLoad").disabled=false;
+		//document.getElementById("id_allDownLoad").style.backgroundColor="#1e3b56";
+		document.getElementById("id_CheckEnable" + selectState[fileNameIndex].toString() + "_value").textContent = 'false';
+	
+	}
+
+	if (stopDown) {
+
+		document.getElementById("ViewCheck").StopHttpDownload(dwTaskHandle);
+		document.getElementById("id_CheckEnable" + selectState[fileNameIndex].toString() + "_value").textContent = 'false';
+
+		clearInterval(iTimer);
+		stopDown = false;
+		return;
+
+	}
+
+
+	if (iTaskFinished != 0) //如果已经完成，或者出错。
+	{
+		document.getElementById("ViewCheck").StopHttpDownload(dwTaskHandle); //执行停止方法。
+		fileNameIndex++;
+		if (fileNameIndex >= selectFileName.length) //如果全部文件下载完毕，清除定时器。
+		{
+			clearInterval(iTimer);
+			var message = document.getElementById("txt_DownloadPath").textContent;
+			SetLang('id_allDownLoad', str_DownLoad);
+
+			download_flag = true;
+
+
+			//alert("\t下载完闭\n\t保存路径\:"+message);
+		} else //如果还没有下载。调用下载方法。
+		{
+			downloadOneFileToDirectory(fileNameIndex);
+		}
+	}
+
+}
+
+function downloadOneFileToDirectory(fileNameIndex) //1  生成路径，生成文件名，调用下载方法。
+{
+	var szSrc = "http://" + filePath + "/record/" + selectFileName[fileNameIndex];
+	if (szSrc.indexOf("ivd") != -1) {
+		document.getElementById("vidview").OnInitParam();
+		var szOutDir = document.getElementById("vidview").szRecPath;
+	} else if (szSrc.indexOf("mp4") != -1) {
+		document.getElementById("vidview").OnInitParam();
+		var szOutDir = "" + document.getElementById("vidview").szRecPath;
+	} else if (szSrc.indexOf("jpg") != -1) {
+		document.getElementById("vidview").OnInitParam();
+		var szOutDir = "" + document.getElementById("vidview").szSnapPath;
+	}
+
+	if (szOutDir != null&&szOutDir !="") {
+		dwTaskHandle = document.getElementById("ViewCheck").StartHttpDownloadToDirectory(szSrc, szOutDir);
+		//2018年1月4日路径配置增加
+		SetLang('id_allDownLoad', str_DownCL);
+	    download_flag = false;
+		iTimer = setInterval("RefreshDownloadTask()", 200);
+	} else {
+		document.getElementById('id_Cover').style.display="block";
+		document.getElementById('id_SendMsg').style.display="block";	
+		return;
+	}
+
+
+}
+
+function startHttpDownloadToDirectory() //0 调用下载方法，执行定时器。
+{
+
+
+	if (selectFileName.length == 0) {
+		alert("Please select the files to be downloaded ")
+		return;
+	}
+	//selectDir();
+	//@取消下载激活。
+	//SetLang('id_allDownLoad', str_DownCL);
+	//download_flag = false;
+	downloadOneFileToDirectory(fileNameIndex);
+
+	
+}
+
+function StopHttpDownload() { /* 关闭指定Handle所对应的任务，需要中途停止或者任务已经执行完毕时调用该函数 */
+	//**** 即使任务已成功执行，最后也要调用此函数，以释放资源 ****//
+	document.getElementById("ViewCheck").StopHttpDownload(dwTaskHandle);
+
+
+}
+
+function selectDir() { /* 弹窗选择一个文件夹，执行成功返回目标路径，否则返回空，第一个参数表示提示信息，第二个参数表示默认路径，都可以传递空值进去 */
+	//var sOutDir = document.getElementById("ViewCheck").OnBrowseFolder('Select', 'E:\\');
+	var sOutDir = document.getElementById("ViewCheck").OnBrowseFolder('', '');
+	if (sOutDir != '') {
+		document.getElementById("txt_DownloadPath").textContent = sOutDir;
+	}
+
+}
+
+
+function ChanggeRadio(){
+	clearFileList(4); //清除掉已结存在的文件列表。
+	if ($('#radio_ivd').is(':checked')) {
+			RecType = '1';
+		} else if ($("#radio_mp4").is(":checked")) {
+			RecType = '3';
+		} else if ($("#radio_jpg").is(":checked")) {
+			RecType = '2';
+		}
+		QueryFileBackUp(RecType)
+		$("#begintime0").val("00");
+		$("#begintime1").val("00");
+		$("#endtime0").val("23");
+		$("#endtime1").val("59");
+	}
+
+
+
+
+function ChanggePage() {
+
+	var page0 = document.getElementById('id_page1'); //日历部分
+	var page1 = document.getElementById('id_page2'); //下载部分
+	var btn_all = document.getElementById('id_allChecked');
+
+	var btn_down = document.getElementById('id_allDownLoad');
+
+	clearFileList(4); //清除掉已结存在的文件列表。
+
+	if (page_onoff == true) {
+		page0.style.display = "none";
+		page1.style.display = "block";
+		btn_all.style.display = "block";
+
+		btn_down.style.display = "block";
+		
+		document.getElementById("vidview").OnInitParam();
+		var szOutDir = document.getElementById("vidview").szRecPath;
+		page_onoff = false;
+		if(szOutDir==null){
+		alert("Please configure the download path");
+		return;
+		}
+		if ($('#radio_ivd').is(':checked')) {
+			RecType = '1';
+
+		} else if ($("#radio_mp4").is(":checked")) {
+			RecType = '3';
+		} else if ($("#radio_jpg").is(":checked")) {
+			RecType = '2';
+		}
+		QueryFileBackUp(RecType)
+
+	} else if (page_onoff == false) {
+		page0.style.display = "block";
+		page1.style.display = "none";
+		btn_all.style.display = "none";
+
+		btn_down.style.display = "none";
+		page_onoff = true;
+		$("#begintime0").val("00");
+		$("#begintime1").val("00");
+		$("#endtime0").val("23");
+		$("#endtime1").val("59");
+	}
+
+}
+
+function QueryFileBackUp(RecType) {
+
+	var msg = [{
+		"xtype": "Type",
+		"text": RecType
+	}, //"text":"1"
+	{
+		"xtype": "Time",
+		"text": checkydm
+	} //checkydm="+year+"-"+month+"-"+day;	
+	];
+	var resp = $.sendMsg("QueryBackUp", msg, "/ISAPI/Record/BackUp", "POST"); //发送请求	
+	var map = resp.data; //响应的数据
+
+	for (var i = 0; i < map.count; i++) { //map.count 录像文件总个数；
+
+		var str = 'map.filepara' + i;
+
+		var obj = eval(str);
+
+		var counter = map.count;
+		addFile(obj.filename, counter);
+
+	}
+//获得第一个文件名，如果是23点变成0点。
+	if(document.getElementById("id_filename0")!= undefined){
+	var  firstfFileName = document.getElementById("id_filename0").textContent;
+	if(firstfFileName.substring(0,2)==23){
+		document.getElementById("id_filename0").innerHTML="00:00:00";
+		}
+	}
+}
+
+
+function addFile(filename, counter) {
+	var newFileName = filename;
+	var str_hour = newFileName.substring(10, 12)
+	var str_minute = newFileName.substring(12, 14);
+	var str_second = newFileName.substring(14, 16);
+	newFileName = str_hour + ":" + str_minute + ":" + str_second;
+
+
+	var str = '<div class="DivLable classFilename" onclick="DownFileTime(this)" myatt="' + filename + '" id="id_filename' + countFile + '">' + newFileName + '</div>';
+	str += '<div class="DivLable classFileType" myatt="' + filename + '" id="state' + countFile + '" ></div>';
+	str += '<div class="DivLable classFileDownload" myatt="' + filename + '">';
+	str += '<div class="DivCheckBox classCheckBox"  myatt="' + filename + '" id="id_CheckEnable' + countFile + '">';
+	str += '</div></div>';
+	str += '<div style="clear:both;"></div>';
+
+	if (countFile < counter) {
+		$("#fileParant").append(str);
+	}
+
+	InitCheckBox("id_CheckEnable" + countFile, 'false'); //初始化选中按钮；在选中按钮中加一个div
+	countFile++;
+
+    
+}
+
+
+//点击下载录像列表时间并播放
+function DownFileTime(objs){
+	var downtime= objs.textContent;	
+	//获取的时分秒转化为整秒
+	var timetext = new Array();
+	timetext = downtime.split(":"); // 获取视频播放的时间
+	var timeStamp = MakeTimeStamp(parseInt(timetext[0]), parseInt(timetext[1]), parseInt(timetext[2]));
+	timebar.SetPlayingPosition(timeStamp);
+	LocateRecord(timeStamp);//播放视频函数
+	document.getElementById("timesTip").textContent=str_playing;
+}
+//点击搜索录像按钮执行
+
+function searchRecord() {
+	//清空掉列表
+	clearFileList(4);
+	if ($('#radio_ivd').is(':checked')) {
+		RecType = '1';
+	} else if ($("#radio_mp4").is(":checked")) {
+		RecType = '3';
+	} else if ($("#radio_jpg").is(":checked")) {
+		RecType = '2';
+	}
+	var msg = [{
+		"xtype": "Type",
+		"text": RecType
+	}, {
+		"xtype": "Time",
+		"text": checkydm
+	}];
+	var resp = $.sendMsg("QueryBackUp", msg, "/ISAPI/Record/BackUp", "POST"); //发送请求
+
+	var map = resp.data; //响应的数据
+
+	for (var i = 0; i < map.count; i++) { //map.count 录像文件总个数；
+
+		var str = 'map.filepara' + i;
+
+		var obj = eval(str);
+		var counter = map.count;
+		addFile2(obj.filename, counter);
+
+
+	}
+}
+//搜索刷新文件列表
+
+function addFile2(filename, counter) {
+	//获取到input中的值
+	var input_h1 = parseInt(document.getElementById("begintime0").value);
+	var input_m1 = parseInt(document.getElementById("begintime1").value);
+	var input_h2 = parseInt(document.getElementById("endtime0").value);
+	var input_m2 = parseInt(document.getElementById("endtime1").value);
+
+	var newFileName = filename;
+	var str_hour = newFileName.substring(10, 12);
+	var str_minute = newFileName.substring(12, 14);
+	var str_second = newFileName.substring(14, 16);
+	var time0 = parseInt(str_hour) * 3600 + parseInt(str_minute) * 60;
+	var time1 = input_h1 * 3600 + input_m1 * 60;
+	var time2 = input_h2 * 3600 + input_m2 * 60;
+
+	if (time1 <= time0 && time0 <= time2) {
+		var str_hour1 = str_hour;
+		var str_minute1 = str_minute;
+		var str_second1 = str_second;
+		newFileName = str_hour + ":" + str_minute + ":" + str_second;
+
+		var select_h = filename.substring(10, 12);
+		var select_m = filename.substring(12, 14);
+		if (select_h == str_hour1 && select_m == str_minute1) {
+			var str = '<div class="DivLable classFilename" onclick="DownFileTime(this)" myatt="' + filename + '" id="id_filename' + countFile + '">' + newFileName + '</div>';
+			str += '<div class="DivLable classFileType" myatt="' + filename + '" id="state' + countFile + '" ></div>';
+			str += '<div class="DivLable classFileDownload" myatt="' + filename + '">';
+			str += '<div class="DivCheckBox classCheckBox"  myatt="' + filename + '" id="id_CheckEnable' + countFile + '">';
+			str += '</div></div>';
+			str += '<div style="clear:both;"></div>';
+
+			if (countFile < counter) {
+				$("#fileParant").append(str);
+			}
+
+
+			InitCheckBox("id_CheckEnable" + countFile, 'false'); //初始化选中按钮；在选中按钮中加一个div
+			countFile++;
+		}
+
+	} else {
+		return;
+
+	}
+
+}
+
+
+
+
+function timeCheck(type,obj1){
+	var obj=document.getElementById(obj1);
+	
+	if(type==1){
+		if(obj.value>=10&&obj.value<=23){
+			obj.value=obj.value;
+		}else if(parseInt(obj.value)>0&&parseInt(obj.value)<10){
+			obj.value="0"+parseInt(obj.value);
+		}else if(parseInt(obj.value)==0){
+			obj.value='00';
+		}else if(obj.value>23){
+			obj.value=23;
+		}else{
+		obj.value='00';
+		}
+		
+		
+	}else if(type==2){
+		if(obj.value>=10&&obj.value<=59){
+			obj.value=obj.value;
+		}else if(parseInt(obj.value)>0&&parseInt(obj.value)<10){
+			obj.value="0"+parseInt(obj.value);
+		}else if(parseInt(obj.value)==0){
+			obj.value='00';
+		}else if(obj.value>59){
+			obj.value='59';
+		}else{
+		obj.value='00';
+		}
+	}
+	
+	var endH=document.getElementById('endtime0').value;
+	var startH=document.getElementById('begintime0').value;
+	var endM=document.getElementById('endtime1').value;
+	var startM=document.getElementById('begintime1').value;
+	if(parseInt(endH)<parseInt(startH)){
+		document.getElementById('endtime0').value=document.getElementById('begintime0').value;
+		document.getElementById('endtime1').value=document.getElementById('begintime1').value;
+		}
+	if(parseInt(endH)==parseInt(startH)&&parseInt(endM)<parseInt(startM)){
+		document.getElementById('endtime1').value=document.getElementById('begintime1').value;
+		}
+
+	
+	}
+	
+
+</script>
+<body style="min-width:1200px;min-height:680px;">
+<div style="display:none" id="txt_DownloadPath"></div>
+<div style="display:none" id="diy"></div>
+<!--
+<div class="PreviewHead" >
+
+<div class="DivButton StreamButton" id="id_MainStream">Local</div>
+<div class="DivButton StreamButton" id="id_SubStream">Remote</div>
+
+<div style="clear:both;"></div>
+</div>-->
+<div class="ParamArea" id="id_ParamArea" style="position:relative">
+	
+	<div style="height:0px;"></div>
+	<div id="id_page1" style="margin-top:23px">
+		<div class="DivLable Lable" id="id_txtFileType" >File type:</div>
+		<div style="float:left"> 
+			<div class="ClassContentSelect" id="id_FileType" style="width:96px;">Video</div>
+			<div class="DivContentSelectIco" id="id_FileType_selectico"></div>
+			<div style="clear:both"></div>
+			<div class="ClassContentSelectOption" name="id_FileType_option"  id="id_txtImage" style="margin-top:0px;width:120px;">Image</div>
+			<div class="ClassContentSelectOption" name="id_FileType_option"  id="id_txtVideo" style="margin-top:24px;width:120px;">Video</div>
+		</div>
+		<div style="clear:both;"></div>
+		<div style="height:20px;"></div>
+		<div class="DivLable Lable" id="id_txtDatasource" >Data Source:</div>
+		<div style="float:left"> 
+			<div class="ClassContentSelect" id="id_Datasource" style="width:96px;">SDCard</div>
+			<div class="DivContentSelectIco" id="id_Datasource_selectico"></div>
+			<div style="clear:both"></div>
+			<div class="ClassContentSelectOption" name="id_Datasource_option"  id="id_txtSdCard" style="margin-top:0px;width:120px;">SDCard</div>
+			<div class="ClassContentSelectOption" name="id_Datasource_option"  id="id_txtLocal" style="margin-top:24px;width:120px;">Local</div>
+		</div>
+		<div style="clear:both;"></div>
+		<div style="height:25px;"></div>
+		<!--<input type="text"  class="DivInput"  style="width:250px;display:block; border-width:0px 0px 0px 0px; color:#15161a;cursor:default;" id="id_date" />
+		<!-- <div style="margin-top: 285px; margin-left:100px;color:#ffffff;font-family:arial;font-weight:bold;font-size:16px;">Today is 2017/04/19</div> -->	
+		<div style="float:left;margin-left:5px;">
+					
+			<div class="ClassContentSelect ContentSelectEx" id="id_SelectMoth" style="text-align:center";></div>
+			<script type="text/javascript">
+				var moonth = new Date().getMonth();
+				var moonthArr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+				document.getElementById('id_SelectMoth').textContent = moonthArr[moonth];
+			</script>
+			<div class="DivContentSelectIco" id="id_SelectMoth_selectico"></div>
+			<div style="clear:both"></div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:0px;" id="id_txtDisable">Jan</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:24px;" id="id_txtEnable">Feb</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:48px;" id="id_txtDisable">Mar</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:72px;" id="id_txtEnable">Apr</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:96px;" id="id_txtEnable">May</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:120px;" id="id_txtEnable">Jun</div>
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:144px;" id="id_txtEnable">Jul</div>		
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:168px;" id="id_txtEnable">Aug</div>		
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:192px;" id="id_txtEnable">Sep</div>		
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:216px;" id="id_txtEnable">Oct</div>		
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:240px;" id="id_txtEnable">Nov</div>		
+			<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SelectMoth_option" style="margin-top:264px;" id="id_txtEnable">Dec</div>
+		</div>
+		
+		<div style="float:left;margin-left:5px;"> 
+			<div class="DivContentSelectLeftIco" id="id_SelectYear_Left_selectico" onclick="SelectYearSubfun()"></div>
+			<div class="ClassContentSelect ContentSelectEx" id="id_SelectYear" style="text-align:center;"></div>
+			<script type="text/javascript">
+				var year = new Date().getFullYear();
+				document.getElementById("id_SelectYear").textContent = year;
+			</script>
+			<div class="DivContentSelectRightIco" id="id_SelectYear_Right_selectico" onclick="SelectYearAddfun()"></div>
+			<div style="clear:both"></div>
+		</div>
+		
+		<!--	<div id="id_SelectYear"  class="DivInput DivInputTime" style="float:left;margin-left:5px;"></div> -->
+
+		<div style="clear:both" ></div>
+		<div id="id_Calendar" style="margin-bottom:48px;"></div>
+		<div style="width:165px;display:none;height:23px;color:#fff;margin-left:65px;font-family: Arial;font-size:15px;" id="id_TodayStr">Today:2017-04-15</div>
+		<div class="TipBox_green1">
+		<div class="TipColor_green1"></div><span id="id_RCTip1">&nbsp;The currently selected.</span>
+		</div>
+		<div class="TipBox_green">
+		<div class="TipColor_green"></div><span id="id_RCTip">&nbsp;Currently contains videos or pictures.</span>
+		<div id="id_DataTime"  style="margin-top: 10px; display:none" class="css_dataime DivButton"></div>
+		</div>
+		
+	</div>
+	<!--下载页面-->
+		<div style="display:none;width:260px;height:77%;" id="id_page2">		
+		<div class="css_downtext" id="id_textDType">下载格式</div>
+		<label class="css_radio" style="padding-left:26px;padding-right:30px;" >
+		<input style="margin-right: 5px;" name="videoType" type="radio" checked value="ivd" id="radio_ivd" onclick="clearFileList(1)"/>ivd
+		</label> 
+		<label class="css_radio"  style="padding-right:15px; display:none" >
+		<input style="margin-right: 5px; " name="videoType" type="radio"  value="mp4" id="radio_mp4" onclick="clearFileList(2)"/>mp4
+		</label> 	
+		<label  class="css_radio" style=" padding-left:15px;" >
+		<input name="videoType" style="margin-right: 5px;" type="radio"  value="jpg" id="radio_jpg" onclick="clearFileList(3)"/>jpg
+		</label> 
+		<!--搜索录像-->
+		<div class="input_parent">
+				<div class="ui-input-box">
+					<input class="fn-width20" id="begintime0" type="text" maxlength="2" value="00" onBlur="timeCheck(1,'begintime0')">
+					<span>:</span>
+					<input class="fn-width20" id="begintime1" type="text" maxlength="2" value="00" onBlur="timeCheck(2,'begintime1')">
+					<span>:</span>
+					<input class="fn-width20" id="begintime2" type="text" maxlength="2" disabled value="00" >
+					<span>-</span>
+					<input class="fn-width20" id="endtime0" type="text" maxlength="2" value="23" onBlur="timeCheck(1,'endtime0')">
+					<span>:</span>
+					<input class="fn-width20" id="endtime1" type="text" maxlength="2" value="59" onBlur="timeCheck(2,'endtime1')">
+					<span>:</span>
+					<input class="fn-width20" id="endtime2" type="text" maxlength="2" disabled value="59">
+
+				</div>
+				<i class="btn-icon-search" title="Search" id = "id_search" onclick="searchRecord()"></i>
+			</div>
+			<!--文件列表-->
+		<div class="DivLable" class="css_downtext" id="text_FileList" style="font-size:14px;margin-left:9px;" >文件列表</div>
+		
+		
+		<!--<iframe style="height:350px;width:240px;" frameborder="no" src="Filedownload.html"></iframe>-->
+		
+		<object id="vidview" 
+				classid="clsid:d02afdec-ab71-428c-88b6-b9f1419bc04c" 
+				codebase="view.exe#version=1,1,0,3" 
+				align="center" 
+				hspace="0" 
+				vspace="0"
+				width=0
+				height=0>
+      </object>
+ <div class="css_ViodTitle">
+            <div class="DivLable classFilenames" style="position: absolute;"  id="text_downFileName" >文件名</div>
+			<div class="DivLable classFileTypes" style="position: absolute;right: 81px;"  id="text_state">下载状态</div>
+			<div class="DivLable classFileDownloads" style="position: absolute;right: 39px;" id="text_select">选择</div>
+	 </div>
+	<div class="css_fileParent" id="fileParant">
+			
+			<div style="clear:both;"></div>				
+	</div>
+		
+	<!--	<div style="height:20px;width:10px;"></div>
+		<div class="DivButton" id="id_allChecked" style="float:left;margin-left:4px;width:70px;" onclick="RecordAllChecked();">全选</div>
+		<div class="DivButton" id="id_allCheckedfalse" style="float:left;margin-left:4px;width:70px" onclick="RecordAllCancel();">取消全选</div>
+		<div class="DivButton" id="id_allDownLoad" style="float:left;margin-left:4px;width:70px" onclick="RecordDownLoad();">下载</div>
+		<div style="clear:both"></div>  -->
+		<!--<div class="DivButton" style=" margin:auto;margin-top: 17px;color:#ffffff;font-family:arial;font-weight:bold;font-size:16px;width:200px;" id="id_PageBack">回退</div>-->
+	</div>
+	
+	
+<div class="DivButton css_YaHei" id="id_allChecked" style="margin-left:13px;width:42%;"  onclick="doSelect();">全选</div>
+		<!--<div class="DivButton css_YaHei" id="id_allCheckedfalse" style="margin-left:4px;" onclick="RecordAllCancel();">取消全选</div>-->
+		<!--RecordDownLoad()-->
+		<div class="DivButton css_YaHei" id="id_allDownLoad" style="margin-left:4px;width:42%;" onclick="startEnd();">下载</div>
+		
+		
+		<div style="clear:both"></div>
+		
+	<div class="DivButton css_pageGO"  id="id_PageGo" onclick="ChanggePage()"></div>			
+	<!-- <div style="bottom:142px; position:absolute;height:40px;background:#1e3856;width:256px;"></div> -->
+</div>
+
+<div id="div_alert"style="width: 227px;height: 156px;z-index:5;display:none;border: 2px solid #1e3b56; background:rgba(46,57,51,0.3);color: #FFF;">
+			<label id="label_btnClose"style="color: #fff;cursor:pointer;font-family:arial;background:#1c1d22;float: right;margin-right: 2px;border: 1px solid #fff;border-radius: 3px;">close</label>
+			<div id="div_showPath"style="width: 100px;height:100px;margin:25% 25%;"><a href="file:///E:\FileServer\video" style="color: #fff;font-family: arial;">E:\FileServer\video</a></div>
+			<div style="clear:both"></div>
+		</div>
+
+<div class="VideoArea" id="id_VideoArea" >
+	<div id="tip_checkVlc" onclick="GoDown()" class="css_checkVlc"></div>
+	 <EMBED style="margin:auto;" pluginspage="http://www.videolan.org"  
+		   type="application/x-vlc-plugin"  
+		   version="VideoLAN.VLCPlugin.2"  
+		   text="Waiting for video"
+		   toolbar="false"
+		   plugins-cache='0'	   
+		   width=1
+		   height=1
+		   name="vlc"
+		   id="vlc">
+	</EMBED>
+</div>
+
+<div style="clear:both;"></div>
+<div  id="id_VedioCtrolArea" style="bottom:0px;width:100%;">
+	<!-- 提示倍数
+	<div id="timesTip" class="timesTip">STOP</div> -->
+	<div style="clear:both;"></div>
+	<div style="width:32px;height:55px;float:left;"></div>
+	<div style="width:434px;height:55px;float:left;">
+	
+		<!--<div class="HeadButtonIco IcoOptBack" id="id_IcoOptPtz"></div>
+		<div class="HeadButtonIco IcoOptNext" id="id_IcoOptPtz"></div>-->
+		<div class="HeadButtonIco IcoOptPlay" id="id_IcoOptPlay" onclick="SwitchPlaying()"></div>
+		<div class="HeadButtonIco IcoOptSlow " id="id_IcoOptSlow" onclick="FastPlay(2)"></div>
+		<div class="HeadButtonIco IcoOptFront" id="id_IcoOptFast" onclick="FastPlay(1)"></div>
+		<div class="HeadButtonIco IcoOptSnap" id="id_IcoOptCapture" onclick="capture()"></div>
+		<div class="HeadButtonIco IcoOptVoice" id="id_IcoOptVolume"; onclick="toggleVoice()"></div>
+	</div>	
+	<div style="width:160px;height:23px;float:left;color:#fff;margin-top:10px;"></div>
+	<div style="clear:both;"></div>
+	<div style="width:100%;position:relative" id="id_TimeParent">
+		<div style="width:1370px;height:40px;margin-left:40px;" id="id_TimeBarBox">
+		</div>
+		<div style="width:1100px;height:40px;margin-left:310px;position:absolute;top:53px;">
+				<div id="text_playStatus" class="timesTip" style="left:-24.5%;">Play Status:</div>
+				<div id="timesTip" class="timesTip" style="left:-18.5%;"></div>
+				<div class="DivButton DivTimeButton" style="" id="id_TimeType24hr">24hr</div>
+				<div class="DivButton DivTimeButton" style="" id="id_TimeType2hr">2hr</div>
+				<div class="DivButton DivTimeButton" style="" id="id_TimeType1hr">1hr</div>
+				<div class="DivButton DivTimeButton" style="" id="id_TimeType30min">30min</div>
+
+			<div style="width:400px;height:40px;position: absolute;right:33%;" >
+			<div class="DivBox" style="background:red;"></div><div class="DivBoxTxt" id='id_txtAlarm'>报警录像</div><div style="width:27px;height:10px;float:left;"></div>
+			<div class="DivBox" style="background:blue;"></div><div class="DivBoxTxt" id='id_txtTime'>定时录像</div><div style="width:27px;height:10px;float:left;"></div>
+			<div class="DivBox" style="background:green;"></div><div class="DivBoxTxt" id='id_txtMothod'>手动录像</div>
+		<!--	<div class="DivBox" style="background:yellow;"></div><div class="DivBoxTxt" id='id_txtmotion'>移动录像</div><div style="width:27px;height:10px;float:left;"></div> -->
+		</div>
+		</div>
+	
+
+	</div>
+	
+</div>
+<!--提示框+遮盖层 -->
+<div id="id_Cover" class="css_Cover">
+</div>
+<div id="id_SendMsg" class="css_SengMsg">
+	<div id="id_SendTitle" class="css_SendTitle"></div>
+	<div id="id_SendContent" class="css_SendContent"></div>
+	<div id="id_SendBtn" class="css_SendBtn">
+		<div id="id_SendSure" class="DivcCssBtn css_SendSure" onclick="OnSure()"></div>
+		<div style="width: 2%;height: 23px;float: left;"></div>
+	     <div id="id_SendCancel" class="DivcCssBtn css_SendCancel" onclick="OnCancel()"></div>
+	</div>	
+</div>
+<object
+		id="ViewCheck"
+		classid="clsid:7F8BBF16-B31D-44F3-BD74-24E207149D59" 
+		codebase="view.cab#version=1,1,1,4"
+		style="width:1060px; height:800px;overfow:hidden;display:none"
+		align="center" 
+		hspace="0"
+		vspace="0">
+	</object>
+	<!-- 插件未安装提示框-->
+	<div class="tip_vlc" id="tipVLC">
+		<div class="tip_top" id="tipTop"></div>
+		<div class="tip_texts" id="tipTexts"></div>
+		<div class="tip_yes" id="tipYes" onclick=""></div>
+		<div class="tip_no" id="tipNo"></div>
+		</div>
+
+
+	
+</body>
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang()
+{	
+
+	SetLang('tipTop',str_tipTop);
+	SetLang('tipTexts',str_tipTexts);
+	SetLang('tipYes',str_tipYes);
+	SetLang('tipNo',str_tipNo);
+	SetLang('id_txtAlarm',str_AlarmRe);
+
+	SetLang('id_txtTime',str_TimerRe);
+	SetLang('id_txtMothod',str_ManualRe);
+	
+	SetLang('id_txtFileType',str_FileType);
+	SetLang('id_txtDatasource',str_FileSource);
+	SetLang('id_txtImage',str_Image);
+	SetLang('id_txtVideo',str_Video);
+	SetLang('id_txtSdCard',str_SDCard);
+	SetLang('id_txtLocal',str_Local);
+	SetLang('id_textDType',str_DType);
+	SetLang('text_FileList',str_FileList);
+	SetLang('text_downFileName',str_downFileName);
+	SetLang('text_state',str_State);
+	SetLang('text_select',str_select);
+	SetLang('id_allChecked',str_allChecked);
+	SetLang('id_allDownLoad',str_DownLoad);
+	SetLang('id_RCTip1',str_RCTip1);
+	SetLang('id_RCTip',str_RCTip);
+	SetLang('tip_checkVlc',str_checkVlc);
+	SetLang('text_playStatus',str_playStatus);
+	SetLang('timesTip',str_timesTip);
+	SetLang('id_SendTitle',str_SendTitle);
+	SetLang('id_SendContent',str_setPath1);
+	SetLang('id_SendCancel',str_SendCancel);
+	SetLang('id_SendSure',str_SendSure);
+	
+	
+	SetTitleLang('id_IcoOptPlay',str_Play);
+	SetTitleLang('id_IcoOptSlow',str_PlaySlow);
+	SetTitleLang('id_IcoOptFast',str_PlayFast);
+	SetTitleLang('id_IcoOptCapture',str_Capture);
+	SetTitleLang('id_IcoOptVolume',str_Volume);
+	
+
+}
+
+</script> 
+
+</html>
+</html>

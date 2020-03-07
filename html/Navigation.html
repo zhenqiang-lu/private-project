@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css">
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script type="text/javascript">
+	document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+body{
+	margin-top:0px;
+}
+
+.DivNavigation{
+	height:32px;
+	width:124px;
+	margin-top:19px;
+	margin-left:8px;
+	float:right;
+	background:#c8c8c8;
+	font-family:arial;
+	font-weight:bold;
+	font-size:16px;
+	line-height:32px;
+	text-align:left;
+	color:#323232;
+	cursor: pointer;
+}
+
+.DivNavigation:hover{
+	background:#646464;
+	
+}
+.DivNavigationSelect{
+	background:#dc0000;
+	color: #ffffff;
+}
+.DivNavigationPreviewBackImg{
+	background: url(./img/select.png) -1px -60px;
+}
+
+.DivNavigationBackUpBackImg{
+	background: url(./img/select.png) -50px -60px;
+}
+
+.DivNavigationSettingsBackImg{
+	background: url(./img/select.png) -100px -60px;
+}
+
+.SettingsBackImgIco{
+	background: url(./img/normal.png) -100px -60px;
+}
+
+.BackUpBackImgIco{
+	background: url(./img/normal.png) -50px -60px;
+}
+
+.PreviewImgIco{
+	background: url(./img/normal.png) -1px -60px;
+}
+
+.DivNavigationIco{
+	width:43px;
+	height:32px;
+	float:left;
+	cursor: pointer;
+}
+
+.DivNavigationOnlyIco{
+	width:43px;
+	height:32px;
+	float:right;
+	cursor: pointer;
+	margin-top:19px;
+	background: url(./img/normal.png) -152px -60px;
+}
+
+.DivNavigationOnlyIco:hover{
+	background: url(./img/select.png) -152px -60px;
+}
+
+.DivNavigationHelp{
+	width:43px;
+	height:36px;
+	float:right;
+	cursor: pointer;
+	margin-top:10px;
+	background: url(./img/help.png);
+}
+
+.DivNavigationHelp:hover{
+	background: url(./img/helpselect.png);
+}
+
+.HeadFontLog{
+	width:280px;
+	height:52px;
+	margin-top:0px;
+	margin-left:9px;
+	color:#323232;
+	font-size:30px;
+	font-family:Arial;
+	font-weight:bold;
+	line-height:52px;
+	float:left;
+};
+
+</style>
+
+
+<body>   
+<div style="left:0px;right:0px;background:#ffffff;height:51px;position:absolute;">
+<!-- <image src="./img/InserLogo.png" style="margin-top: 9px;"></image> -->
+<div class="HeadFontLog">WEB IPCAMERA</div>
+<div class="DivNavigationOnlyIco" id="id_NavigationloginOut" style=";float:right"></div>
+
+<!-- <div class="DivNavigationHelp" id="id_NavigationHelp" style=";float:right"></div> -->
+
+<div class="DivNavigation" id="id_NavigationSettings"><div class="DivNavigationIco SettingsBackImgIco" id = "id_SettingsBackImg" ></div><script>document.write(str_UserParameter);</script></div>
+<div class="DivNavigation" id="id_NavigationBackUp"><div class="DivNavigationIco BackUpBackImgIco" id = "id_BackUpBackImg" ></div><script>document.write(str_BackUp);</script></div>
+<div class="DivNavigation" id="id_NavigationPreview"><div class="DivNavigationIco PreviewImgIco" id = "id_PreviewBackImg" ></div><script>document.write(str_Pre);</script></div>
+</div>
+<div style="left:0px;right:0px;background:#dcdcdc;height:8px;top:51px;position:absolute;"></div>
+<div style="left:0px;right:0px;background:#dcdcdc;bottom:0px;top:59px;position:absolute;overflow:hidden;">
+<iframe style="background:#dcdcdc;width:100%;height:100%;" frameborder="no" id="id_NavigationContent"></iframe>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//语言包初始化
+$(function(){
+	//alert(str_MainStream);
+	//SetLang('id_NavigationSettings',str_MainStream);
+	//SetLang('id_NavigationBackUp',str_SubStream);
+	//SetLang('id_NavigationPreview',str_SubStream);
+});
+</script> 
+
+<script  type="text/javascript"> 
+var NavigationPath = [
+{"id":"id_NavigationloginOut","path":"index.html"},
+{"id":"id_NavigationBackUp","path":"BackUp.html"},
+{"id":"id_NavigationPreview","path":"Preview.html"},
+{"id":"id_NavigationSettings","path":"SetParam.html"}
+];
+function NavigationOnclick(id)
+{
+	$("#id_NavigationSettings").removeClass("DivNavigationSelect");
+	$("#id_NavigationBackUp").removeClass("DivNavigationSelect");
+	$("#id_NavigationPreview").removeClass("DivNavigationSelect");
+	$("#" + id).addClass("DivNavigationSelect");
+	if (id == 'id_NavigationPreview')
+	{
+		$("#id_PreviewBackImg").removeClass("PreviewImgIco");
+		$("#id_PreviewBackImg").addClass("DivNavigationPreviewBackImg");
+		$("#id_BackUpBackImg").addClass("BackUpBackImgIco");
+		$("#id_SettingsBackImg").addClass("SettingsBackImgIco");
+	}
+	
+	else if (id == 'id_NavigationBackUp')
+	{
+		$("#id_BackUpBackImg").removeClass("BackUpBackImgIco");
+		$("#id_BackUpBackImg").addClass("DivNavigationBackUpBackImg");
+		$("#id_PreviewBackImg").addClass("PreviewImgIco");
+		$("#id_SettingsBackImg").addClass("SettingsBackImgIco");
+	}
+	else if (id == 'id_NavigationSettings')
+	{
+		$("#id_SettingsBackImg").removeClass("SettingsBackImgIco");
+		$("#id_SettingsBackImg").addClass("DivNavigationSettingsBackImg");
+		$("#id_PreviewBackImg").addClass("PreviewImgIco");
+		$("#id_BackUpBackImg").addClass("BackUpBackImgIco");
+	}
+	
+	
+	if(id == "id_NavigationloginOut"){	
+		self.location='index.html';
+		return ;
+	}
+	for(var i = 0;i < NavigationPath.length;i++){
+		if(NavigationPath[i].id == id){
+			//var plugin = document.getElementById('id_NavigationContent').contentWindow.document.getElementById('vlc');
+			//if(plugin != null){
+				//plugin.playlist.stop(); 
+			//}
+			document.getElementById("id_NavigationContent").src = NavigationPath[i].path;
+			//document.getElementById("id_NavigationContent").src = NavigationPath[i].path;
+			return ;
+		}
+	}
+/*	if(id == "id_NavigationPreview"){	//setTimeout("document.getElementById('id_NavigationContent').contentWindow.document.getElementById('id_IcoOptFullScreen').onclick();",20);
+	}*/
+}
+
+function AddBindEvent(id,mothod,fun,param)
+{
+	BindEvent(id,mothod,fun,param);
+}
+/*
+function OpenHelp(id)
+{
+	var language = $.GetCookie('language');
+	var path = "";
+	if(language == "English"){
+		path += "helpEnglish.html";
+	}else if(language == "chinese"){
+		path += "helpChinese.html";
+	}else if(language == "chinese2"){
+		path += "helpChinese2.html";
+	}else{
+		path += "helpChinese2.html";
+	}
+	window.open("helpEnglish.html", 'newwindow','height=800, width=800, top=20, left=40,scrollbars=yes');
+}*/
+
+$(function() {
+
+	/*alert(111111111);
+	var resp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		alert("recv ThirdServer msg fail");
+		return;  
+	}
+	var map = resp.data;
+	console.log( JSON.stringify(map));
+	alert(map.option_3.specoportmap);*/
+	var username,password;
+	username = $.GetCookie('usrname');
+	password = $.GetCookie('password');
+	//console.log('username = '+username +'password = '+password);
+	var msg = [{"xtype":"username","text":username},
+					{"xtype":"password","text":password}];
+	var resp = $.sendMsg("UserCheck",msg,"/ISAPI/Security/Login","PUT");
+	var map = resp.data;
+	//console.log('UserCheck map = '+JSON.stringify(map));
+	//console.log('priviligge = '+map.privilege);
+	
+	if (!!window.ActiveXObject || "ActiveXObject" in window /*|| "0" == map.option_3.specoportmap*/){
+		//alert(--why---！);
+		//NavigationPath[1].path = "BackUpIE.html";
+		NavigationPath[2].path = "PreviewIE.html";
+	}
+	AddBindEvent("id_NavigationSettings","onclick",NavigationOnclick,"id_NavigationSettings");
+	AddBindEvent("id_NavigationBackUp","onclick",NavigationOnclick,"id_NavigationBackUp");
+	AddBindEvent("id_NavigationPreview","onclick",NavigationOnclick,"id_NavigationPreview");
+	AddBindEvent("id_NavigationloginOut","onclick",NavigationOnclick,"id_NavigationloginOut");
+	//AddBindEvent("id_NavigationHelp","onclick",OpenHelp,"id_NavigationHelp");
+	NavigationOnclick("id_NavigationPreview");
+	
+	if(map.privilege == '2')
+		document.getElementById("id_NavigationSettings").style.display = "none";
+});
+</script>
+</html> 

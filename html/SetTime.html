@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link href="css/glDatePicker.default.css" rel="stylesheet" type="text/css" />
+	<link href="css/glDatePicker.darkneon.css" rel="stylesheet" type="text/css" />
+	<link href="css/glDatePicker.flatwhite.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/glDatePicker.min.js"></script>
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.SetTimeDiv{
+	left:0px;
+	right:0px;
+	height:270px;
+}
+
+
+
+
+.DivInputAtLoacalRecord{
+	width:457px;
+	float:left;
+}
+
+.DivInputTime{
+	width:50px;
+	float:left;
+	border:0px solid #ffffff;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtSetTime{
+	width:160px;
+	float:left;
+}
+
+
+.MarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.WeekRadio{
+	width:90px;
+	float:left;
+}
+.ContentSelectEx{
+	width:430px;
+}
+
+.ContentSelectOptionEx{
+	width:457px;
+}
+
+</style> 
+
+<body>   
+<div class="ContentBg SetTimeDiv" style="min-width:800px;">
+	<div style="height:100%;margin:auto;width:800px;">
+		<div style="clear:both;height:15px;"></div>
+			
+		<div class="DivLable txtSetTime" id="id_txtTimeZone">Time Zone:</div>
+		<div style="float:left" id="id_GMTSELECT">
+		<div class="ClassContentSelect ContentSelectEx" id="id_TimeZone">GMT+0:00</div>
+		<div class="DivContentSelectIco" id="id_TimeZone_selectico"></div>
+		<div style="clear:both"></div>		
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtSetTime" id="id_txtTime">Time:</div>
+		<div id="id_TimeHour"  class="DivInput DivInputTime"></div>
+		<div class="DivLable" style="float:left;">:</div>
+		<div id="id_TimeMinute"  class="DivInput DivInputTime"></div>
+		<div class="DivLable" style="float:left;">:</div>
+		<div id="id_TimeSecond"  class="DivInput DivInputTime"></div>		
+		
+		<div class="DivLable" style="float:left;margin-left:20px;margin-left:10px;" id="id_txtDate">Date:</div>
+		<input type="text"  class="DivInput" style="float:left;width:164px;" id="id_date" />
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSetTime" id="id_txtSyncPCTime">PC Time Sync:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect ContentSelectEx" id="id_SyncPCTime">No</div>
+		<div class="DivContentSelectIco" id="id_SyncPCTime_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption ContentSelectOptionEx"  name="id_SyncPCTime_option" style="margin-top:0px;" id="id_txtNo">No</div>
+		<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_SyncPCTime_option" style="margin-top:24px;" id="id_txtYes">Yes</div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSetTime" id="id_txtNTPEnable">NTP:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect ContentSelectEx" id="id_NTP">Disable</div>
+		<div class="DivContentSelectIco" id="id_NTP_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_NTP_option" style="margin-top:0px;" id="id_txtDisable">Disable</div>
+		<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_NTP_option" style="margin-top:24px;" id="id_txtEnable">Enable</div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSetTime" id="id_txtNTPServer">NTP Server:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_NTPServer" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body> 
+
+<script  type="text/javascript">
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtTimeZone',str_BasicZone);
+	SetLang('id_txtTime',str_BasicSetTime);
+	//SetLang('id_txtTimeHour',str_BasicHour);
+	//SetLang('id_txtTimeMinute',str_BasicMic);
+	//SetLang('id_txtTimeSecond',str_BasicSec);
+	SetLang('id_txtDate',str_BasicDate);
+	SetLang('id_txtSyncPCTime',str_TIMES);
+	SetLang('id_txtNo',str_TIMENO);
+	SetLang('id_txtYes',str_TIMEYES);
+	SetLang('id_txtNTPEnable',str_BasicIsEnable);
+	SetLang('id_txtDisable',str_BasicDisable);
+	SetLang('id_txtEnable',str_BasicEnable);
+	SetLang('id_txtNTPServer',str_BasicNtpServer);	
+	SetLang('id_submit',str_btnBasicSave);
+};
+</script>
+
+<script  type="text/javascript"> 
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+} 
+
+
+
+function InitPageParam()
+{
+
+
+	var resp = $.sendMsg("NTPStatus",null,"/ISAPI/System/NTP","POST");
+	if(resp.success == false){
+		alert("recv NTPStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	//2017-4-11T15:17:27Z
+	//var map = {"timezone":{"tz":"GMT+08:00"},"isupdatetime":"0","ntpenable":"1","utcdatetime":"2017-4-25T19:56:47Z","ntpserver":"time.windows.com"};
+	var strdate = map.utcdatetime.split("T");
+	var strTime = strdate[1].split("Z");
+	var strcoverTime = strTime[0].split(":",3);
+	var strHour = strcoverTime[0];
+	var strMinute = strcoverTime[1];
+	var strSecond  = strcoverTime[2];
+	
+	//console.log(JSON.stringify(map));
+	SetSelectionVal('id_TimeZone',map.timezone.tz);
+	//console.log(map.timezone.tz);
+	lastZone = GetOptionByVlaue('id_TimeZone',map.timezone.tz);
+	
+	//console.log("lastZone =" + lastZone);
+	SetSelectionOptID('id_SyncPCTime',map.isupdatetime);
+	SetSelectionOptID('id_NTP',map.enabled);
+	$("#id_NTPServer")[0].value = map.ntpserver;
+	$("#id_date")[0].value = strdate[0];
+	//$("#id_TimeHour")[0].value = strHour;
+	//$("#id_TimeMinute")[0].value = strMinute;
+	//$("#id_TimeSecond")[0].value = strSecond;
+	TimeHour.SetValue(strHour);
+	TimeMinute.SetValue(strMinute);
+	TimeSecond.SetValue(strSecond);
+}
+
+function submit()
+{
+
+	var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+	
+	var year = date.getFullYear();
+	var hour =  date.getHours();
+	var min = date.getMinutes();
+	var sec = date.getSeconds();
+
+
+	
+	var dateStr = year+"-"+month+"-"+strDate;
+
+	var strisupdatetime, strntpenable;
+	//alert(GetSelectionVal('id_SyncPCTime'));
+	if(GetSelectionVal('id_SyncPCTime') == str_TIMEYES){
+		strisupdatetime = "1";
+		TimeHour.SetValue(hour);
+		TimeMinute.SetValue(min);
+		TimeSecond.SetValue(sec);
+		$("#id_date")[0].value = dateStr;
+	}
+	else{
+		strisupdatetime = "0";
+		
+	}
+	
+	var timesrt = $("#id_date")[0].value;
+	
+	//var utctime = timesrt + "T" +  $("#id_TimeHour")[0].value +":"+ $("#id_TimeMinute")[0].value+":"+$("#id_TimeSecond")[0].value+"Z";
+	var utctime =  timesrt + "T" + TimeHour.GetValue() +":"+ TimeMinute.GetValue() +":"+TimeSecond.GetValue() +"Z";
+	
+	//console.log(utctime);
+	//console.log(GetSelectionVal('id_NTP'));
+	//console.log(str_BasicEnable);
+	if(GetSelectionVal('id_NTP') == str_BasicEnable){
+		strntpenable = "1";
+	}
+	else{
+		strntpenable = "0";
+	}
+	
+	var msg = [
+				{"xtype":"timezone","items":
+					[
+						{"xtype":"tz","text":GetSelectionVal('id_TimeZone')}
+					]
+				},
+				{"xtype":"isupdatetime","text":strisupdatetime},
+				{"xtype":"enabled","text":strntpenable},
+				{"xtype":"utcdatetime","text":utctime},
+				{"xtype":"ntpserver","text":$("#id_NTPServer")[0].value}
+			];
+	
+	var resp = $.sendMsg("NTPStatus",msg,"/ISAPI/System/NTP","PUT");
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+	SetSelectionOptID('id_SyncPCTime',0);
+}
+
+function InitTZ()
+{
+	var szTimeZoneOption,i;
+	for(i = 12;i > 0; i--)
+	{
+		if(i < 10)
+		{
+			var str = "GMT"+"-0"+i+":00";
+		}
+		else
+		{
+			var str = "GMT"+"-"+i+":00";
+		}
+		
+		var addstr = '<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_TimeZone_option" style="margin-top:'+(12-i)*24+'px;">'+str+'</div>';
+		$("#id_GMTSELECT").append(addstr);
+	}
+	
+	for(i = 0;i <= 12; i++)
+	{
+		if(i < 10)
+		{
+			var str = "GMT"+"+0"+i+":00";
+		}
+		else
+		{
+			var str = "GMT"+"+"+i+":00";
+		}
+		
+		var addstr = '<div class="ClassContentSelectOption ContentSelectOptionEx" name="id_TimeZone_option" style="margin-top:'+(i+12)*24+'px;">'+str+'</div>';
+		$("#id_GMTSELECT").append(addstr);
+	}
+}
+var lastZone;
+function OnchangeAtGMT(param)
+{
+
+	var tz = GetSelectionOption('id_TimeZone');
+	var timesub = parseInt(lastZone) - parseInt(tz);
+	var timestr = $("#id_date")[0].value;
+	var value = timestr.split("-");
+	lastZone = tz;	
+	var val = TimeHour.GetValue() - timesub;
+	if(val >= 24){
+		val = val - 24;
+		var date = new Date(Number(value[0]),Number(value[1]),Number(value[2]) + 1);
+		var month = date.getMonth();
+		var strDate = date.getDate();
+		var year = date.getFullYear();
+		var dateStr = year+"-"+month+"-"+strDate;
+		$("#id_date")[0].value = dateStr;
+		
+	}
+	if(val < 0){
+		val = val + 24;
+		var date = new Date(Number(value[0]),Number(value[1]),Number(value[2]) - 1);
+		var month = date.getMonth();
+		var strDate = date.getDate();
+		var year = date.getFullYear();
+		var dateStr = year+"-"+month+"-"+strDate;
+		$("#id_date")[0].value = dateStr;
+	}
+	TimeHour.SetValue(val);
+	
+	
+}
+
+function  InitglDate()
+{
+	$('#id_date').glDatePicker(
+	{
+		showAlways: false,
+		cssName: 'darkneon',
+		//cssName: 'default',
+		//cssName: 'flatwhite',
+		selectedDate: new Date(),
+		dowOffset:0,
+		dowNames:[ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ],
+		monthNames:[ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
+	});
+}
+
+var  TimeHour;
+var  TimeMinute;
+var  TimeSecond;
+
+function TimeSelectCb(id,param)
+{
+	//console.log(id + " = "+ param);
+}
+
+
+
+
+$(function(){
+	InitTZ();
+	InitglDate();
+	InitUdfSelect('id_TimeZone',OnchangeAtGMT);
+	InitUdfSelect('id_SyncPCTime');
+	InitUdfSelect('id_NTP');
+	TimeHour = new SelectInput("id_TimeHour",0,23,0,TimeSelectCb);
+	TimeMinute = new SelectInput("id_TimeMinute",0,59,0,TimeSelectCb);
+	TimeSecond = new SelectInput("id_TimeSecond",0,59,0,TimeSelectCb);	
+	InitLang();
+	InitPageParam();	
+	BindEvent('id_submit','onmousedown',submit,null);
+});
+</script> 
+  
+</html>  

@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.BasicInforDiv{
+	left:0px;
+	right:0px;
+	height:130px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtDeviceModel{
+	width:160px;
+	float:left;
+}
+
+</style> 
+
+
+<body>   
+<div class="BasicInforDiv ContentBg" style="min-width:600px;">
+	<div style="width:100px;height:30px;"></div>
+	<div style="height:100%;margin:auto;width:600px;">	
+		<div class="DivLable txtDeviceModel" id="id_txtDeviceModel">Device Model:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DeviceModel" value="IPCAM" readonly="readonly"></input>
+		<div style="clear:both;height:15px;"></div>
+	<!--	
+		<div class="DivLable txtDeviceModel" id="id_txtOCXVersion">OCX Version:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_OCXVersion" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+	-->
+		<div class="DivLable txtDeviceModel" id="id_txtIPCVersion">IPC Version:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_IPCVersion" value="admin" readonly="readonly"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<!--
+		<div class="DivLable txtDeviceModel" id="id_txtIEVersion">IE Version:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_IEVersion" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtDeviceModel" id="id_txtImageVersion">Image Version:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="idImageVersion" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+	-->
+	</div>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//���԰���ʼ��
+function InitLang(){
+
+	SetLang('id_txtDeviceModel',str_BasicDeviceModel);
+	//SetLang('id_txtOCXVersion',str_OCXVersion);	
+	SetLang('id_txtIPCVersion',str_IPcameVersion);
+	//SetLang('id_txtIEVersion',str_IEVersion);
+	//SetLang('id_txtImageVersion',str_ImageLibVision);
+};
+</script> 
+
+ <script  type="text/javascript"> 
+ 
+function InitPageParam()
+{
+
+	var resp = $.sendMsg("DeviceInfo",null,"/ISAPI/DeviceInfo","POST");
+	if(resp.success == false){
+		alert("recv DeviceInfo msg fail");
+		return;
+	}
+	var map = resp.data;
+	
+	//var map = {"devicename":"IPCAM","deviceid":"1701060000","devicemodel":null,"upnp":"0","softwarever":"0a-00-00-03-GW","factoryinfo":"IPCAM"};
+	//console.log(JSON.stringify(map));
+
+	//SetSelectionOptID('id_UPNP',map.upnp);
+	$("#id_IPCVersion")[0].value = map.softwarever;
+	$("#id_DeviceModel")[0].value = map.devicemodel;
+}
+ 
+function submit()
+{
+
+	var str_pal;
+	if(GetSelectionVal('id_TimeZone') == "NTSC"){
+		str_pal = "0";
+	}else{
+		str_pal = "1";
+	}
+	var msg=[
+			{xtype:"param",text:""+str_pal}
+	];	
+	
+	var resp = $.sendMsg("Format",msg,"/ISAPI/System/Format","PUT");
+	if(resp.success == false){
+		alert("Set fail");
+		return ;
+	}else{
+		alert(str_SetSuccess);
+		return ;
+	}
+}
+
+ $(function (){
+		InitLang();
+		//InitUdfSelect('id_TimeZone',null);
+		//BindEvent('id_SubMit','onmousedown',submit,null);
+		InitPageParam();
+	}
+ );
+	
+</script>
+</html>  

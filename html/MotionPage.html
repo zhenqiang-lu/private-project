@@ -1,0 +1,1071 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+
+<style type="text/css">
+.MotionDetectionDiv{
+	left:0px;
+	right:0px;
+	height:615px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:60px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:90px;
+	float:left;
+}
+
+.txtSnap{
+	width:90px;
+	float:left;
+}
+
+.txtMotionDetectionPage{
+	width:158px;
+	float:left;
+}
+
+.txtMotionDetectionRecordTime{
+	width:130px;
+	float:left;
+}
+.txtMotionDetectionRecordTime1{
+	width:157px;
+	float:left;
+}
+
+.WeekRadio{
+	width:81px;
+	float:left;
+}
+
+
+.TimeLable{
+	width:50px;
+	float:left;
+}
+
+.StartTimeLable{
+	width:80px;
+	float:left;
+}
+
+.TimeSpaceLable{
+	width:10px;
+	float:left;
+}
+
+.StartSpaceEndLable{
+	width:20px;
+	float:left;
+}
+
+.TimeSelect{
+	width:81px;
+}
+
+.CopyButton{
+	width:70px;
+}
+
+.divbox{
+	width:110px;
+}
+
+.MarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.WeekMarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.DivTime{
+	width:40px;
+	height:23px;
+	float:left;
+}
+
+
+.DivInputMotion{
+	width:100px;
+	float:left;
+}
+
+.DivInputMotionRecordTime{
+	width:130px;
+	float:left;
+}
+
+.DivInputMotionRecord{
+	width:77px;
+	float:left;
+}
+
+.DivInputMotionRecordIco{
+	width:100px;
+	float:left;
+}
+
+
+
+</style> 
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtMotionDetectionEnable',str_MotionEnable);
+	SetLang('id_MotionDetectionEdit',str_RegionEdit);
+	SetLang('id_MotionDetectionSubmit',str_MotionSave);
+	SetLang('id_txtMotionDetectionOutput',str_MotionInpuOut); 
+	SetLang('id_txtMotionDetectionRecord',str_MotionRecordOut);
+	SetLang('id_txtMotionDetectionSendEmail',str_MotionSendEmail);
+	SetLang('id_txtMotionDetectionDuration',str_MotionAlarmTime); 
+	SetLang('id_txtMotionDetectionPreRecordTime',str_MotionStandy);
+	
+
+	
+	SetLang('id_MotionDetectionPara1',str_MotionParaTime1);
+	SetLang('id_MotionDetectionPara2',str_MotionParaTime2);
+	SetLang('id_MotionDetectionPara3',str_MotionParaTime3);
+	SetLang('id_MotionDetectionPara4',str_MotionParaTime4);
+	
+	
+	SetLang('id_MotionDetectionCopyTo',str_SelectAll);
+	
+	SetLang('id_txtMotionDetectionday0',str_MotionSunday);
+	SetLang('id_txtMotionDetectionday1',str_MotionMonday);
+	SetLang('id_txtMotionDetectionday2',str_MotionTuesday);
+	SetLang('id_txtMotionDetectionday3',str_MotionWednesday);
+	SetLang('id_txtMotionDetectionday4',str_MotionThursday);
+	SetLang('id_txtMotionDetectionday5',str_MotionFriday);
+	SetLang('id_txtMotionDetectionday6',str_MotionSatDay);
+	SetLang('id_button0',str_Setup);
+	SetLang('id_button1',str_Setup);
+	SetLang('id_button2',str_Setup);
+	SetLang('id_button3',str_Setup);
+	SetLang('id_button4',str_Setup);
+	SetLang('id_button5',str_Setup);
+	SetLang('id_button6',str_Setup);
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+var map;
+var time;
+var AllFlag = 0;
+var selectDay;
+var StartHour0,StartMin0,StartSec0,EndHour0,EndMin0,EndSec0,StartHour1,StartMin1,StartSec1,EndHour1,EndMin1,EndSec1;
+var StartHour2,StartMin2,StartSec2,EndHour2,EndMin2,EndSec2,StartHour3,StartMin3,StartSec3,EndHour3,EndMin3,EndSec3;
+
+function addSelectMotionDetectionTime(id,num,streamtype)
+{
+	for(var i =0;i < num; i ++){
+		var addstr = '<div class="ClassContentSelectOption TimeSelect" name="id_'+streamtype+'_option" style="margin-top:'+i*24+'px;">'+i+'</div>';
+		$("#"+id).append(addstr);
+	}
+}
+
+function GetNetMap()
+{
+	var resolutionsavailable,begintime,endtime;
+	var resp = $.sendMsg("MotionDetectionParam",null,"/ISAPI/Event/MotionDetectionParam","POST");
+	if(resp.success == false){
+		alert("recv /Event/MotionDetectionParam msg fail");
+		return;
+	}
+	return resp.data;
+}
+
+function InitPageParam()
+{
+	//map = resp.data;
+	var myDate = new Date();
+	var today = myDate.getDay();
+	selectDay = today;
+	
+	SetCheckBox('id_MotionDetectionEnable',TranslationStrAndBool(map.enabled));
+	SetCheckBox('id_MotionDetectionOutput',TranslationStrAndBool(map.alarmoutput));
+	SetCheckBox('id_MotionDetectionRecord',TranslationStrAndBool(map.videooutput));
+	SetCheckBox('id_MotionDetectionSendEmail',TranslationStrAndBool(map.sendemail));
+	
+	$("#id_MotionDetectionDuration")[0].value = map.alarmduration;
+	$("#id_MotionDetectionPreRecordTime")[0].value = map.prerectime;
+
+	var startTime, startTimeHour, startTimeMin, startTimeSec;
+	var EndTime, endTimeHour, endTimeMin, endTimeSec;
+	
+	SetCheckBox('id_MotionDetectionday'+today+'Enable','1');
+	
+	for(var i = 0; i < 7; i++)
+	{
+		if(today == i)
+		{
+			$("#id_txtMotionDetectionday" + i + "").addClass("ButtonSelectedLable");
+		}
+		else
+		{
+			$("#id_txtMotionDetectionday" + i + "").removeClass("ButtonSelectedLable");
+		}
+	}
+	
+	for(i = 0 ; i < 4; i++)
+	{
+		var paraEnable = eval('map.weekday_'+today+'.section_'+i+'.plantimeenabled');		
+		startTime = eval('map.weekday_'+today+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+today+'.section_'+i+'.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_MotionDetectionPara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			var paraEnable = eval('map.weekday_'+i+'.section_'+j+'.plantimeenabled');		
+			startTime = eval('map.weekday_'+i+'.section_'+j+'.begintime').split(":");
+			EndTime = eval('map.weekday_'+i+'.section_'+j+'.endtime').split(":");
+			
+			startTimeHour = parseInt(startTime[0]);
+			startTimeMin = parseInt(startTime[1]);
+			startTimeSec = parseInt(startTime[2]);
+			
+			endTimeHour = parseInt(EndTime[0]);
+			endTimeMin = parseInt(EndTime[1]);
+			endTimeSec = parseInt(EndTime[2]);
+			
+			iEnable[i][j] = parseInt(paraEnable); 
+			iStartTime[i][j] = [startTimeHour, startTimeMin, startTimeSec];
+			iEndTime[i][j] = [endTimeHour, endTimeMin, endTimeSec];
+		
+			if (paraEnable == "1")
+			{
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec, endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}	
+}
+
+function SetPlanTime(iEnable, iStartTime, iEndTime)
+{	
+	var startTimeHour, startTimeMin, startTimeSec;
+	var endTimeHour, endTimeMin, endTimeSec;
+	
+	for(var i = 0; i < 4; i++)
+	{
+		var paraEnable = iEnable[selectDay][i];
+		//console.log("InitPageParam StartHour=" + iStartTime[0][i][0] + ", EndHour=" + iEndTime[0][i][0]);
+		//console.log("InitPageParam StartMi=" + iStartTime[0][i][1] + ", EndMi=" + iEndTime[0][i][1]);
+		
+		startTimeHour = iStartTime[selectDay][i][0];
+		startTimeMin = iStartTime[selectDay][i][1];
+		startTimeSec = iStartTime[selectDay][i][2];			
+				
+		endTimeHour = iEndTime[selectDay][i][0];
+		endTimeMin = iEndTime[selectDay][i][1];
+		endTimeSec = iEndTime[selectDay][i][2];
+		
+		SetCheckBox('id_MotionDetectionPara' + i + 'Enable', TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+	
+	for (var i = 0; i < 7; i++)
+	{
+		for (var j = 0 ; j < 4; j++)
+		{
+			startTimeHour = iStartTime[i][j][0];
+			startTimeMin = iStartTime[i][j][1];
+			startTimeSec = iStartTime[i][j][2];
+			
+			endTimeHour = iEndTime[i][j][0];
+			endTimeMin = iEndTime[i][j][1];
+			endTimeSec = iEndTime[i][j][2];
+								
+			if (iEnable[i][j] == 1)
+			{
+//				console.log("SetPlanTime i=" + i + ", j=" + j + ", StartTimeHour=" + startTimeHour + 
+//					", StartTimeMin=" + startTimeMin + ", EndTimeHour=" + endTimeHour + 
+//					", EndTimeMin=" + endTimeMin + " iEnable=" + iEnable[i][j]);
+//			
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec,
+					endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+}
+
+function time1(i, j)
+{			
+	var str_ParaEnable;
+	if (iEnable[i][j] == 1)
+	{
+		str_ParaEnable = "1";
+	}
+	else
+	{
+		str_ParaEnable = "0";
+	}
+	
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	var MotionDetectionmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+
+	return MotionDetectionmap;	
+}
+
+function section(i, j)
+{
+	var MotionDetectionmap = {"xtype":"section_"+j,"items":time1(i, j)};
+	return MotionDetectionmap;
+}
+
+function week(i)
+{
+	var map0 = {"xtype":"weekday_" + i, "items":[section(i, 0), section(i, 1), section(i, 2), section(i, 3)]};	
+	return map0;	
+}
+
+function currenttime(i, j)
+{
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_MotionDetectionPara' + j + 'Enable') == "false")
+	{
+		str_ParaEnable = "0";
+	}
+	else
+	{
+		str_ParaEnable = "1";
+	}
+	
+	var StartTime, EndTime;
+
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	var currentmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+				
+				
+	//console.log("Currenttime i:" + i + ", j:" + j + ", StartTime:" + StartTime + ", EndTime:" + EndTime);
+	
+	return currentmap;	
+}
+
+function currentsection(i, j)
+{
+	var MotionDetectionmap = {"xtype":"section_" + j,"items":currenttime(i, j)};
+	return MotionDetectionmap;
+}
+
+function submit()
+{
+	MotionDetectionPreRecordTimeCon();
+	MotionDetectionDurationCon();
+	var str_MotionDetectionEnable,str_MotionDetectionOutput,str_MotionDetectionRecord,str_MotionDetectionSensitivity,str_MotionDetectionSendEmail;
+	if(GetCheckBoxValue('id_MotionDetectionEnable') == "false")
+	{
+		str_MotionDetectionEnable = "0";
+	}
+	else
+	{
+		str_MotionDetectionEnable = "1";
+	}
+	
+	if(GetCheckBoxValue('id_MotionDetectionOutput') == "false")
+	{
+		str_MotionDetectionOutput = "0";
+	}
+	else
+	{
+		str_MotionDetectionOutput = "1";
+	}
+	
+	if(GetCheckBoxValue('id_MotionDetectionRecord') == "false")
+	{
+		str_MotionDetectionRecord = "0";
+	}
+	else
+	{
+		str_MotionDetectionRecord = "1";
+	}
+	
+	if(GetCheckBoxValue('id_MotionDetectionSendEmail') == "false")
+	{
+		str_MotionDetectionSendEmail = "0";
+	}
+	else
+	{
+		str_MotionDetectionSendEmail = "1";
+	}
+		
+	if (AllFlag == 1) // 表示选择全选，把选中那天的时间替换其它天
+	{
+		for(var i = 0; i < 7; i++)
+		{			
+			iStartTime[i] = iStartTime[selectDay];
+			iEndTime[i] = iEndTime[selectDay];				
+			iEnable[i] = iEnable[selectDay];
+		}
+	}
+	
+	EditSetPlanTime();
+	
+	var respflag = 0;
+	var msg =	[
+					{"xtype":"enabled","text":str_MotionDetectionEnable},
+					{"xtype":"alarmoutput","text":str_MotionDetectionOutput},
+					{"xtype":"videooutput","text":str_MotionDetectionRecord},
+					{"xtype":"sendemail","text":str_MotionDetectionSendEmail},
+					{"xtype":"alarmduration","text":$("#id_MotionDetectionDuration")[0].value},
+					{"xtype":"prerectime","text":$("#id_MotionDetectionPreRecordTime")[0].value},
+					//{"xtype":"delayrectime","text":""+GetSelectionVal('id_MotionDetectionRecordTime')},
+					week(0), week(1), week(2), week(3), week(4), week(5), week(6)
+				];
+	
+	for (var i = 0; i < 7; i++)
+	{
+		//var mapsend = [msg[0], msg[1], msg[2], msg[3], msg[4], msg[5], msg[i + 5]];
+		var mapsend = [msg[0], msg[1], msg[2], msg[3], msg[4], msg[5], msg[i + 6]];
+		var resp = $.sendMsg("MotionDetectionParam", mapsend, "/ISAPI/Event/MotionDetectionParam", "PUT");
+		if(resp.success == false)
+		{
+			alert("submit submit msg fail");
+		}
+		else
+		{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+	{
+		MotionDetectionTime();
+		map = GetNetMap();
+		alert(str_SetSuccess);
+		InitPlanTime();	
+		InitPageParam();
+	}
+}
+
+function copysubmit()
+{
+	var myDate = new Date();
+	var today = myDate.getDay();
+	var respflag = 0;
+	var msg =	[
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	var todaymap = {"xtype":"weekday_"+today+"","items":[currentsection(today,0),currentsection(today,1),currentsection(today,2),currentsection(today,3)]};
+	msg[today] = todaymap;
+
+
+/*	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert("设置成功");
+	}*/
+	
+	for(var i = 0; i < 7; i++){
+		var mapsend = [msg[i]];
+		var resp = $.sendMsg("MotionDetectionChannel",mapsend,"/ISAPI/MotionDetection","PUT");
+		if(resp.success == false){
+			alert("submit submit msg fail");
+		}else{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+		alert("设置成功");
+}
+
+function submitcurrenttime(j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_MotionDetectionPara'+j+'Enable') == "false"){
+		str_ParaEnable = "0";
+	}else{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = eval('StartHour'+j+'').GetValue()+':'+ eval('StartMin'+j+'').GetValue()+':'+eval('StartSec'+j+'').GetValue();
+	EndTime = eval('EndHour'+j+'').GetValue()+':'+ eval('EndMin'+j+'').GetValue()+':'+eval('EndSec'+j+'').GetValue();
+	var currentmap ={"plantimeenabled":str_ParaEnable,"begintime":StartTime,"endtime":EndTime};
+	return currentmap;	
+}
+
+function submitcurrentsection(i,j)
+{
+	var a = submitcurrenttime(j);
+	var str = '"section_'+j+'"'+':'+JSON.stringify(a);
+	return str;
+}
+
+function CopyTo()
+{
+	//console.log('flag ='+AllFlag);
+	if (AllFlag == 0)
+	{
+		for (var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_MotionDetectionday' + i + 'Enable','true');
+			MotionDetectionTime();
+		}
+		AllFlag = 1;
+	}
+	else if (AllFlag == 1)
+	{
+		for (var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_MotionDetectionday' + i + 'Enable', 'false');
+		}
+		AllFlag = 0;
+	}
+}
+
+function RadioEvent()
+{
+	var radiostr = GetRaioIndex('MotionDetectionRadioWeekDay');
+	//console.log("111 = "+radiostr);
+	for(var i = 0;i < 7;i++)
+	{
+		if(i == radiostr)
+			SetCheckBox('id_MotionDetectionday'+radiostr+'Enable','true');
+		else
+			SetCheckBox('id_MotionDetectionday'+i+'Enable','false');
+	}
+	
+	for(i = 0 ; i < 4; i++)
+	{
+		var paraEnable = eval('map.weekday_'+radiostr+'.section_'+i+'.plantimeenabled');		
+		StartTime = eval('map.weekday_'+radiostr+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+radiostr+'.section_'+i+'.endtime').split(":");
+		//console.log("paraEnable=="+paraEnable+"StartTime="+StartTime+"EndTime="+EndTime);
+		startTimeHour = StartTime[0];
+		startTimeMin = StartTime[1];
+		startTimeSec = StartTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_MotionDetectionPara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+}
+
+function MotionDetectionCon()
+{
+	if($('#id_MotionDetectionInterval')[0].value < 1){
+		$('#id_MotionDetectionInterval')[0].value = 1;
+	}
+	if($('#id_MotionDetectionInterval')[0].value > 600){
+		$('#id_MotionDetectionInterval')[0].value = 600;
+	}
+}
+
+function EditSetPlanTime()
+{
+	for (var i = 0; i < 7; i++)
+	{
+		if (GetCheckBoxValue('id_MotionDetectionday' + i + 'Enable') == "true")
+		{		
+			for (var j = 0; j < 4; j++)
+			{
+				if (GetCheckBoxValue('id_MotionDetectionPara' + j + 'Enable') == "true")
+					iEnable[i][j] = 1
+				else
+					iEnable[i][j] = 0;
+
+				iStartTime[i][j][0]	= parseInt(eval('StartHour' + j + '').GetValue());
+				iStartTime[i][j][1] = parseInt(eval('StartMin' + j + '').GetValue());
+				iStartTime[i][j][2] = parseInt(eval('StartSec' + j + '').GetValue());
+				iEndTime[i][j][0] = parseInt(eval('EndHour' + j + '').GetValue());
+				iEndTime[i][j][1] = parseInt(eval('EndMin' + j + '').GetValue());
+				iEndTime[i][j][2] = parseInt(eval('EndSec' + j + '').GetValue());			
+			}
+		}
+	}
+	
+	var MinIndex, OldStartTime; 
+	var StartTimeHour, StartTimeHour, EndTimeHour, EndTimeMin;
+	var tempStartTimeHour, tempStartTimeMin, tempEndTimeHour, tempEndTimeMin;
+	var tempEnable = 0;
+	for(var i = 0; i < 7; i++)
+	{	
+		if (GetCheckBoxValue('id_MotionDetectionday' + i + 'Enable') == "true")
+		{
+			for(var j = 0; j < 4; j++)
+			{	
+				MinIndex = -1;
+				OldStartTime = 30 * 60 + 60;
+				for(var n = j; n < 4; n++)
+				{						
+					StartTimeHour = parseInt(iStartTime[i][n][0]);
+					StartTimeMin = parseInt(iStartTime[i][n][1]);
+					EndTimeHour = parseInt(iEndTime[i][n][0]);
+					EndTimeMin = parseInt(iEndTime[i][n][1]);
+					if (StartTimeHour * 60 + StartTimeMin > 0)
+					{
+						if (OldStartTime > StartTimeHour * 60 + StartTimeMin) // 找出最小的
+						{
+							MinIndex = n;
+							OldStartTime = StartTimeHour * 60 + StartTimeMin;
+							//console.log("1==== i=" + i + ", j=" + j + ", n=" + n + ", StartTimeHour=" + StartTimeHour);
+							tempStartTimeHour = StartTimeHour;
+							tempStartTimeMin = StartTimeMin;
+							tempEndTimeHour = EndTimeHour;
+							tempEndTimeMin = EndTimeMin;
+							tempEnable = iEnable[i][n];
+						}
+					}	
+				}
+				if (MinIndex >= 0)
+				{
+					iStartTime[i][MinIndex] = iStartTime[i][j];													
+					iEndTime[i][MinIndex] = iEndTime[i][j];
+					iEnable[i][MinIndex] = iEnable[i][j];
+					iStartTime[i][j] = [tempStartTimeHour, tempStartTimeMin, 0];					
+					iEndTime[i][j] = [tempEndTimeHour, tempEndTimeMin, 59];
+					iEnable[i][j] = tempEnable;
+					//console.log("2==== i=" + i + ", j=" + j + ", MinIndex=" + MinIndex + ", StartTimeHour=" + StartTimeHour);
+				}
+			}
+		}
+	}	
+}
+
+
+function MotionDetectionTime()
+{
+	var STimeHour, STimeMin, STimeSec;
+	var ETimeHour, ETimeMin, ETimeSec;
+	var Temp1, Temp2;
+	var endTimeHour, endTimeMin, endTimeSec
+	
+	for (var i = 0; i < 7; i++)
+	{
+		if (GetCheckBoxValue('id_MotionDetectionday' + i + 'Enable') == "true")
+		{		
+			for (var j = 0; j < 4; j++)
+			{
+				STimeHour = parseInt(eval('StartHour' + j + '').GetValue());
+				STimeMin = parseInt(eval('StartMin' + j + '').GetValue());
+				STimeSec = parseInt(eval('StartSec' + j + '').GetValue());
+				
+				ETimeHour = parseInt(eval('EndHour' + j + '').GetValue());
+				ETimeMin = parseInt(eval('EndMin' + j + '').GetValue());
+				ETimeSec = parseInt(eval('EndSec' + j + '').GetValue());
+				
+				Temp1 = STimeHour * 3600 + STimeMin * 60 + STimeSec; 
+				Temp2 = ETimeHour * 3600 + ETimeMin * 60 + ETimeSec;
+				if (Temp1 > Temp2)
+				{
+					eval('EndHour' + j + '').SetValue(eval('StartHour' + j + '').GetValue());
+					eval('EndMin' + j + '').SetValue(eval('StartMin' + j + '').GetValue());
+					eval('EndSec' + j + '').SetValue(eval('StartSec' + j + '').GetValue());;
+				}
+				
+				time.ClearSingle(i, j);
+				if(GetCheckBoxValue('id_MotionDetectionPara' + j + 'Enable') == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue(),
+						eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());						
+				}
+				else
+				{
+					time.ClearSingle(i,j);
+				}
+			}
+		}
+	}
+}
+
+function MotionDetectionDurationCon()
+{
+	if($('#id_MotionDetectionDuration')[0].value < 5)
+	{
+		$('#id_MotionDetectionDuration')[0].value = 5;
+	}
+	
+	if($('#id_MotionDetectionDuration')[0].value > 300)
+	{
+		$('#id_MotionDetectionDuration')[0].value = 300;
+	}
+}
+
+function MotionDetectionPreRecordTimeCon()
+{
+	if($('#id_MotionDetectionPreRecordTime')[0].value < 1)
+	{
+		$('#id_MotionDetectionPreRecordTime')[0].value = 1;
+	}
+	
+	if($('#id_MotionDetectionPreRecordTime')[0].value > 10)
+	{
+		$('#id_MotionDetectionPreRecordTime')[0].value = 10;
+	}
+}
+
+function funbutton(id)
+{
+	selectDay = id.substring(id.length - 1, id.length);
+	//console.log("selectDay:" + selectDay);	
+	for(var i = 0; i < 7; i++)
+	{
+		if(selectDay == i)
+		{
+			SetCheckBox('id_MotionDetectionday' + i + 'Enable', 'true');
+			$("#id_txtMotionDetectionday" + i + "").addClass("ButtonSelectedLable");
+			for(j = 0 ; j < 4; j++)
+			{
+
+				var paraEnable = iEnable[selectDay][j];
+//				console.log("funbutton StartHour=" + iStartTime[selectDay][j][0] + ", EndHour=" + iEndTime[selectDay][j][0]);
+//				console.log("funbutton StartMin=" + iStartTime[selectDay][j][1] + ", EndMin=" + iEndTime[selectDay][j][1]);
+				
+				startTimeHour = iStartTime[selectDay][j][0];
+				startTimeMin = iStartTime[selectDay][j][1];
+				startTimeSec = iStartTime[selectDay][j][2];			
+				
+				endTimeHour = iEndTime[selectDay][j][0];
+				endTimeMin = iEndTime[selectDay][j][1];
+				endTimeSec = iEndTime[selectDay][j][2];
+				
+				SetCheckBox('id_MotionDetectionPara' + j +'Enable',TranslationStrAndBool(paraEnable));
+				eval('StartHour' + j + '').SetValue(startTimeHour);
+				eval('StartMin' + j + '').SetValue(startTimeMin);
+				eval('StartSec' + j + '').SetValue(startTimeSec);
+				eval('EndHour' + j + '').SetValue(endTimeHour);
+				eval('EndMin' + j + '').SetValue(endTimeMin);
+				eval('EndSec' + j + '').SetValue(endTimeSec);
+				
+				if (TranslationStrAndBool(paraEnable) == "true")
+				{
+					time.SetTime(i, j, eval('StartHour' + j + '').GetValue(),eval('StartMin' + j + '').GetValue(),eval('StartSec' + j + '').GetValue(), 
+						eval('EndHour' + j + '').GetValue(),eval('EndMin' + j + '').GetValue(),eval('EndSec' + j + '').GetValue());
+				}
+				
+				else
+				{
+					time.ClearSingle(i, j);
+				}
+			}
+		}
+		else
+		{
+			SetCheckBox('id_MotionDetectionday' + i + 'Enable', 'false');
+			$("#id_txtMotionDetectionday" + i + "").removeClass("ButtonSelectedLable");
+		}
+	}
+}
+function motionDetectionEdit()
+{
+	self.location='MotionAreaSet.html';
+	self.location='MotionAreaSet.html';
+}
+
+$(function()
+{
+	BindEvent('id_MotionDetectionEdit','onmousedown',motionDetectionEdit,null);	
+	StartHour0 = new SelectInput("id_MotionDetectionStartHour0",0,23,0,MotionDetectionTime);
+	StartMin0 = new SelectInput("id_MotionDetectionStartMin0",0,59,0,MotionDetectionTime);
+	StartSec0 = new SelectInput("id_MotionDetectionStartSec0",0,59,0,MotionDetectionTime);
+
+	EndHour0 = new SelectInput("id_MotionDetectionEndHour0",23,23,0,MotionDetectionTime);
+	EndMin0 = new SelectInput("id_MotionDetectionEndMin0",59,59,0,MotionDetectionTime);
+	EndSec0 = new SelectInput("id_MotionDetectionEndSec0",59,59,0,MotionDetectionTime);
+	
+	StartHour1 = new SelectInput("id_MotionDetectionStartHour1",0,23,0,MotionDetectionTime);
+	StartMin1 = new SelectInput("id_MotionDetectionStartMin1",0,59,0,MotionDetectionTime);
+	StartSec1 = new SelectInput("id_MotionDetectionStartSec1",0,59,0,MotionDetectionTime);
+	
+	EndHour1 = new SelectInput("id_MotionDetectionEndHour1",23,23,0,MotionDetectionTime);
+	EndMin1 = new SelectInput("id_MotionDetectionEndMin1",59,59,0,MotionDetectionTime);
+	EndSec1 = new SelectInput("id_MotionDetectionEndSec1",59,59,0,MotionDetectionTime);
+	
+	StartHour2 = new SelectInput("id_MotionDetectionStartHour2",0,23,0,MotionDetectionTime);
+	StartMin2 = new SelectInput("id_MotionDetectionStartMin2",0,59,0,MotionDetectionTime);
+	StartSec2 = new SelectInput("id_MotionDetectionStartSec2",0,59,0,MotionDetectionTime);
+
+	EndHour2 = new SelectInput("id_MotionDetectionEndHour2",23,23,0,MotionDetectionTime);
+	EndMin2 = new SelectInput("id_MotionDetectionEndMin2",59,59,0,MotionDetectionTime);
+	EndSec2 = new SelectInput("id_MotionDetectionEndSec2",59,59,0,MotionDetectionTime);
+
+	StartHour3 = new SelectInput("id_MotionDetectionStartHour3",0,23,0,MotionDetectionTime);
+	StartMin3 = new SelectInput("id_MotionDetectionStartMin3",0,59,0,MotionDetectionTime);
+	StartSec3 = new SelectInput("id_MotionDetectionStartSec3",0,59,0,MotionDetectionTime);
+
+	EndHour3 = new SelectInput("id_MotionDetectionEndHour3",23,23,0,MotionDetectionTime);
+	EndMin3 = new SelectInput("id_MotionDetectionEndMin3",59,59,0,MotionDetectionTime);
+	EndSec3 = new SelectInput("id_MotionDetectionEndSec3",59,59,0,MotionDetectionTime);
+	time = new TimeTable('id_TimeTable');
+	time.ClearAll();
+	
+	map = GetNetMap();
+	InitLang();
+	InitPlanTime();	
+	InitPageParam();
+	BindEvent('id_MotionDetectionCopyTo','onmousedown',CopyTo,null);
+	BindEvent('id_MotionDetectionSubmit','onmousedown',submit,null);
+	BindEvent('id_MotionDetectionDuration','onchange',MotionDetectionDurationCon,null);
+	BindEvent('id_MotionDetectionPreRecordTime','onchange',MotionDetectionPreRecordTimeCon,null);
+	BindEvent('id_button0','onmousedown',funbutton,'id_button0');
+	BindEvent('id_button1','onmousedown',funbutton,'id_button1');
+	BindEvent('id_button2','onmousedown',funbutton,'id_button2');
+	BindEvent('id_button3','onmousedown',funbutton,'id_button3');
+	BindEvent('id_button4','onmousedown',funbutton,'id_button4');
+	BindEvent('id_button5','onmousedown',funbutton,'id_button5');
+	BindEvent('id_button6','onmousedown',funbutton,'id_button6');
+}
+)
+//$(document).ready(function()
+//{
+//	$(document).mousemove(function(e)
+//	{
+//	    $("span").text("X: " + e.pageX + ", Y: " + e.pageY); 
+//	});
+//});
+</script> 
+
+<body>   
+<div class="ContentBg MotionDetectionDiv" style="min-width:950px;">
+	<!--<p>鼠标指针位于： <span></span></p>-->
+	<div style="height:100%;margin:auto;width:950px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionEnable"><script>InitCheckBox('id_MotionDetectionEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtMotionDetectionEnable">Enable</div>
+		<div class="DivButton" style="float:left;margin-left:86px;width:110px;" id="id_MotionDetectionEdit">Regional Edit</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionOutput"><script>InitCheckBox('id_MotionDetectionOutput','true')</script></div>
+		<div class="DivLable divbox" style="float:left;margin-left:10px;" id="id_txtMotionDetectionOutput">Output</div>
+		
+		<div class="DivCheckBox" style="float:left;margin-left:40px;"id="id_MotionDetectionRecord"><script>InitCheckBox('id_MotionDetectionRecord','true')</script></div>
+		<div class="DivLable divbox" style="float:left;margin-left:10px;" id="id_txtMotionDetectionRecord">Record</div>
+		
+		<div class="DivCheckBox" style="float:left;margin-left:40px;"id="id_MotionDetectionSendEmail"><script>InitCheckBox('id_MotionDetectionSendEmail','true')</script></div>
+		<div class="DivLable divbox" style="float:left;margin-left:10px;" id="id_txtMotionDetectionSendEmail">SendEmail</div>	
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtMotionDetectionRecordTime" id="id_txtMotionDetectionPreRecordTime">Pre-record Time:</div>
+		<input class="DivInput DivInputMotion" id="id_MotionDetectionPreRecordTime" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Sec)(1-10)</div>
+		
+		<div class="DivLable txtMotionDetectionPage" id="id_txtMotionDetectionDuration" style="margin-left:30px;">Alarm Duration:</div>
+		<input class="DivInput DivInputMotion" id="id_MotionDetectionDuration" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Sec)(5-300)</div>
+		<div style="clear:both;height:15px;"></div>
+		 
+		<div id="id_TimeTable" style="float:left; width: 553px; height: 229px;" oncontextmenu="return false"></div>
+		<div style="float:left;width:200px;height:227px;">
+			<div style="width:28px;height:16px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button0">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button1">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button2">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button3">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button4">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button5">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button6">设置</div>
+		</div>
+		<div style="clear:both;"></div>
+		
+		<div style="clear:both;height:15px;" id="BottomClear"></div>
+		
+		
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionPara0Enable"><script>InitCheckBox('id_MotionDetectionPara0Enable','flase',MotionDetectionTime)</script></div>
+		<div class="DivLable" id="id_MotionDetectionPara1" style="float:left;margin-left:10px;">Para1:</div>
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_MotionDetectionStartHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartSec0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="float:left;margin-left:10px;">
+		<div id="id_MotionDetectionEndHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndSec0"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+			
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionPara1Enable"><script>InitCheckBox('id_MotionDetectionPara1Enable','flase',MotionDetectionTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_MotionDetectionPara2">Para2:</div>
+	
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_MotionDetectionStartHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartSec1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="float:left;margin-left:10px;">
+		<div id="id_MotionDetectionEndHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndSec1"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionPara2Enable"><script>InitCheckBox('id_MotionDetectionPara2Enable','flase',MotionDetectionTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_MotionDetectionPara3">Para3:</div>
+		
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_MotionDetectionStartHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartSec2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="float:left;margin-left:10px;">
+		<div id="id_MotionDetectionEndHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndSec2"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_MotionDetectionPara3Enable"><script>InitCheckBox('id_MotionDetectionPara3Enable','flase',MotionDetectionTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_MotionDetectionPara4">Para4:</div>	
+		
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_MotionDetectionStartHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionStartSec3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="float:left;margin-left:10px;">
+		<div id="id_MotionDetectionEndHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_MotionDetectionEndSec3"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+				
+		<div class="DivAllBtn CopyButton" style="float:left;" id="id_MotionDetectionCopyTo">All</div>
+		
+
+		<div class="DivCheckBox" style="float:left;margin-left:20px;"id="id_MotionDetectionday0Enable"><script>InitCheckBox('id_MotionDetectionday0Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday0">Sunday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_MotionDetectionday1Enable"><script>InitCheckBox('id_MotionDetectionday1Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday1">Monday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_MotionDetectionday2Enable"><script>InitCheckBox('id_MotionDetectionday2Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft"  id="id_txtMotionDetectionday2">Tuesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_MotionDetectionday3Enable"><script>InitCheckBox('id_MotionDetectionday3Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday3">Wednesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_MotionDetectionday4Enable"><script>InitCheckBox('id_MotionDetectionday4Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday4">Thursday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_MotionDetectionday5Enable"><script>InitCheckBox('id_MotionDetectionday5Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday5">Friday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_MotionDetectionday6Enable"><script>InitCheckBox('id_MotionDetectionday6Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtMotionDetectionday6">Saturday</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_MotionDetectionSubmit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+</html>  

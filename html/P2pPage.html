@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/qrcode.js"></script>
+</head>
+
+<style type="text/css">
+.P2pDiv{
+	left:0px;
+	right:0px;
+	height:450px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:440px;
+	float:left;
+	margin-left:10px;
+	text-align:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+
+.txtUUID{
+	width:100px;
+	float:left;
+}
+
+
+
+</style> 
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+
+<body>   
+<div class="ContentBg P2pDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_P2p"><script>InitCheckBox('id_P2p','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtP2p">P2P</div>
+		<div style="clear:both;height:15px;"></div>	
+		<div class="DivLable" style="float:left;width:100px;margin-left:0px;">UUID:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_UUID"value="" readonly=readonly></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable" style="float:left;width:100px;margin-left:0px;">APP Android:</div>
+		<input class="DivInput DivInputAtLoacalRecord" readonly=readonly value="" id = "id_Android"></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable" style="float:left;width:100px;margin-left:0px;">APP IOS:</div>
+		<input class="DivInput DivInputAtLoacalRecord" readonly=readonly value="" id = "id_IOS"></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:240px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+		<div style="clear:both;height:20px;"></div>
+		<div id="ID_Qrcode" style="width:150px;height:150px; float:left;margin-left:0px;border:4px solid white;"></div>
+		<div id="ID_AppAndroid" style="width:150px;height:150px;float:left;margin-left:35px;border:4px solid white;"></div>
+		<div id="ID_AppIOS" style="width:150px;height:150px;float:left;margin-left:35px;border:4px solid white;"></div>
+		<div style="clear:both;height:15px;"></div>
+		<div>
+			<div class="DivLable txtUUID" id="id_TXTP2PUUID" style="float:left;margin-left:40px;">P2P UUID</div>
+			<div class="DivLable txtUUID" id="id_txtAnroidUUID" style="float:left;margin-left:90px;">Android App</div>
+			<div class="DivLable txtUUID" id="id_txtIOSUUID" style="float:left;margin-left:110px;">IOS App</div>
+		</div>
+		<div style="clear:both;height:20px;"></div>
+	</div>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_submit',str_btnSnapSave);
+};
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("P2PStatus",null,"/ISAPI/Network/P2P","POST");
+	if(resp.success == false){
+		alert("recv SNMPStatus  msg fail");
+		return;
+	}
+
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	SetCheckBox('id_P2p',TranslationStrAndBool(map.enabled));
+	if(map.p2puuid != null)
+	{
+		initQrccode(map.p2puuid);
+		$("#id_UUID")[0].value = map.p2puuid;
+	}
+	else
+	{
+		document.getElementById("ID_Qrcode").style.cssText  = "width:150px;height:150px; float:left;border:4px solid #c8c8c8;";
+		$("#id_UUID")[0].value = "";
+		
+	}
+	if (map.appurlandroid != null)
+	{
+		initApp(map.appurlandroid, map.appurlios);
+		$("#id_Android")[0].value = map.appurlandroid;
+		$("#id_IOS")[0].value = map.appurlios;
+	}
+	else
+	{
+		initApp("http://www.zwcloud.wang/p2p_direct.html", "https://itunes.apple.com/us/app/p2pcmscam/id1173582301?mt=8");
+		$("#id_Android")[0].value = "http://www.zwcloud.wang/p2p_direct.html";
+		$("#id_IOS")[0].value = "https://itunes.apple.com/us/app/p2pcmscam/id1173582301?mt=8";
+	}
+}
+
+function submit()
+{
+	var str_idP2p;
+	if(GetCheckBoxValue('id_P2p') == "false"){
+		str_idP2p = "0";
+	}else{
+		str_idP2p = "1";
+	}
+	var msg = [
+				{"xtype":"enabled","text":str_idP2p}
+			];
+	
+	var resp = $.sendMsg("P2PStatus",msg,"/ISAPI/Network/P2P","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+	
+}
+function initQrccode(uuid)
+{
+	var qrcObj = document.getElementById("ID_Qrcode");
+	var qrcode = new QRCode(qrcObj, {
+		width : 150,
+		height : 150,
+	});
+	qrcode.makeCode(uuid);
+}
+
+function initApp(app,ios)
+{
+	var qrcObj = document.getElementById("ID_AppAndroid");
+	var qrcode = new QRCode(qrcObj, {
+		width : 150,
+		height : 150,
+	});
+	qrcode.makeCode(app);
+	
+	qrcObj = document.getElementById("ID_AppIOS");
+	qrcode = new QRCode(qrcObj, {
+		width : 150,
+		height : 150,
+	});
+	qrcode.makeCode(ios);
+}
+
+$(function(){
+	InitLang();
+	InitPageParam();	
+	BindEvent('id_submit','onmousedown',submit,null);
+	//initApp("http://www.zwcloud.wang/p2p_direct.html","https://itunes.apple.com/us/app/p2pcmscam/id1173582301?mt=8");
+});
+</script> 
+  
+</html>  

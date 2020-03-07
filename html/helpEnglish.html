@@ -1,0 +1,666 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="icon" href="data:;base64,=">
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<style type="text/css">
+h2{
+	color:#64b9fa;
+}
+h3{
+	color:#4586d8;
+}
+h4{
+	color:#f7ad51;
+	margin-left:20px;
+	float:left;
+}
+p{
+	margin-left:20px;
+}
+
+</style>
+<body>
+<div style="color:#ffffff">
+<h2>1.  Connection Guide</h2>
+<h3>1.1 Connecting the Camera</h3>
+<p>
+There are two main methods to connect the camera:<br/>
+Before accessing the IP camera, user needs to acquire the IP address on the IP camera. User can find the IP address by using the “GW Device Manager” software included in the CD.
+From the GW Device Manager software, left click on “search” to find all the available IP camera in your current network. The software will display the IP camera’s IP address, port number, MAC address, Serial Number, UID, version info, and model number.<br/>
+If the IP address found does not match your computer’s IP subnet, please use GW Device Manager to modify the IP camera’s network info.<br/>
+From the GW Device Manager, select the IP camera to be modified and right click, then choose Network Configuration.
+<h4>Note:</h4><p>The IP camera will have DHCP turned on by default. Please connect the IP camera to a network with DHCP available. If there is no DHCP server available, the IP camera’s IP address will default to 192.168.0.66.<br/>
+</p>
+</p>
+<br/><br/>
+<h3>1.2  Logging into the Web Interface</h3>
+ <p>
+When user accesses the web interface for the first time, “VLC media player” is needed in order for the video to show correctly. 
+To access the web interface, please follow the step below:<br/>
+Step 1: Open Internet Explorer and input the IP camera’s IP address into the URL address bar.<br/>
+Step 2: When the user interface is shown, enter the default username: admin and password: admin to log into the web interface. <br/>
+Step 3: Install the “VLC media player”: <br/>
+•After login successfully.<br/>
+•You can see a plugin need load,Please follow tips do it.<br/>
+ Available from the Web Interface:<br/>
+•Live Preview<br/>
+•Record Playback<br/>
+•Save a recording onto the local computer.<br/>
+•Modify IP camera parameters, change settings, change video quality and system time.<br/>
+
+Minimum Requirement<br/>
+2.0 Ghz and up CPU<br/>
+2GB and up RAM<br/>
+10/100Mbps network<br/>
+1024 x 768 or up Monitor Resolution
+<br/>
+Supported OS:<br/>
+Microsoft Windows XP, Microsoft Windows Vista, Microsoft Windows 7,Microsoft Windows 8,Microsoft Windows 10
+Mac OS.<br/>
+<h4>Note:</h4><p>The Internet browser mentioned in the manual is Internet Explorer. Please use IE version 9 and up to access the web interface.<br/>
+</p>
+</p>
+<br/><br/><br/>
+<h2>2. Preview</h2>
+<h3>2.1 Main Menu</h3>
+
+<p>
+For detail information of each section, please see (section 2 Preview, section 3 Backup, section 4 Settings).
+</p>
+<br/><br/>
+<h3>2.2 Function Bar</h3>
+<p>
+1.Main Stream:Switch to main stream; Main stream is the recorded bit rate with high resolution.<br/>
+2.Sub Stream:Switch to sub stream; Sub stream is the lower resolution and bit rate used when bandwidth is a restriction for accessing camera remotely.<br/>
+3.Sensor Alarm: Alarm in is open and sensor had alarm. <br/>
+White: Sensor Alarm has not been set up.<br/>
+Blue: Sensor Alarm has been set up and activated.<br/>
+Red: Sensor Alarm is been triggered.<br/>
+4.Motion Alarm:Display the Motion Alarm Status:<br/>
+White: Motion Alarm has not been set up.<br/>
+Blue: Motion Alarm has been set up and activated.<br/>
+Red: Motion Alarm is been triggered.<br/>
+Note: Only the status is shown here. For detail setting, please refer to section 4.3.1.<br/>
+5.Video Cover Alarm:Display the Video Cover Alarm status:<br/>
+White: Video Cover Alarm has not been set up.<br/>
+Blue: Video Cover Alarm has been set up and activated.<br/>
+Red: Video Cover Alarm is been triggered.<br/>
+Note: Only the status is shown here. For detail setting, please refer to section 4.3.2.<br/>
+6.Full screen:Single left click this icon will bring the video to full screen. Double click on the video or hit “ESC” to exit full screen mode.<br/>
+7.Manual Record:Single left click will turn on manual record mode.<br/>
+8.Schedule Record:Show the status of Schedule Record:<br/>
+White: Schedule Record has not been set up.<br/>
+Blue: Schedule Record has been set up and is currently recording.<br/>
+9.Audio:Turn on/off the Audio.<br/>
+10.Screen Capture:Single left click will capture a screenshot. For the screenshot save path, please refer to section 5.1.1.<br/>
+11.Display/Hide:Sidebar	Display/hide sidebar.<br/>
+</p>
+<br/><br/>
+<h3>2.3  Feature bar</h3>
+<p>
+Zoom: Adjust the camera’s Zoom level; single left click or left click and hold on the + and – sign for adjustment.<br/>
+Focus: Adjust the focus; single left click or left click and hold on the + and – sign for adjustment.<br/>
+<h4>Note:</h4>
+<p>Only model with motorized zoom support this feature.</p>
+</p>
+<br/><br/>
+
+<h2>3. Playback</h2>
+<br/><br/>
+<h2>4. Settings</h2>
+<p>
+Web Client’s Setting has 5 options: Config Media, Network, Alarm, Record, and System.
+</p>
+<br/>
+<h3>4.1 Config Media</h3>
+<p>Config Media has the section: Audio Video, Privacy, Image, ROI, OSD.</p>
+
+
+
+<h3>4.1.1 Audio Video</h3>
+<p>
+Step 1: Choose “Settings -> Config Media -> Audio Video”. <br/>
+Step 2: Audio Video Parameters: <br/>
+Standard:Set the video standard.<br/>
+		Pal: 25FPS<br/>
+		NTSC: 30FPS<br/>
+Stream Type:Set the video parameter for each stream type:<br/>
+		Main Stream is the recorded bit rate.<br/>
+		Sub Stream is the secondary stream used for mobile access.<br/>
+Frame Rate:Set the Frame Rate Per second (FPS). Reducing the frame rate will increase the average bit rate for each frame, but does not necessary saves disk space. The maximum FPS will depend on the resolution set. <br/>
+Code:Set the camera to use H.264 or H.265 codec.<br/>
+Step 3: click “Save”to complete video configuration.<br/>
+</p>
+
+<h3>4.1.2 Privacy</h3>
+<p>
+Step 1: Select Settings > Config Media > Privacy<br/>
+Step 2: Tick "Enable".<br/>
+Step 3: Click "Full Screen Click" to select the whole region selection screen area, click "click Clear Screen" to clear the previous to cancel the full screen area settings, set the area, click the "save"  Save to complete privacy complete privacy settings area configuration.<br/>
+<h4> Note: </h4>
+<p>
+Privacy masking supports up to most areas: Privacy block supports up to four areas.<br/>
+</p>
+</p>
+<br/><br/>
+
+
+<h3>4.1.3 Image</h3>
+<p>
+Step 1:Select“Settings > Config Media > Image”<br/>
+Step 2:Image setting detail description.<br/>
+• Hue: Changes the color mix of the image (this can have very dramatic results). <br/>
+• Brightness: Changes how bright the image appears to be. The bigger number the brighter effect.<br/>
+• Contrast: The separation between the darkest and brightest areas of the image. <br/>
+• Saturation: Alters how much color is displayed in the image. The higher the saturation, the more bright and vivid colors will appear to be.<br/>
+• Sharpness: Sharpen image to increase the Signal Noise Ratio .<br/>
+• Mirror: Change the orientation of the image to be horizontally reversed. <br/>
+• Turn: Change the orientation of the image to be vertically reversed. <br/>
+• Camera Angle:Angle Change the orientation of the image to 90°、180°、270° or normal. <br/>
+3DNR: 3D-Noise Ratio: if Enabled may decrease the noise of the image.<br/>
+• LUX: Adjust Illuminance value, the bigger the number the easier to trigger the infrared. Set to “0” to turn off the IR lights and set to “9” to keep the IR lights always on. <br/>
+• Dewarping: refers to the process of perspective correction of an image, to reverse the effects of geometric distortions caused by the camera lens. Most commonly known as a “Fisheye” and/or “360º” device. <br/>
+• Led intensity:Led intensity Adjust the intensity of LED lights. Set to “0” to turn off the LED lights. The bigger the number the stronger the intensity. <br/>
+• Exposure Mode: <br/>
+Auto: Select the exposure level of the camera based on pre-defined conditions. <br/>
+Manual: Manual: Adjust shutter speed and gain value of the camera manually. <br/>
+• Shutter: Known as “exposure time”, stands for the length of time a camera shutter is open to expose light into the camera sensor. <br/>If the shutter speed is fast, it can help to freeze action completely. <br/>If the shutter speed is slow, it can create an effect called “motion blur”, where moving objects appear blurred along the direction of the motion. This effect is used quite a bit in advertisements of cars and motorbikes, where a sense of speed and motion is communicated to the viewer by intentionally blurring the moving wheels. <br/>
+• BLC Mode:<br/>
+WDR: Turning on the Wide Dynamic Range (WDR) feature for photos improves the overall exposure throughout your entire image. It enables the camera to pick up greater detail in dark shadows, while making sure that the highlights don't get blown-out.<br/>
+DWDR: Digital wide dynamic range (D-WDR) is a software-based technique that optimizes image quality by adjusting the gamma (γ) value to enhance dark areas.<br/>
+BLC: Back-light Compensation (BLC) optimizes exposure in the foreground and background of security video. It splits the video scene into different regions and uses a different exposure for each of these regions. It corrects regions with extremely high or low levels of light to maintain a normal and usable level of light for the object in focus.<br/>
+HLC: 	Highlight Compensation (HLC) senses strong sources of light in video and compensates for exposure on these spots to enhance the overall quality.<br/>
+• Backlight compensation: turn off, WDR, DWDR, backlight compensation, glare, preset value to turn off.<br/>
+• FLC:<br/>
+50Hz: in the case of 50Hz, the exposure is automatically adjusted according to the brightness of the scene to ensure that the image does not appear horizontal stripes. <br/>
+The 60Hz: in the case of 60Hz, according to the brightness of the scene, automatically adjust the exposure to ensure that the image does not appear horizontal stripes. <br/> 
+The outdoor: this mode can be switched to light exposure, the effect of the corresponding exposure mode.<br/> 
+• Anti flicker: outdoor, 50Hz, 60Hz optional. Preset value for outdoor.<br/>
+• Day/Night:<br/>
+Color: Display only color images.<br/>
+Black and white: Only black and white images are displayed. <br/>
+Automatic: According to the CDS illuminance to switch to display color or black and white images.<br/>
+Time: Toggle the color or black and white image according to the set time.<br/>
+• Day/Night: color, black and white, automatic, time selectable. Non red light machine preset value is color, red light machine preset value is automatic.<br/>
+</p>
+<br/><br/>
+<h3>4.1.4, ROI, ROI-Region, of, Interest</h3>
+<p>
+Step 1: Select“Settings > Conig Media > ROI”.<br/>
+Step 2: Check“Enable”.<br/>
+Step 3: Click“Full Screen” to select the whole area,click“Clear Screen”to clear the previous settings，click”Save” to complete ROI area configuration. <br/>
+<h4> Note: </h4>
+<p>
+ROI function supports up to four areas.<br/>
+</p>
+</p>
+<br/><br/>
+
+<h3>4.1.5 OSD</h3>
+<p>
+Step 1:Select“Settings > Config Media > OSD”.<br/>
+Step 2:OSD Parameters:<br/>
+• Show clock Display or Hide current time. <br/>
+• Show Fps Display or Hide FPS info. <br/>
+• Show Channel Name	Display or Hide Channel name. (up to 16 characters). <br/>
+• Show User Info Display or Hide User info. (up to 16 characters). <br/>
+<h4> Note: </h4>
+<p>
+You can use mouse to change the OSD content position. <br/>
+</p>
+</p>
+<br/><br/><br/>
+
+<h2>4.2 Network</h2>
+<p>
+Local Network Configuration:<br/>
+“TCP/IP、PPPOE、DDNS Client、Email、FTP、Bonjour、SNMP、HTTPS、P2P”.<br/>
+</p><br/><br/>
+
+<h3>4.2.1 TCP/IP</h3>
+<p>
+Step 1:Select“Settings > Network > TCP/IP”.<br/>
+Step 2:TCP/IP Parameters.<br/>
+• Allows up to 10 devices log in at the same time. <br/>
+• DHCP <br/>
+Enable DHCP: DHCP is a system where one device on your network (usually a router) will automatically assign IP address to device connected to the network.<br/>
+Disable DHCP(Static): Static networks require all devices to have their IP addresses manually defined, as there is no device dedicated to automatically assign IP address. <br/>
+• IPv4/IPv6 Address, just as families and offices need an address to determine where they are on the network. <br/>
+The IPv4 address: Four groups of 0 and 255 between the digital components, and separated from the full stop. For example, a typical IP address may be "192.168.1.24" or similar.
+The IPv6 address: IPv6 address length is 128 bits, is 4 times the length of the IPv4 address, said the sixteen digit, and by a colon. For example, a typical IP address is "2001:250:3000:1: 1:7" or similar.
+IPv4 Subnet - If the IP address is like a street address, then a sub-network is like your neighborhood.<br/>
+The This will be formatted in a similar way to the IP address (ie. four numbers up to 255 separated by periods but contain very different numbers.)
+The In the above example, the Subnet might be something like: "255.255.255.0".
+Gateway This is the address of - the way to the Internet. "To continue the road analogy, this is like your local access point to the highway. This is an IP in the same, format the others  as and  is typically very similar  to the IP address, address  of, Camera.
+The To continue the above example, it might be something such as: "192.168.1.1".<br/>
+• DNS sets the DNS server address. I suggest you make an automatic DNS here and let people set it. If it's wrong, you won't be able to use MAC.<br/>
+MAC Address network card physical address. This is a unique code. You can't change it - it's preset when you leave the factory. <br/>
+• The service port provided by Http Port HTTP communications defaults to 80 and can be logged in using the http://ip:port pipeline login device. <br/>
+• Ie. http://ip:port (http://56.236.333.237:80).<br/>
+• Service port provided by Onvif Port ONVIF communication, defaults to 85.<br/>
+• The service port provided by RTSPPort RTSP communications defaults to 554.<br/>
+Rtsp://192.168.0.83:554/H264? Channel=0&amp;subtype=0&amp;unicast=true&amp;proto=Onvif?<br/>
+• Main, Stream, path, example<br/>
+Rtsp://192.168.0.83:554/H264? Channel=0&amp;subtype=1&amp;unicast=true&amp;proto=Onvif?<br/>
+• Sub Stream path example. <br/>
+</p>
+<br/></br>
+
+
+<h3>4.2.2 PPPOE</h3>
+<p>
+Step 1:Select“Settings > Network > PPPOE” .<br/>
+Step 2: Check”Enable”.<br/>
+Step 3:Input username & password from ISP.<br/>
+Step 4:Click save, the camera will restart, and the PPPOE settings will complete. <br/>
+<h4> Note: </h4>
+<p>
+PPPOE: an advanced protocol, so that the camera is directly connected via modem. An option only for advanced users. Set up after the success of the network camera will automatically PPPOE way to establish a network connection, IP address will be automatically modified to obtain the WAN dynamic IP address.
+</p>
+</p>
+<br/></br>
+<h3>4.2.3 DDNS Client</h3>
+<p>
+Step 1:Select“Settings > Network > DDNS Client”<br/>
+Step 2: DDNS Client Parameters. <br/>
+• Choose a server that you’re using from 3322.org, DynDDNS, Noip. <br/>
+• Enter the server address from your DDNS service provider. <br/>
+• Enter the Hostname that you set up in your DDNS service. This is the address you use to acceess your network. <br/>
+• Enter the username you setup with your DDNS server.<br/>
+• Enter the password you setup with your DDNS server. These do not have to match your username/password combination in either your Camera or router. (For the sake of security, we suggest making them different) <br/>
+Step 3:click save, and the camera will restart. <br/>
+<h4> Note: </h4>
+<p>
+DDNS: many Internet service providers do not give the customer a static IP address. IP changes frequently, which led to the remote login via the Internet camera, if you want to through the Internet camera remote login, please use DDNS, it can automatically update the IP .<br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.4 Email</h3>
+<p>
+Step 1:Select“Settings > Network >Email”.<br/>
+Step 2:Email Setting Parameters.<br/>
+• Enable or Disable Email Function.<br/>
+• This field allows the user to define the Motion Subject line of the email that is sent to the receivers. <br/>
+• This field allows the user to define the Alarm Subject line of the email that is sent to the receivers. <br/>
+• SMTP stands for Simple Mail Transfer Protocol. 
+This field allows the user to enter the SMTP server used by the email service.
+For example: “smtp.gmail.com”.<br/>
+• SMTP <br/>
+The SMTP Port used by the email provider of your choice. 
+The default value is “25”<br/>
+• Sender Password: The password for the outgoing email account.<br/>
+• Sender:<br/>
+The address you’re sending the emails from.
+For example: “youraddress@gmail.com” or similar.
+• Recipient Address :The email address you want the Camera to send emails to. Note that the Camera might send a large number of automatic emails under certain conditions. 
+Maximum 4 recipients. <br/>
+<h4> Note: </h4>
+<p>
+E-mail: Email is a kind of electronic means of providing information exchange, through the network of e-mail system, the user can be very fast
+Get a lot of information. When mobile detection alarm, probe alarm, occlusion alarm occurs, notify the user  by the pipe of the mail <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.5 FTP</h3>
+<p>
+Step 1:Select“Settings > Network >FTP”<br/>
+Step 2:FTP Parameters.<br/>
+• Server:Enter your FTP server address, can be IP address or the FTP link address. <br/>
+• Port: <br/>
+Enter the FTP port number.<br/>
+The default value is “21”.<br/>
+• Mode: Sets the FTP transfer mode: active or passive, where the active and passive roles play respectively. You have to write it out before I can translate .<br/>
+• Username: Enter your FTP user name. <br/>
+• Password: Enter your FTP password. <br/>
+• Upload Path<br/>
+Upload Directory input upload folder name .<br/>
+<h4> Note: </h4>
+<p>
+FTP: Ftp is a file transfer protocol for bidirectional transmission. Control files on the network. Use them in the FTP, there are two concepts: "download" and "Upload". The "download" file is copied from the remote host file to your computer; the "Upload" files are files from their own copy to the remote host computer. This feature is the camera "Upload" pictures or video to FTP Server. <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.6 Bonjour</h3>
+<p>
+Step 1:Select“Settings > Network > Bonjour”<br/>
+Step 2: Check“Enable”Click”Save”to complete Bonjour configuration. <br/>
+<h4> Note: </h4>
+<p>
+The Bonjour function is enabled, the operating system support Bonjour and the client, the camera will be detected automatically when the camera is automatically detected, display user configuration of the server name. This function is part of the camera does not support. <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.7 SNMP</h3>
+<p>
+Step 1:Select“Settings > Network > SNMP”.<br/>
+Step 2:SNMP Parameters.<br/>
+• SNMP<br/>
+SNMP - Version<br/>
+These check-boxes allow the user to select the SNMP version to use.<br/>
+• SNMP Port<br/>
+This field allows the user to write in a port for SNMP to use. 
+The default value is “161”.<br/>
+• Read Community <br/>
+This field shows which SNMP community has read access. 
+The default setting is： public<br/>
+• Write Community <br/>
+This field shows which SNMP community has write access. <br/>
+The default setting is: Private<br/>
+• This field allows the user to write in a trap address.<br/>
+•Trap Port <br/>
+This field allows the user to write in a trap port number. The trap port number should not be the same as the SNMP port. 
+The default value is “162”.
+<br/>
+Step 3:Click click, save, Save, and the Bonjour settings are complete. To complete Bonjour configuration.<br/>
+<h4> Note: </h4>
+<p>
+SNMP stands for Simple Network Management Protocol. This protocol is used to provide a basic framework in order to allow connection between various network devices. <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.8 HTTPS</h3>
+<p>
+Step 1:Select“Settings > Network > HTTPS”.<br/>
+Step 2:Check“Enable”Click”Save”to complete HTTPs configuration. <br/>
+<h4> Note: </h4>
+<p>
+This check-box enables the use of the HTTPS protocol for accessing the camera. This field designates the Hypertext Transfer Protocol Secure (HTTPS) port number. The default value is “443”. <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.2.9 P2P</h3>
+<p>
+Step 1: Select“Settings > Network >P2P”.<br/>
+Step 2: Check“P2P”to enable the P2P feature for the camera. This feature must be enabled for the camera to connect to a smartphone or tablet via the GW App. It is enabled by default.<br/>
+Step 3: Scan APP, the APP’s QR Code to download the GW Mobile App.<br/>
+Step 4: Use the GW APP to scan the UUID QR Code to add the camera. The S/N can be used to manually enter the camera’s information on a mobile or tablet device in case the QR code scanning feature cannot be used.<br/>
+Step 5:Click“Save”to complete P2P configuration.<br/>
+<h4> Note: </h4>
+<p>
+Through the P2P function, can use the mobile phone APP remote real-time video camera view. To realize the video capture and mobile phone terminal, parameter setting, alarm information, tips and other functions of the camera.<br/> 
+</p>
+</p>
+<br/></br>
+
+<h3>4.3 Alarm Config</h3>
+<p> Alarm is divided into "Motion Detection", "Video Blind" and "Alarm" </p>
+<br/><br/>
+
+<h3>4.3.1 Motion Detection</h3>
+<p>
+Step 1:Select“Settings > Alarm Config > Motion Detection” <br/>
+Step 2: Check“Enable” to turn on the Motion Detection function<br/>
+•Alarm Output: check this function to generate an alarm output signal to trigger the related alarm output devices. <br/>
+•Record Video: check this function to record video when a motion detection alarm is triggered.<br/>
+Step 3  Click“Regional Edit” opens a pop up screen that can be used to set detection areas.<br/>
+Setting the moving detection area, you can drag the mouse to select the area. <br/>
+•detection sensitivity: if mobile detection sensitivity is too high, then the camera will record too frequent or continuous - any motion detection advantage will be lost. If the motion detection sensitivity is too low, then photograph the machine will not record, when it should and may not record anything. Here, you can set the sensitivity of different time <br/>.
+• Threshold: the smaller the threshold, the easier it is to generate movement detection .<br/>
+Full Screen: means that the whole area is to select the regional mobile detecting area .<br/>
+Clear - Screes:  no clear zone means regional mobile detection.<br/>
+Step 4:Click“Save”then click”Back ”to complete the configuration.<br/>
+Step 5: Set up "Alarm Duration", "Pre-record Time", "Record Time" for different circumstances.<br/>
+•Alarm Duration: when alarm triggered, the alarm duration will last for a certain period.<br/> 
+(range from 5 to 300 seconds) <br/>
+•The alarm will not be triggered again till this period is ended.<br/>
+Pre-record Time: this field specifies in seconds how long the surveillance footage is recorded before motion detection is triggered.<br/>
+•Record Time: this field specifies in seconds how long the surveillance footage will be recorded after motion.<br/>
+detection is triggered. The record time will not be triggered again till this period is ended. <br/>
+Step 6:Set up “Time Periods”for motion alarm, only scheduled periods will trigger alarm event. <br/>
+You can set up 4 periods per day maximum.<br/>
+Step 7: You can duplicate the same settings to different days as you select, or all days by checking “Select All”.<br/>
+Step 8:Click “Save” to complete motion detection configuration.<br/>
+<h4> Note: </h4>
+<p>
+Alarm output need alarm output interface support .Only certain models support Alarm Output function.<br/>
+</p></p>
+<br/></br>
+
+<h3>4.3.2 Video Bind</h3>
+<p>
+Step 1:Select“Settings > Alarm Config > Video Bind”<br/>
+Step 2:Tick "enable occlusion alarm", and select "alarm output" and "video output" according to the need ".<br/>"
+• alarm output: to indicate the start / close alarm linkage output port, check the item, when the alarm can be linked with the corresponding alarm output device. <br/>
+• video output: when this item is selected, video will be recorded when blocking the .<br/>
+Step 3:Set the alarm duration according to requirements, 5-300 seconds optional, and detect sensitivity: high, medium, low, optional. <br/>
+• alarm duration: means that when the alarm is over, the alarm will be extended for some time and the will be stopped detection sensitivity: if the detection sensitivity is too high, then the camera will record too frequent or continuous any occlusion detection advantages will be lost. If occlusion detection sensitivity is too low, then photograph the machine will not record, when it should and may not record anything. Here, you can set the sensitivity of different time. <br/>
+Step 4: set the time slot of the video occlusion alarm in the setting time, and then start the alarm event within the set time range. Each day has four time periods for setting the .<br/>
+Step 5: select the number of weeks (default day), if you choose to select, said it will set the application throughout the week, also can choose the number of weeks in front of the check box for a few days to set. <br/>.
+Step 6: click save, prompt save success, and hide the alarm settings to complete the. <br/>
+<h4> Note: </h4>
+<p>
+Alarm output alarm, output interface support <br/>
+</p>
+</p>
+<br/></br>
+<h3>4.3.3 Alarm</h3>
+<p>
+Step 1: Select “Settings > Alarm Config > Alarm”.<br/>
+Step 2: Tick "enable probe alarm", tick "alarm output" and "video output" according to the need ".<br/>"
+Alarm output: to indicate the start / close alarm linkage output port. When selecting this item, when the alarm occurs, the corresponding alarm output device <br/> can be linked together.
+Video output: when selecting this item, video will be recorded when moving and detecting the alarm. <br/>
+Step 3: set the alarm duration according to the requirements, 5-300 seconds optional, and probe type: normally closed or normally open .<br/>
+- alarm duration: said when the alarm at the end, the alarm will stop for an extended period of time (the time for continuous alarm set time). During this time, if there is alarm, will not react to this time, after the alarm will occur again. <br/>
+• probe type: indication of the state of the probe, sub normally closed and normally open two states, when set to normally closed, indicating that the line closed when the alarm. When set to normally open, when the line is disconnected, the alarm. <br/>
+Step 4: set the time to set the probe alarm time period, within the set time range will start the alarm event. Every day has four time periods for setting .<br/>
+Step 5: select the number of weeks (default day), if you choose to select, said it will set the application throughout the week, also can choose the number of weeks in front of the check box for a few days to set .<br/>
+Step 6: Click Save, and probe the alarm setting to complete the .<br/>
+<h4> Note: </h4>
+<p>
+Alarm output alarm, output interface support, some of the camera does not support .<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.4 Storage</h3>
+<p>
+ Storage:”Schedule、SD Storage、Snapshot、Destination、NAS“.<br/>
+</p>
+<br/><br/>
+
+<h3>4.4.1 Schedule</h3>
+<p>
+Step1:Select“Settings > Storage > Schedule”.<br/>
+Step2:Check“Enable”to set up scheduled recording.<br/>
+Step3: Set up “Time Periods”for scheduled recording, only scheduled periods will start recording.
+You can set up 4 periods per day maximum.<br/>
+Step4: You can duplicate the same settings to different days as you select, or all days by checking “Select All”.<br/>
+Step5:Click ”Save”.to complete scheduled recording configuration.
+</p>
+<br/><br/>
+
+
+<h3>4.4.2 SD Storage</h3>
+<p>
+ Step1:Select“Settings > Storage > SD Storage”<br/>
+ Step2:After put in the SD card, click “Refresh”，to check the “Total Space”, ”Used Space” and “Available Space”<br/>
+ Step3:Click “Format” to format the SD card before use. All existing data from the SD card will be erased.<br/>
+ Step4:Enable or Disable auto overwrite for different circumstance. 
+“On”: The recording will overwrite the data to the first day of records that's saved on the SD card automatically when there’s no available space.<br/>
+“Off”: The recording will stop when the SD card has no available space.
+Click “Save” to complete SD Storage configuration.
+</p>
+<br/><br/>
+
+<h3>4.4.3 Snapshot </h3>
+<p>
+Step1:Select“Settings > Storage > Snapshot”<br/>
+Step2:Check“Enable”to turn on the snapshot function.<br/>
+Step3:Set up the capture time interval from 1 to 600 seconds for different circumstances.<br/>
+Step4: Set up “Time Periods”for snapshot, only scheduled periods will capture snapshots. 
+You can set up 4 periods per day maximum.<br/>
+Step5:You can duplicate the same settings to different days as you select, or all days by checking “Select All”.<br/>
+Step6:Click ”Save”，to complete Snapshot configuration.
+</p>
+<br/><br/>
+
+<h3>4.4.4 Destination  </h3>
+<p>
+ Step1:Select“Settings > Storage > Destination”<br/>
+ Step2:Destination Parameters.<br/>
+ Local:When check this option,Record will save at sd card.<br/>
+ FTP:When check this option,Record will save at Ftp Server.<br/>
+ NAS:When check this option,Record will save at NAS.<br/>
+ Step3:Click ”Save”.to complete Destination configuration. 
+</p>
+<br/><br/>
+
+<h3>4.4.5 NAS </h3>
+<p>
+Step1:Select“Settings > Storage > NAS”<br/>
+Step2:NAS ParamInfo.<br/>
+Server Address:Input NAS IP address.<br/>
+Remote Directory:Input NAS directory.<br/>
+Step3:Click ”Save”.to complete NAS configuration. 
+</p>
+<br/><br/>
+
+
+<h3>4.5 System Info</h3>
+<h3>4.5.1 Maintenance </h3>
+<p>
+ Step1:Select“Settings > System > Maintenance”.<br />
+ Step2:Maintenance Parameters.<br />
+ Factory Default:Reset the system to factory default settings.<br/>
+ Reboot:Simply reboot the IP Camera.<br/>
+ Auto Reboot:Schedule an auto Reboot for the IP Camera.<br/>
+</p>
+<br/>
+
+<h3>4.5.2 Device lnfo</h3>
+<p>
+Step1:Select“Setting > System > Device Info”.<br/>
+Step2:Device info Parameters.<br/>
+Device Model:model number for the IP Camera.<br/>
+IPC Version: IP Camera firmware version.<br/>
+Step3: Click “Save”，Device Info to complete Device Info configuration.<br/>
+</p>
+<br/><br/>
+
+<h3>4.5.3 Set Time </h3>
+<p>
+Step1:“Settings > System > Set Time”<br/>
+Step2:Parameters Info:<br/>
+Time zone:IPcamea Zone<br/>
+Time:Manul Set Time<br/>
+PC Time Sync:Sync Device Time With PC,Default: "Open" <br/>
+NTP:Ntp Default "Open"<br/>
+NTP Server: Set NTP Server.Default:“time.windows.com”<br/>
+Step3:Click “Save”，Set Time Finish.<br/>
+</p>
+<br/><br/>
+
+<h3>4.5.4 User Admin </h3>
+<p>
+Step1:Check “Settings > System > User Admin”<br/>
+Step2:Click “Add User” add user<br/>
+<h4>Note</h4>
+<p>Admin,user1,user2 can't delete，Only modify password. </p>
+</p>
+<br/><br/>
+
+<h2>Appendix 1 Glossary of Terms<h2>
+<h3>1 WDR</h3>
+<p>
+WDR (Wide Dynamic Range) is the technique aim to reproduce a similar range of luminance through adapting to the different exposure level presented in the environment, by collecting two different level of exposure of the same picture twice and combining them. The WDR feature will allow the dark area to be brighter and darken over-expose area, allowing detail other-wise dampened by over-exposure (glare) and under-exposure.
+</p>
+<br/><br/>
+
+<h3>2 DWDR</h3>
+<p> With the same aim as WDR, DWDR (Digital Wide Dynamic Range) adjust the exposure by digitally adjusting the contrast and gamma value of the picture, reducing the effect of glare. Unlike WDR is done by the hardware, DWDR may cause the picture to appear washed-out.
+</p>
+<br/><br/>
+
+<h3>3 BLC</h3>
+<p> 
+BLC (Backlight Compensation) increase the overall exposure of the entire picture to reduce the contrast between the background and the main interest area. The overall viewable area will improve but area with brightly-lit area will be overexposed. 
+</p>
+<br/><br/>
+
+<h3>4 HLC</h3>
+<p>
+HLC (Highlight Compensation) reduce the overall exposure in the main interest area to reduce the effect of strong light. It is the reverse of BLC because HLC target the lighting generated in the main interest area.
+</p>
+<br/><br/>
+
+<h3>5 3DNR</h3>
+<p> 
+ 3DNR (3D Noise Reduction) is the technique used to reduce video noise by analyzing and compare the difference between each successive frames in order to adjust video pixel. With 3DNR, there will be a trade-off between video crisp and motion blur.
+</p>
+<br/><br/>
+
+<h3>6 IPv6</h3>
+<p>
+  IPv6 is the next version of IP (Internet Protocol), the communication protocol that provides an identification and location system for traffic-routing across the networks. It is designed by IETF (Internet Engineering Task Force) to replace IPv4 in the anticipation of IPv4 address exhaustion. 
+</p>
+<br/><br/>
+
+<h3>7 FTP</h3>
+<p> 
+ FTP (File transfer Protocol) is a protocol used to transfer files between two end-points (computers) on a network. FTP is an application that exists in different operation system which follows the same set of standard for file transportation, allowing file transfer across different plateforms.
+</p>
+<br/><br/>
+
+<h3>8 DHCP</h3>
+<p>  DHCP (Dynamic Host Configuration Protocol) is a network protocol that allows a server (in most cases, a router/modem) to automatically assign an IP address to a connected device from a defined range of IP numbers. DHCP allows a uniformly assigned network environment across different devices.
+</p>
+<br/><br/>
+
+<h3>9 DDNS</h3>
+<p>
+DDNS (Dynamic Domain Name System) is a system to automatically update the client’s dynamic IP address to a static domain name, thus allow a consistent connection without the need to check dynamic IP address. The update client will send the IP address in real time, based on a predefined interval, to a server hosting the static domain name, which in term allows other domain name server to acknowledge the new IP address, without the need to manually changing the record.
+</p>
+<br/><br/>
+
+
+<h3>10 HTTPS</h3>
+<p> 
+HTTPS (Hyper Text Transfer Protocol Secure) is the secure version of HTTP, the protocol which data is sent between browser and the website connected to. The 'S' at the end of HTTPS stands for 'Secure'. It means all communications between your browser and the website are encrypted using SSL. 
+</p>
+<br/><br/>
+
+<h3>11 PPPOE</h3>
+<p> 
+PPPoE (Point-to-Point Protocol over Ethernet) is a network protocol for encapsulating Point-to-Point Protocol (PPP) frames inside Ethernet frames. It is used mainly with DSL services where individual users connect to a DSL modem over Ethernet.
+</p>
+<br/><br/>
+
+<h3>12 RTSP</h3>
+<p>
+RTSP (Real Time Streaming Protocol) is a network protocol designed to allow system to control streaming media servers and is used to establish and control media session between two end-points over TCP/IP. 
+</p>
+<br/><br/>
+
+<h3>13 ONVIF</h3>
+<p> 
+ONVIF is the global and open industry standard for interfacing between video surveillance product and other physical security areas. The standard defines device discoveries, live video and audio standard, bit rate, and controls, ensuring compatibility between different manufacturer. 
+</p>
+<br/><br/>
+
+<h3>14 H265</h3>
+<p>  H.265 is the successor to the H.264 video encoding standard. The aim for H.265 is to improve bit rate, video quality, and overall video performance. Compare to H.264, H.265 only needs half of the require data to achieve the same video quality as H.264.
+</p>
+<br/><br/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div> 
+</body>
+</html>

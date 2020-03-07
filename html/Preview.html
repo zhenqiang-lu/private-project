@@ -1,0 +1,461 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="icon" href="data:;base64,=">
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/plugin.js"></script>
+	<script src="js/network.js"></script>
+</head>
+<script type="text/javascript">
+	document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+body{
+	margin-top:0px;
+}
+.PreviewHead{
+	left:0px;
+	right:0px;
+	background:#dcdcdc;
+	height:37px;
+	position:absolute;
+	
+}
+
+.StreamButton{
+	width:90px;
+	height:23px;
+	line-height:23px;
+	background:#646464;
+	margin-top:7px;
+	margin-left:15px;
+	float:left;
+	border:0px solid #ffffff;
+	border-radius:1px;
+}
+
+.StreamButton:hover{
+	/*background:#64b9fa;*/
+}
+
+.StreamButtonSelected{
+	background:#dc0000;
+}
+
+.HeadButtonIco{
+	width:43px;
+	height:36px;
+	cursor: pointer;
+	float:right;	
+	/*border:1px solid black;*/
+}
+
+.IcoOptPtz{
+	background:url(./img/normal.png) -402px -106px;
+}
+.IcoOptPtzSelected{
+	background:url(./img/select.png) -402px -106px;
+}
+
+.IcoOptRecordTime{
+	background:url(./img/normal.png) -252px -106px;
+}
+.IcoOptAlarm{
+	background:url(./img/normal.png) -2px -106px;
+	
+}
+.IcoOptMotionAlarm{
+	background:url(./img/normal.png) -52px -106px;
+}
+
+.IcoOptVideoBlind{
+	background:url(./img/normal.png) -102px -106px;
+}
+
+.IcoOptAlarmAction{
+	background:url(./img/alarm.gif) -2px -110px;
+}
+.IcoOptMotionAlarmAction{
+	background:url(./img/motion.gif) -2px -110px;
+}
+.IcoOptVideoBlindAction{
+	background:url(./img/vedioblind.gif) -2px -110px;
+}
+
+
+
+.IcoOptVideoBlindEnabled{
+	background:url(./img/select.png) -102px -106px;
+}
+
+.IcoOptAlarmEnabled{
+	background:url(./img/select.png) -2px -106px;
+}
+.IcoOptMotionAlarmEnabled{
+	background:url(./img/select.png) -52px -106px;
+}
+
+
+.IcoOptSnap{
+	background:url(./img/normal.png) -352px -106px;
+}
+.IcoOptSpeek{
+	background:url(./img/normal.png) -302px -106px;
+}
+.IcoOptRecord{
+	background:url(./img/normal.png) -152px -106px;
+}
+
+.IcoOptFullScreen{
+	background:url(./img/normal.png) -202px -106px;
+}
+.IcoOptFullScreenSelected{
+	background:url(./img/select.png) -202px -106px;
+}
+.IcoOptSnap:hover{
+	background:url(./img/select.png) -352px -106px;
+}
+.IcoOptSpeek:hover{
+	background:url(./img/select.png) -302px -106px;
+}
+
+.IcoOptRecord:hover{
+	background:url(./img/select.png) -152px -106px;
+}
+.IcoOptRecordSelected{
+	background:url(./img/select.png) -152px -106px;
+}
+.IcoOptSpeekSelected{
+	background:url(./img/select.png) -302px -106px;
+}
+
+
+.VideoArea{
+	background:#000000;
+	bottom:0px;
+	top:39px;
+	position:absolute;
+	left:0px;
+	right:0px;
+	/*border:2px solid  #00BFFF;*/
+	min-height: 560px;
+} 
+
+
+.PluginArea{
+	min-height: 500px;
+	min-width：800;
+	margin:auto;
+} 
+
+
+.VideoAreaPtz{
+	right:160px;
+} 
+.PtzArea{
+	background:#ffffff;
+	bottom:0px;
+	top:39px;
+	position:absolute;
+	width:160px;
+	right:0px;
+	display:none;
+}
+
+.PtzKeyIcon{
+	width:36px;
+	height:30px;
+	cursor: pointer;
+	float:left;
+	border:1px solid  #646464;	
+}
+
+.PTZKeyIconAdd{
+	background:url(./img/normal.png) -6px -160px;
+	background-color:#646464;
+}
+
+.PTZKeyIconSub{
+	background:url(./img/normal.png) -156px -160px;
+	background-color:#646464;
+}
+
+.PTZKeyIconAdd:hover{
+	background-color:#c8c8c8;
+}
+
+.PTZKeyIconSub:hover{
+	background-color:#c8c8c8;
+}
+
+
+
+
+.PtzKeyBoxArea{
+	margin-left:20px;
+	width:120px;
+	height:36px;
+}
+ 
+</style>
+
+
+<body style="min-height:500px;min-width:800px;">
+<div class="PreviewHead" style="">
+<div class="DivButton StreamButton" id="id_MainStream">Main Stream</div>
+<div class="DivButton StreamButton" id="id_SubStream">Sub Stream</div>
+<div class="HeadButtonIco IcoOptPtz" id="id_IcoOptPtz"></div>
+<div class="HeadButtonIco IcoOptSnap" id="id_IcoOptSnap" title="snap"></div>
+<div class="HeadButtonIco IcoOptSpeek" id="id_IcoOptSpeek" title="speak"></div>
+<div class="HeadButtonIco IcoOptRecordTime" id="id_IcoOptRecordTime" title="RecordTime"></div>
+<div class="HeadButtonIco IcoOptRecord" id="id_IcoOptRecord" title="Record"></div>
+<div class="HeadButtonIco IcoOptFullScreen" id="id_IcoOptFullScreen"></div>
+<div class="HeadButtonIco IcoOptVideoBlind" id="id_IcoOptVideoBlind" title="VideoBlind"></div>
+<div class="HeadButtonIco IcoOptMotionAlarm" id="id_IcoOptMotionAlarm" title="MotionAlarm"></div>
+<div class="HeadButtonIco IcoOptAlarm" id="id_IcoOptAlarm" title="Alarm"></div>
+<div style="clear:both;"></div>
+</div>
+<!-->插件区域<-->
+<div class="VideoArea" id="id_VideoArea" >
+ <div class="PluginArea" id="id_PluginArea">
+ <EMBED style="margin:auto;" pluginspage="http://www.videolan.org"  
+       type="application/x-vlc-plugin"  
+       version="VideoLAN.VLCPlugin.2"  
+       text="Waiting for video"
+	   toolbar="false"
+	   plugins-cache='0'	   
+	   width=320
+	   height=240
+       name="vlc"
+	   id="vlc">
+</EMBED>
+</div>
+</div>
+<div class="PtzArea" id="id_PtzArea">
+<div class="PtzKeyBoxArea" style="margin-top:24px;">
+<div class="PtzKeyIcon PTZKeyIconAdd" id="id_zoomadd" onmousedown="PtzZoom(1)" onmouseup="PtzZoom(0)"></div>
+<div class="PtzKeyIcon" style="background:url(./img/normal.png) -56px -160px;"></div>
+<div class="PtzKeyIcon PTZKeyIconSub" id="id_zoomsub"  onmousedown="PtzZoom(-1)" onmouseup="PtzZoom(0)"></div>
+<div style="clear:both"></div>
+</div>
+<div class="PtzKeyBoxArea" style="margin-top:10px;">
+<div class="PtzKeyIcon PTZKeyIconAdd" id="id_Focusadd"  onmousedown="PtzFocus(1)" onmouseup="PtzFocus(0)"></div>
+<div class="PtzKeyIcon" style="background:url(./img/normal.png) -106px -160px;"></div>
+<div class="PtzKeyIcon PTZKeyIconSub" id="id_Focussub" onmousedown="PtzFocus(-1)" onmouseup="PtzFocus(0)"></div>
+<div style="clear:both"></div>
+</div>
+</div>
+</body>
+<script  type="text/javascript"> 
+//语言包初始化
+function SetTitle(id,value)
+{
+	var vobj = document.getElementById(id);
+	vobj.title = value;
+}
+function InitLang()
+{
+	SetLang('id_MainStream',str_MainStream);
+	SetLang('id_SubStream',str_SubStream);
+	
+	SetTitle('id_IcoOptSnap',str_ManualPic);
+	SetTitle('id_IcoOptSpeek',str_EnableVoice);
+	SetTitle('id_IcoOptRecordTime',str_flexTime);
+	SetTitle('id_IcoOptRecord',str_manualRec);
+	SetTitle('id_IcoOptFullScreen',str_Full);
+	SetTitle('id_IcoOptVideoBlind',str_SnapTypeBlind);
+	SetTitle('id_IcoOptMotionAlarm',str_SnapTypeMotion);
+	SetTitle('id_IcoOptAlarm',str_AlarmSet);
+}
+</script> 
+<script  type="text/javascript"> 
+var fullscreen = false;
+var displayPtzOptArea = false;
+
+function DispalyPtzOptArea()
+{
+
+	if(displayPtzOptArea == false){
+		$("#id_VideoArea").addClass("VideoAreaPtz");
+		$("#id_IcoOptPtz").addClass("IcoOptPtzSelected");
+		document.getElementById("id_PtzArea").style.display = "block";
+		displayPtzOptArea = true;
+	}else{
+		$("#id_VideoArea").removeClass("VideoAreaPtz");
+		$("#id_IcoOptPtz").removeClass("IcoOptPtzSelected");
+		document.getElementById("id_PtzArea").style.display = "none";
+		displayPtzOptArea = false;
+	}
+	ReSizePluginArea();	
+}
+
+function IcoOptFullScreen()
+{
+	fullscreen = !fullscreen;
+	getVLC("vlc").video.fullscreen = fullscreen;
+}
+
+function ReSizePluginArea()
+{
+	//alert(1);
+	var width = $(this).width();    
+	var height = $(this).height(); 
+	var MinWidth = 600;
+	if(displayPtzOptArea == true){
+		width -= 160;
+	}
+	if((width*9/16)>height){
+			width = height*16/9;
+	}else{
+			height = width*9/16;
+	}
+	
+	if(width < MinWidth){
+		width = MinWidth;
+		height = MinWidth*9/16;
+	}
+	height= height - 43;
+	$("#id_PluginArea").width(width);
+	$("#id_PluginArea").height(height);
+	PluginChanggeSize(width,height);
+}
+/*
+function ReSizePluginArea()
+	{
+		var width = $(this).width();    
+		var height = $(this).height(); 
+		var MinWidth = 500;
+		width = width - 210 - 4; 
+		height = height  - 50;
+		$("#id_PluginArea").width(width);
+		$("#id_PluginArea").height(height);
+		PluginChanggeSize(width,height);
+	}
+*/
+/*Plugin*/
+
+var StreamType = -1;
+function StreamChange(value)
+{
+	if(value == StreamType){
+		return;
+	}
+	if(-1 != StreamType){
+		PluginStreamStop();
+	}
+	StreamType = value;
+	$("#id_MainStream").removeClass("StreamButtonSelected");
+	$("#id_SubStream").removeClass("StreamButtonSelected");
+	if(0 == StreamType){
+		$("#id_MainStream").addClass("StreamButtonSelected");
+	}else if(1 == StreamType){
+		$("#id_SubStream").addClass("StreamButtonSelected");
+	}
+	PluginStreamPlay(StreamType);
+}
+
+function PullMsg()
+{ 
+	var msg = [{"xtype":"Channel","text":"0"}];
+	var resp = $.sendMsg("PullMsg",msg,"/ISAPI/Alarm/PullMsg","POST");
+	if(resp.success == false){
+		//alert("Get PullMsg fail");
+		return ;
+	}
+	var map = resp.data;
+	
+	//var map ={"channel":"0","motionalarm":{"alarmtype":"MotionAlarm"}};
+	//console.log("map ="+JSON.stringify(map));
+
+		
+	
+	$("#id_IcoOptMotionAlarm").removeClass("IcoOptMotionAlarmEnabled");
+	if(map.motionalarm != undefined){
+		$("#id_IcoOptMotionAlarm").addClass("IcoOptMotionAlarmAction");
+	}else{
+		$("#id_IcoOptMotionAlarm").removeClass("IcoOptMotionAlarmAction");
+		if(map.motionalarmenabled == "1"){
+			$("#id_IcoOptMotionAlarm").addClass("IcoOptMotionAlarmEnabled");
+		}
+	}
+	
+	
+	$("#id_IcoOptAlarm").removeClass("IcoOptAlarmEnabled");
+	
+	if(map.sensoralarm != undefined){
+		$("#id_IcoOptAlarm").addClass("IcoOptAlarmAction");
+	}else{
+		$("#id_IcoOptAlarm").removeClass("IcoOptAlarmAction");
+		if(map.sensoralarmenabled == "1"){
+			$("#id_IcoOptAlarm").addClass("IcoOptAlarmEnabled");
+		}
+	}
+	
+	$("#id_IcoOptVideoBlind").removeClass("IcoOptVideoBlindEnabled");
+	if(map.videoblindalarm != undefined){
+		$("#id_IcoOptVideoBlind").addClass("IcoOptVideoBlindAction");
+	}else{
+		$("#id_IcoOptVideoBlind").removeClass("IcoOptVideoBlindAction");
+		if(map.videoblindalarmenabled == "1"){
+			$("#id_IcoOptVideoBlind").addClass("IcoOptVideoBlindEnabled");
+		}
+	}
+	/*if(map.videolossalarm != undefined){
+		$("#id_IcoOptAlarm").addClass("IcoOptAlarmAction");
+	}else{
+		$("#id_IcoOptAlarm").removeClass("IcoOptAlarmAction");
+	}*/
+}
+
+function PtzZoom(val)
+{
+	var msg = [
+				{"xtype":"Zoom","text":""+val}	
+			  ];
+	var resp = $.sendMsg("PTZMotorsCtr",msg,"/ISAPI/Preview/PtzMotorsCtr","PUT");	
+}
+
+function PtzFocus(val)
+{
+	var msg = [
+				{"xtype":"Focus","text":""+val}	
+			  ];
+	var resp = $.sendMsg("PTZMotorsCtr",msg,"/ISAPI/Preview/PtzMotorsCtr","PUT");
+}
+
+
+
+$(function() {//页面初始化
+	InitLang();
+	BindEvent("id_IcoOptPtz","onmousedown",DispalyPtzOptArea,null);
+	BindEvent("id_MainStream","onclick",StreamChange,0);
+	BindEvent("id_SubStream","onclick",StreamChange,1);
+	BindEvent("id_IcoOptFullScreen","onclick",IcoOptFullScreen,1);
+	//setTimeout("alert(2)",10);//延时拉取视频框
+	PluginInit();
+	//webserverBUG
+	
+	
+	setTimeout("ReSizePluginArea();",20);//延时拉取视频框
+	setTimeout("StreamChange(0);",200);//延时获取视频流
+	setInterval("PullMsg()",500);
+	setTimeout('setInterval("CheckPluginState(0)",1000);',10000);//	
+});
+
+$(window).resize(function() {    
+	ReSizePluginArea();
+});
+
+</script> 
+
+</html>

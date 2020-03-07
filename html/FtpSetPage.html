@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+
+<style type="text/css">
+.FtpDiv{
+	left:0px;
+	right:0px;
+	height:345px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtFtpSetPage{
+	width:160px;
+	float:left;
+}
+
+</style> 
+
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<body>   
+<div class="ContentBg FtpDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;" id="id_FtpEnable"><script>InitCheckBox('id_FtpEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtFtpEnable">Enable</div>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPageServer">Server:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_FtpServer"value="admin" ></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPagePort">Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_FtpPort"value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPageMode">Mode:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_FtpMode" >Passive</div>
+		<div class="DivContentSelectIco"  id="id_FtpMode_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_FtpMode_option" style="margin-top:0px;" id="id_txtPassiveMode">Passive</div>
+		<div class="ClassContentSelectOption" name="id_FtpMode_option" style="margin-top:24px;" id="id_txtActiveMode">Active</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPageUserName">UserName:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_FtpUserName"value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPagePassword">Password:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_FtpPassWord"value="admin" type="password"></input>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtFtpSetPage" id="id_txtFtpSetPageUploadpath">Upload path:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_UploadPath"value="admin"></input>
+		<div class="DivButton" style="float:left;margin-left:10px;" id="id_txtFtpSetPageTest">Test</div>
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>
+
+<script  type="text/javascript"> 
+function InitLang(){
+	SetLang('id_txtFtpEnable',str_FTPEnable);
+	SetLang('id_txtFtpSetPageServer',str_FTPServer);
+	SetLang('id_txtFtpSetPagePort',str_FTPPort);	
+	SetLang('id_txtFtpSetPageMode',str_FTPSendMode);
+	SetLang('id_txtPassiveMode',str_beidong);
+	SetLang('id_txtActiveMode',str_zhudong);
+	SetLang('id_txtFtpSetPageUserName',str_FTPNum);
+	SetLang('id_txtFtpSetPagePassword',str_FTPPwd);
+	SetLang('id_txtFtpSetPageUploadpath',str_UpPath);
+	SetLang('id_txtFtpSetPageTest',str_test);
+	SetLang('id_submit',str_FTPbtn);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("FTPStatus",null,"/ISAPI/Network/FTP","POST");
+	if(resp.success == false){
+		alert("recv FTPStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	//var map = {"enabled":"1","ftpmode":"0","ftpserver":"192.168.0.11","ftpuser":"aaaa","ftppass":"aaaa","uploaddirectory":"c:\\aaaa","ftpport":"21"};
+	//console.log( JSON.stringify(map));
+	SetCheckBox('id_FtpEnable',TranslationStrAndBool(map.enabled));
+	SetSelectionOptID("id_FtpMode",map.ftpmode);
+	
+	$("#id_FtpServer")[0].value = map.ftpserver;
+	$("#id_FtpPort")[0].value = map.ftpport;
+	$("#id_FtpUserName")[0].value = map.ftpuser;
+	$("#id_FtpPassWord")[0].value = map.ftppassword;
+	$("#id_UploadPath")[0].value = map.uploaddirectory;
+}
+
+function submit()
+{
+	var strFtpMode,strFtpAddr,strFtpnum;
+
+	if(GetSelectionVal('id_FtpMode') == str_beidong){
+		strFtpMode = "0";
+	}else{
+		strFtpMode = "1";
+	}
+	
+	var str_idFtpEnable;
+	if(GetCheckBoxValue('id_FtpEnable') == "false"){
+		str_idFtpEnable = "0";
+	}else{
+		str_idFtpEnable = "1";
+	}
+	
+	strFtpAddr = $("#id_UploadPath")[0].value;
+	//console.log(strFtpAddr);
+	strFtpnum = strFtpAddr.replace(/\\/g,"\\\\");
+
+	var msg = [
+				{"xtype":"enabled","text":str_idFtpEnable},
+				{"xtype":"ftpmode","text":strFtpMode},
+				{"xtype":"ftpserver","text":$("#id_FtpServer")[0].value},
+				{"xtype":"ftpuser","text":$("#id_FtpUserName")[0].value},
+				{"xtype":"ftppassword","text":$("#id_FtpPassWord")[0].value},
+				{"xtype":"uploaddirectory","text":strFtpnum},
+				{"xtype":"ftpport","text":$("#id_FtpPort")[0].value}
+			];
+	//console.log(JSON.stringify(msg));
+	var resp = $.sendMsg("FTPStatus",msg,"/ISAPI/Network/FTP","PUT");
+	<!-- console.log(JSON.stringify(msg)); -->
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+function FtpSetTest(){
+	var strFtpMode,strFtpAddr,strFtpnum;
+
+	if(GetSelectionVal('id_FtpMode') == str_beidong){
+		strFtpMode = "0";
+	}else{
+		strFtpMode = "1";
+	}
+	
+	var str_idFtpEnable;
+	if(GetCheckBoxValue('id_FtpEnable') == "false"){
+		str_idFtpEnable = "0";
+	}else{
+		str_idFtpEnable = "1";
+	}
+	
+	strFtpAddr = $("#id_UploadPath")[0].value;
+	//console.log(strFtpAddr);
+	strFtpnum = strFtpAddr.replace(/\\/g,"\\\\");
+
+	var msg = [
+				{"xtype":"enabled","text":str_idFtpEnable},
+				{"xtype":"ftpmode","text":strFtpMode},
+				{"xtype":"ftpserver","text":$("#id_FtpServer")[0].value},
+				{"xtype":"ftpuser","text":$("#id_FtpUserName")[0].value},
+				{"xtype":"ftppassword","text":$("#id_FtpPassWord")[0].value},
+				{"xtype":"uploaddirectory","text":strFtpnum},
+				{"xtype":"ftpport","text":$("#id_FtpPort")[0].value}
+			];
+	//console.log(JSON.stringify(msg));
+	var resp = $.sendMsg("FTPStatus",msg,"/ISAPI/Network/TestFtp","POST");
+	var data = resp.data;
+	if(data.statuscode == "1"){
+		alert(str_SetTestSuccess);
+	}else if(data.statuscode == "3"){
+		alert(str_SetTestFail);
+	}
+}
+
+$(function(){
+	InitUdfSelect('id_FtpMode');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+	BindEvent('id_txtFtpSetPageTest','onmousedown',FtpSetTest,null);
+})
+
+</script>    
+</html>  

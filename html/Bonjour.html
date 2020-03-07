@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.BonjourDiv{
+	left:0px;
+	right:0px;
+	height:180px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtBonjour{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg BonjourDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_BonjourEnable"><script>InitCheckBox('id_BonjourEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtBonjourEnable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtBonjour" id="id_txtBonjour">Bonjour:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Bonjour" value="admin"></input>
+		
+			
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:160px;" id="id_txtBonjourDefault">Default</div>
+		<div class="DivButton" style="float:left;margin-left:5px;" id="id_txtBonjourUpdate">Update</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtBonjourEnable',str_BasicEnable);
+	SetLang('id_txtBonjour',str_bonjour);
+	SetLang('id_txtBonjourDefault',str_Default);	
+	SetLang('id_txtBonjourUpdate',str_Update);
+	SetLang('id_submit',str_btnBasicSave);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("BonjourStatus",null,"/ISAPI/Network/Bonjour","POST");
+	if(resp.success == false){
+		alert("recv BonjourStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	<!-- console.log( JSON.stringify(map)); -->
+	SetCheckBox('id_BonjourEnable',TranslationStrAndBool(map.enabled));
+	$("#id_Bonjour")[0].value = map.name;
+}
+
+function submit()
+{	
+	var str_idBonjourEnable;
+	if(GetCheckBoxValue('id_BonjourEnable') == "false"){
+		str_idBonjourEnable = "0";
+	}else{
+		str_idBonjourEnable = "1";
+	}
+	
+	var msg =	[
+					{"xtype":"enabled","text":str_idBonjourEnable},
+					{"xtype":"name","text":$("#id_Bonjour")[0].value}
+				];
+	
+	var resp = $.sendMsg("BonjourStatus",msg,"/ISAPI/Network/Bonjour","PUT");
+	<!-- console.log(JSON.stringify(msg)); -->
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+$(function(){
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+})
+</script> 
+</html>  

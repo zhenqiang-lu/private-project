@@ -1,0 +1,928 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>	
+	<script src="js/common.js"></script>
+</head>
+
+<style type="text/css">
+.ScheduleDiv{
+	left:0px;
+	right:0px;
+	height:540px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:60px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:90px;
+	float:left;
+}
+
+.txtSnap{
+	width:90px;
+	float:left;
+}
+
+.txtSchedulePage{
+	width:90px;
+	float:left;
+}
+
+.WeekRadio{
+	width:81px;
+	float:left;
+}
+
+
+.TimeLable{
+	width:50px;
+	float:left;
+}
+
+.StartTimeLable{
+	width:80px;
+	float:left;
+}
+
+.TimeSpaceLable{
+	width:10px;
+	float:left;
+}
+
+.StartSpaceEndLable{
+	width:20px;
+	float:left;
+}
+
+.TimeSelect{
+	width:81px;
+}
+
+.CopyButton{
+	width:70px;
+}
+
+.MarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.WeekMarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.DivTime{
+	width:40px;
+	height:23px;
+	float:left;
+}
+
+
+
+
+.ButtonSelectedLable{
+	color:red;
+}
+
+</style> 
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtScheduleEnable',str_RemoteEnable);
+	
+	SetLang('id_SchedulePara1',str_ParaTime1);
+	SetLang('id_SchedulePara2',str_ParaTime2);
+	SetLang('id_SchedulePara3',str_ParaTime3);
+	SetLang('id_SchedulePara4',str_ParaTime4);
+	
+	
+	SetLang('id_txtScheduleday0',str_RemotionSunday);
+	SetLang('id_txtScheduleday1',str_RemotionMonday);
+	SetLang('id_txtScheduleday2',str_RemotionThrsday);
+	SetLang('id_txtScheduleday3',str_RemotionWensday);
+	SetLang('id_txtScheduleday4',str_RemotionThusday);
+	SetLang('id_txtScheduleday5',str_RemotionFriday);
+	SetLang('id_txtScheduleday6',str_RemotionSatDay);
+	SetLang('id_ScheduleCopyTo',str_SelectAll);
+	SetLang('id_ScheduleSubmit',str_Save);
+	SetLang('id_button0',str_Setup);
+	SetLang('id_button1',str_Setup);
+	SetLang('id_button2',str_Setup);
+	SetLang('id_button3',str_Setup);
+	SetLang('id_button4',str_Setup);
+	SetLang('id_button5',str_Setup);
+	SetLang('id_button6',str_Setup);
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+var map;
+var time;
+var AllFlag = 0;
+var selectDay;
+var StartHour0,StartMin0,StartSec0,EndHour0,EndMin0,EndSec0,StartHour1,StartMin1,StartSec1,EndHour1,EndMin1,EndSec1;
+var StartHour2,StartMin2,StartSec2,EndHour2,EndMin2,EndSec2,StartHour3,StartMin3,StartSec3,EndHour3,EndMin3,EndSec3;
+
+function addSelectScheduleTime(id,num,streamtype)
+{
+	for(var i =0;i < num; i ++){
+		var addstr = '<div class="ClassContentSelectOption TimeSelect" name="id_'+streamtype+'_option" style="margin-top:'+i*24+'px;">'+i+'</div>';
+		$("#"+id).append(addstr);
+	}
+}
+
+function GetNetMap()
+{
+	var resolutionsavailable,begintime,endtime;
+	var resp = $.sendMsg("RemoteVideoPlan",null,"/ISAPI/RecFile/VideoPlan","POST");
+	if(resp.success == false){
+		alert("recv /Event/Schedule msg fail");
+		return;
+	}
+	return resp.data;
+}
+
+function InitPageParam(){
+
+	//map = resp.data;
+	var myDate = new Date();
+	var today = myDate.getDay();
+	selectDay = today;
+	SetCheckBox('id_ScheduleEnable',TranslationStrAndBool(map.enabled));
+
+	var startTime,startTimeHour,startTimeMin,startTimeSec;
+	var EndTime,endTimeHour,endTimeMin,endTimeSec;
+	
+	//SetRaioChanged('id_Scheduleday'+today+'radio','ScheduleRadioWeekDay');
+	SetCheckBox('id_Scheduleday' + today + 'Enable', '1');
+	for(var i = 0; i < 7; i++)
+	{
+		if(today == i)
+		{
+			$("#id_txtScheduleday" + i + "").addClass("ButtonSelectedLable");
+		}
+		else
+		{
+			$("#id_txtScheduleday" + i + "").removeClass("ButtonSelectedLable");
+		}
+	}
+	for(i = 0 ; i < 4; i++){	
+		var paraEnable = eval('map.weekday_' + today + '.section_' + i + '.plantimeenabled');		
+		startTime = eval('map.weekday_' + today + '.section_' + i + '.begintime').split(":");
+		EndTime = eval('map.weekday_' + today + '.section_' + i + '.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_SchedulePara' + i + 'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour' + i + '').SetValue(startTimeHour);
+		eval('StartMin' + i + '').SetValue(startTimeMin);
+		eval('StartSec' + i + '').SetValue(startTimeSec);
+		eval('EndHour' + i + '').SetValue(endTimeHour);
+		eval('EndMin' + i + '').SetValue(endTimeMin);
+		eval('EndSec' +i+'').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			var paraEnable = eval('map.weekday_'+i+'.section_'+j+'.plantimeenabled');		
+			startTime = eval('map.weekday_'+i+'.section_'+j+'.begintime').split(":");
+			EndTime = eval('map.weekday_'+i+'.section_'+j+'.endtime').split(":");
+			
+			startTimeHour = parseInt(startTime[0]);
+			startTimeMin = parseInt(startTime[1]);
+			startTimeSec = parseInt(startTime[2]);
+			
+			endTimeHour = parseInt(EndTime[0]);
+			endTimeMin = parseInt(EndTime[1]);
+			endTimeSec = parseInt(EndTime[2]);
+			
+			iEnable[i][j] = parseInt(paraEnable); 
+			iStartTime[i][j] = [startTimeHour, startTimeMin, startTimeSec];
+			iEndTime[i][j] = [endTimeHour, endTimeMin, endTimeSec];
+			
+			if(paraEnable == "1")
+			{
+				time.SetTime(i,j,startTimeHour,startTimeMin,startTimeSec
+							,endTimeHour,endTimeMin,endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+	
+}
+
+function SetPlanTime(iEnable, iStartTime, iEndTime)
+{	
+	var startTimeHour, startTimeMin, startTimeSec;
+	var endTimeHour, endTimeMin, endTimeSec;
+	
+	for(var i = 0; i < 4; i++)
+	{
+		var paraEnable = iEnable[selectDay][i];
+		//console.log("InitPageParam StartHour=" + iStartTime[0][i][0] + ", EndHour=" + iEndTime[0][i][0]);
+		//console.log("InitPageParam StartMi=" + iStartTime[0][i][1] + ", EndMi=" + iEndTime[0][i][1]);
+		
+		startTimeHour = iStartTime[selectDay][i][0];
+		startTimeMin = iStartTime[selectDay][i][1];
+		startTimeSec = iStartTime[selectDay][i][2];			
+				
+		endTimeHour = iEndTime[selectDay][i][0];
+		endTimeMin = iEndTime[selectDay][i][1];
+		endTimeSec = iEndTime[selectDay][i][2];
+		
+		SetCheckBox('id_SchedulePara' + i + 'Enable', TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			startTimeHour = iStartTime[i][j][0];
+			startTimeMin = iStartTime[i][j][1];
+			startTimeSec = iStartTime[i][j][2];
+			
+			endTimeHour = iEndTime[i][j][0];
+			endTimeMin = iEndTime[i][j][1];
+			endTimeSec = iEndTime[i][j][2];
+								
+			if (iEnable[i][j] == 1)
+			{
+//				console.log("SetPlanTime i=" + i + ", j=" + j + ", StartTimeHour=" + startTimeHour + 
+//					", StartTimeMin=" + startTimeMin + ", EndTimeHour=" + endTimeHour + 
+//					", EndTimeMin=" + endTimeMin + " iEnable=" + iEnable[i][j]);
+//			
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec,
+					endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+}
+
+function time1(i, j){
+	var str_ParaEnable;
+	if (iEnable[i][j] == 1)
+	{
+		str_ParaEnable = "1";
+	}
+	else
+	{
+		str_ParaEnable = "0";
+	}
+	
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+
+	var Schedulemap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return Schedulemap;	
+}
+
+function section(i, j)
+{
+	var Schedulemap = {"xtype":"section_"+j,"items":time1(i,j)};
+	return Schedulemap;
+}
+
+
+function week(i)
+{
+	var map0 = {"xtype":"weekday_"+i,"items":[section(i,0),section(i,1),section(i,2),section(i,3)]};	
+	return map0;
+	
+}
+
+function currenttime(i, j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_SchedulePara'+j+'Enable') == "false")
+	{
+		str_ParaEnable = "0";
+	}
+	else
+	{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	var currentmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return currentmap;	
+}
+
+function currentsection(i,j)
+{
+	var Schedulemap = {"xtype":"section_" + j,"items":currenttime(i,j)};
+	return Schedulemap;
+}
+
+function submit()
+{
+	var str_ScheduleEnable;
+	if(GetCheckBoxValue('id_ScheduleEnable') == "false")
+	{
+		str_ScheduleEnable = "0";
+	}
+	else
+	{
+		str_ScheduleEnable = "1";
+	}
+	
+	if (AllFlag == 1) // 表示选择全选，把选中那天的时间替换其它天
+	{
+		for(var i = 0; i < 7; i++)
+		{			
+			iStartTime[i] = iStartTime[selectDay];
+			iEndTime[i] = iEndTime[selectDay];				
+			iEnable[i] = iEnable[selectDay];
+		}
+	}
+	
+	EditSetPlanTime()
+	
+	//var myDate = new Date();
+	//var today = myDate.getDay();
+	var respflag = 0;
+	var msg =	[
+					{"xtype":"enabled","text":str_ScheduleEnable},
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	
+	
+	for(var i = 0; i < 7; i++){
+		var mapsend = [msg[0],msg[i+1]];
+		var resp = $.sendMsg("RemoteVideoPlan",mapsend,"/ISAPI/RecFile/VideoPlan","PUT");
+		if(resp.success == false){
+			alert("submit submit msg fail");
+		}else{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+	{
+		ScheduleTime();
+		map = GetNetMap();
+		alert(str_SetSuccess);
+		InitPlanTime();	
+		InitPageParam();
+	}
+}
+
+function copysubmit()
+{
+	var myDate = new Date();
+	var today = myDate.getDay();
+	var respflag = 0;
+	var msg =	[
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	var todaymap = {"xtype":"weekday_"+today+"","items":[currentsection(today,0),currentsection(today,1),currentsection(today,2),currentsection(today,3)]};
+	msg[today] = todaymap;
+
+//	var resp = $.sendMsg("ScheduleAlarmParam",msg,"/ISAPI/Event/ScheduleAlarmParam","PUT");
+
+/*	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert("设置成功");
+	}*/
+	
+	for(var i = 0; i < 7; i++){
+		var mapsend = [msg[i]];
+		var resp = $.sendMsg("ScheduleChannel",mapsend,"/ISAPI/Schedule","PUT");
+		if(resp.success == false){
+			alert("submit submit msg fail");
+		}else{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+		alert("设置成功");
+}
+
+function submitcurrenttime(j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_SchedulePara'+j+'Enable') == "false"){
+		str_ParaEnable = "0";
+	}else{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = eval('StartHour'+j+'').GetValue()+':'+ eval('StartMin'+j+'').GetValue()+':'+eval('StartSec'+j+'').GetValue();
+	EndTime = eval('EndHour'+j+'').GetValue()+':'+ eval('EndMin'+j+'').GetValue()+':'+eval('EndSec'+j+'').GetValue();
+	var currentmap ={"plantimeenabled":str_ParaEnable,"begintime":StartTime,"endtime":EndTime};
+	return currentmap;	
+}
+
+function submitcurrentsection(i,j)
+{
+	var a = submitcurrenttime(j);
+	//var str = '{"section_'+j+'":'+JSON.stringify(a)+'}';
+	var str = '"section_'+j+'"'+':'+JSON.stringify(a);
+	//var Schedulemap = JSON.parse(str);
+	return str;
+}
+
+function CopyTo()
+{
+	//console.log('flag ='+AllFlag);
+	if(AllFlag == 0)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Scheduleday'+i+'Enable','true');
+			ScheduleTime();
+		}
+		AllFlag = 1;
+	}
+	else if(AllFlag == 1)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Scheduleday'+i+'Enable','false');
+		}
+		AllFlag = 0;
+	}
+	
+}
+
+function RadioEvent()
+{
+	var radiostr = GetRaioIndex('ScheduleRadioWeekDay');
+	//console.log("111 = "+radiostr);
+	for(var i = 0;i < 7;i++)
+	{
+		if(i == radiostr)
+			SetCheckBox('id_Scheduleday'+radiostr+'Enable','true');
+		else
+			SetCheckBox('id_Scheduleday'+i+'Enable','false');
+	}
+	for(i = 0 ; i < 4; i++){
+		var paraEnable = eval('map.weekday_'+radiostr+'.section_'+i+'.plantimeenabled');		
+		startTime = eval('map.weekday_'+radiostr+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+radiostr+'.section_'+i+'.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_SchedulePara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+}
+
+function ScheduleCon()
+{
+	if($('#id_ScheduleInterval')[0].value < 1){
+		$('#id_ScheduleInterval')[0].value = 1;
+	}
+	if($('#id_ScheduleInterval')[0].value > 600){
+		$('#id_ScheduleInterval')[0].value = 600;
+	}
+}
+
+function EditSetPlanTime()
+{
+	for (var i = 0; i < 7; i++)
+	{
+		if (GetCheckBoxValue('id_Scheduleday' + i + 'Enable') == "true")
+		{		
+			for (var j = 0; j < 4; j++)
+			{
+				if (GetCheckBoxValue('id_SchedulePara' + j + 'Enable') == "true")
+					iEnable[i][j] = 1
+				else
+					iEnable[i][j] = 0;
+
+				iStartTime[i][j][0]	= parseInt(eval('StartHour' + j + '').GetValue());
+				iStartTime[i][j][1] = parseInt(eval('StartMin' + j + '').GetValue());
+				iStartTime[i][j][2] = parseInt(eval('StartSec' + j + '').GetValue());
+				iEndTime[i][j][0] = parseInt(eval('EndHour' + j + '').GetValue());
+				iEndTime[i][j][1] = parseInt(eval('EndMin' + j + '').GetValue());
+				iEndTime[i][j][2] = parseInt(eval('EndSec' + j + '').GetValue());			
+			}
+		}
+	}
+	
+	var MinIndex, OldStartTime; 
+	var StartTimeHour, StartTimeHour, EndTimeHour, EndTimeMin;
+	var tempStartTimeHour, tempStartTimeMin, tempEndTimeHour, tempEndTimeMin;
+	var tempEnable = 0;
+	for(var i = 0; i < 7; i++)
+	{	
+		if (GetCheckBoxValue('id_Scheduleday' + i + 'Enable') == "true")
+		{
+			for(var j = 0; j < 4; j++)
+			{	
+				MinIndex = -1;
+				OldStartTime = 30 * 60 + 60;
+				for(var n = j; n < 4; n++)
+				{						
+					StartTimeHour = parseInt(iStartTime[i][n][0]);
+					StartTimeMin = parseInt(iStartTime[i][n][1]);
+					EndTimeHour = parseInt(iEndTime[i][n][0]);
+					EndTimeMin = parseInt(iEndTime[i][n][1]);
+					if (StartTimeHour * 60 + StartTimeMin > 0)
+					{
+						if (OldStartTime > StartTimeHour * 60 + StartTimeMin) // 找出最小的
+						{
+							MinIndex = n;
+							OldStartTime = StartTimeHour * 60 + StartTimeMin;
+							//console.log("1==== i=" + i + ", j=" + j + ", n=" + n + ", StartTimeHour=" + StartTimeHour);
+							tempStartTimeHour = StartTimeHour;
+							tempStartTimeMin = StartTimeMin;
+							tempEndTimeHour = EndTimeHour;
+							tempEndTimeMin = EndTimeMin;
+							tempEnable = iEnable[i][n];
+						}
+					}				
+				}
+									
+				if (MinIndex >= 0)
+				{
+					iStartTime[i][MinIndex] = iStartTime[i][j];													
+					iEndTime[i][MinIndex] = iEndTime[i][j];
+					iEnable[i][MinIndex] = iEnable[i][j];
+					iStartTime[i][j] = [tempStartTimeHour, tempStartTimeMin, 0];					
+					iEndTime[i][j] = [tempEndTimeHour, tempEndTimeMin, 59];
+					iEnable[i][j] = tempEnable;
+					//console.log("2==== i=" + i + ", j=" + j + ", MinIndex=" + MinIndex + ", StartTimeHour=" + StartTimeHour);
+				}
+			}
+		}
+	}	
+}
+
+function ScheduleTime()
+{
+	for(var i = 0; i < 7; i++)
+	{
+		var STimeHour, STimeMin, STimeSec;
+		var ETimeHour, ETimeMin, ETimeSec;
+		var Temp1, Temp2;
+		var endTimeHour, endTimeMin, endTimeSec
+		
+		if(GetCheckBoxValue('id_Scheduleday'+i+'Enable') == "true")
+		{		
+			for(var j = 0 ; j < 4; j++)
+			{
+				STimeHour = parseInt(eval('StartHour' + j + '').GetValue());
+				STimeMin = parseInt(eval('StartMin' + j + '').GetValue());
+				STimeSec = parseInt(eval('StartSec' + j + '').GetValue());
+				
+				ETimeHour = parseInt(eval('EndHour' + j + '').GetValue());
+				ETimeMin = parseInt(eval('EndMin' + j + '').GetValue());
+				ETimeSec = parseInt(eval('EndSec' + j + '').GetValue());
+				
+				Temp1 = STimeHour * 3600 + STimeMin * 60 + STimeSec; 
+				Temp2 = ETimeHour * 3600 + ETimeMin * 60 + ETimeSec;
+				if (Temp1 > Temp2)
+				{
+					eval('EndHour' + j + '').SetValue(eval('StartHour' + j + '').GetValue());
+					eval('EndMin' + j + '').SetValue(eval('StartMin' + j + '').GetValue());
+					eval('EndSec' + j + '').SetValue(eval('StartSec' + j + '').GetValue());;
+				}
+				
+				time.ClearSingle(i,j);
+				if(GetCheckBoxValue('id_SchedulePara'+j+'Enable') == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue()
+								,eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());
+				}else{
+					time.ClearSingle(i,j);
+				}
+			}
+		}
+	}
+}
+
+function funbutton(id){
+	selectDay = id.substring(id.length - 1,id.length);
+	//console.log(selectDay);
+	for(var i = 0; i < 7; i++)
+	{
+		if(selectDay == i)
+		{
+			SetCheckBox('id_Scheduleday'+i+'Enable','true');
+			$("#id_txtScheduleday"+i+"").addClass("ButtonSelectedLable");
+			for(j = 0 ; j < 4; j++){	
+				var paraEnable = iEnable[selectDay][j];
+//				console.log("funbutton StartHour=" + iStartTime[selectDay][j][0] + ", EndHour=" + iEndTime[selectDay][j][0]);
+//				console.log("funbutton StartMin=" + iStartTime[selectDay][j][1] + ", EndMin=" + iEndTime[selectDay][j][1]);
+				
+				startTimeHour = iStartTime[selectDay][j][0];
+				startTimeMin = iStartTime[selectDay][j][1];
+				startTimeSec = iStartTime[selectDay][j][2];			
+				
+				endTimeHour = iEndTime[selectDay][j][0];
+				endTimeMin = iEndTime[selectDay][j][1];
+				endTimeSec = iEndTime[selectDay][j][2];
+				
+				SetCheckBox('id_SchedulePara'+j+'Enable',TranslationStrAndBool(paraEnable));
+				eval('StartHour'+j+'').SetValue(startTimeHour);
+				eval('StartMin'+j+'').SetValue(startTimeMin);
+				eval('StartSec'+j+'').SetValue(startTimeSec);
+				eval('EndHour'+j+'').SetValue(endTimeHour);
+				eval('EndMin'+j+'').SetValue(endTimeMin);
+				eval('EndSec'+j+'').SetValue(endTimeSec);
+				
+				if(TranslationStrAndBool(paraEnable) == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue()
+									,eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());
+				}
+				else
+				{
+					time.ClearSingle(i,j);
+				}
+			}
+		}else{
+			SetCheckBox('id_Scheduleday'+i+'Enable','false');
+			$("#id_txtScheduleday"+i+"").removeClass("ButtonSelectedLable");
+		}
+	}
+}
+
+$(function(){
+
+	StartHour0 = new SelectInput("id_ScheduleStartHour0",0,23,0,ScheduleTime);
+	StartMin0 = new SelectInput("id_ScheduleStartMin0",0,59,0,ScheduleTime);
+	StartSec0 = new SelectInput("id_ScheduleStartSec0",0,59,0,ScheduleTime);
+
+	EndHour0 = new SelectInput("id_ScheduleEndHour0",23,23,0,ScheduleTime);
+	EndMin0 = new SelectInput("id_ScheduleEndMin0",59,59,0,ScheduleTime);
+	EndSec0 = new SelectInput("id_ScheduleEndSec0",59,59,0,ScheduleTime);
+	
+	StartHour1 = new SelectInput("id_ScheduleStartHour1",0,23,0,ScheduleTime);
+	StartMin1 = new SelectInput("id_ScheduleStartMin1",0,59,0,ScheduleTime);
+	StartSec1 = new SelectInput("id_ScheduleStartSec1",0,59,0,ScheduleTime);
+	
+	EndHour1 = new SelectInput("id_ScheduleEndHour1",23,23,0,ScheduleTime);
+	EndMin1 = new SelectInput("id_ScheduleEndMin1",59,59,0,ScheduleTime);
+	EndSec1 = new SelectInput("id_ScheduleEndSec1",59,59,0,ScheduleTime);
+	
+	StartHour2 = new SelectInput("id_ScheduleStartHour2",0,23,0,ScheduleTime);
+	StartMin2 = new SelectInput("id_ScheduleStartMin2",0,59,0,ScheduleTime);
+	StartSec2 = new SelectInput("id_ScheduleStartSec2",0,59,0,ScheduleTime);
+
+	EndHour2 = new SelectInput("id_ScheduleEndHour2",23,23,0,ScheduleTime);
+	EndMin2 = new SelectInput("id_ScheduleEndMin2",59,59,0,ScheduleTime);
+	EndSec2 = new SelectInput("id_ScheduleEndSec2",59,59,0,ScheduleTime);
+
+	StartHour3 = new SelectInput("id_ScheduleStartHour3",0,23,0,ScheduleTime);
+	StartMin3 = new SelectInput("id_ScheduleStartMin3",0,59,0,ScheduleTime);
+	StartSec3 = new SelectInput("id_ScheduleStartSec3",0,59,0,ScheduleTime);
+
+	EndHour3 = new SelectInput("id_ScheduleEndHour3",23,23,0,ScheduleTime);
+	EndMin3 = new SelectInput("id_ScheduleEndMin3",59,59,0,ScheduleTime);
+	EndSec3 = new SelectInput("id_ScheduleEndSec3",59,59,0,ScheduleTime);
+	time = new TimeTable('id_TimeTable');
+	time.ClearAll();
+	
+	map = GetNetMap();
+	InitLang();
+	InitPlanTime();	
+	InitPageParam();
+	BindEvent('id_ScheduleCopyTo','onmousedown',CopyTo,null);
+	BindEvent('id_ScheduleSubmit','onmousedown',submit,null);
+	//BindEvent('id_ScheduleInterval','onchange',ScheduleCon,null);
+	BindEvent('id_button0','onmousedown',funbutton,'id_button0');
+	BindEvent('id_button1','onmousedown',funbutton,'id_button1');
+	BindEvent('id_button2','onmousedown',funbutton,'id_button2');
+	BindEvent('id_button3','onmousedown',funbutton,'id_button3');
+	BindEvent('id_button4','onmousedown',funbutton,'id_button4');
+	BindEvent('id_button5','onmousedown',funbutton,'id_button5');
+	BindEvent('id_button6','onmousedown',funbutton,'id_button6');
+	
+}
+)
+
+</script> 
+
+<body>   
+<div class="ContentBg ScheduleDiv" style="min-width:950px;">
+	<div style="height:100%;margin:auto;width:950px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_ScheduleEnable"><script>InitCheckBox('id_ScheduleEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtScheduleEnable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		 
+		<div id="id_TimeTable" style="float:left;" oncontextmenu="return false"></div>
+		<div style="float:left;width:200px;height:227px;">
+			<div style="width:28px;height:16px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button0">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button1">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button2">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button3">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button4">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button5">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button6">设置</div>
+		</div>
+		<div style="clear:both;"></div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SchedulePara0Enable"><script>InitCheckBox('id_SchedulePara0Enable','flase',ScheduleTime)</script></div>
+		<div class="DivLable" id="id_SchedulePara1" style="float:left;margin-left:10px;">Para1:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_ScheduleStartTime1">Start Time</div> -->
+		<div style="float:left;margin-left:20px;">
+		<div id="id_ScheduleStartHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartSec0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_ScheduleEndTime1">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_ScheduleEndHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndSec0"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+			
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SchedulePara1Enable"><script>InitCheckBox('id_SchedulePara1Enable','flase',ScheduleTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SchedulePara2">Para2:</div>
+	
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_ScheduleStartTime2">Start Time</div> -->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_ScheduleStartHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartSec1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_ScheduleEndTime2">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_ScheduleEndHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndSec1"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_SchedulePara2Enable"><script>InitCheckBox('id_SchedulePara2Enable','flase',ScheduleTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SchedulePara3">Para3:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_ScheduleStartTime3">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_ScheduleStartHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartSec2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_ScheduleEndTime3">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_ScheduleEndHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndSec2"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SchedulePara3Enable"><script>InitCheckBox('id_SchedulePara3Enable','flase',ScheduleTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SchedulePara4">Para4:</div>	
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_ScheduleStartTime4">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_ScheduleStartHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleStartSec3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_ScheduleEndTime4">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_ScheduleEndHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_ScheduleEndSec3"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+				
+		<div class="DivAllBtn CopyButton" style="float:left;" id="id_ScheduleCopyTo">All</div>
+		
+
+		<div class="DivCheckBox" style="float:left;margin-left:20px;"id="id_Scheduleday0Enable"><script>InitCheckBox('id_Scheduleday0Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday0">Sunday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Scheduleday1Enable"><script>InitCheckBox('id_Scheduleday1Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday1">Monday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Scheduleday2Enable"><script>InitCheckBox('id_Scheduleday2Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft"  id="id_txtScheduleday2">Tuesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Scheduleday3Enable"><script>InitCheckBox('id_Scheduleday3Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday3">Wednesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Scheduleday4Enable"><script>InitCheckBox('id_Scheduleday4Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday4">Thursday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Scheduleday5Enable"><script>InitCheckBox('id_Scheduleday5Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday5">Friday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Scheduleday6Enable"><script>InitCheckBox('id_Scheduleday6Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtScheduleday6">Saturday</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_ScheduleSubmit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+</html>  

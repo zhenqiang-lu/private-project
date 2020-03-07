@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.ContentBgEX{
+	left:0px;
+	right:0px;
+	height:330px;
+	min-width:600px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtPPPOES{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg ContentBgEX" >
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_GB28181Enable"><script>InitCheckBox('id_GB28181Enable','false')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtGB28181Enable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtDeviceID">设备ID:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DeviceID" value="34020000001320000001"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtServerID">SIP服务器ID:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_ServerID" value="34020000002000000001"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtServerPort">SIP服务端口:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_ServerPort" value="5060" type=""></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtServerIP">SP服务器地址:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_ServerIP" value="192.168.1.88" type=""></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtServerPassword">SIP服务器密码:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_ServerPassword" value="12345678" type="password"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtPPPOES" id="id_txtKeepAliveTime">注册有效期:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_KeepAliveTime" value="3600" type=""></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		
+		
+		<div class="DivButton" style="float:left;margin-left:250px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>  
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtGB28181Enable',str_EnablePPPOE);
+	SetLang('id_txtServerID',str_sipserverid);
+	SetLang('id_txtServerPort',str_sipserverport);
+	SetLang('id_txtServerIP',str_sipserverip);
+	SetLang('id_txtServerPassword',str_sipserverpasswd);
+	SetLang('id_txtKeepAliveTime',str_sipserverKeepTime);
+	SetLang('id_txtDeviceID',str_BasicDeviceID);
+	SetLang('id_submit',str_btnPPPOESave);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("GB28181Param",null,"/ISAPI/Network/GB28181Param","POST");
+	if(resp.success == false){
+		alert("recv GB28181Param msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map)); 
+	SetCheckBox('id_GB28181Enable',TranslationStrAndBool(map.enabled));
+	$("#id_ServerID")[0].value = map.serverid;
+	$("#id_ServerPort")[0].value = map.serverport;
+	$("#id_ServerIP")[0].value = map.serverip;
+	$("#id_ServerPassword")[0].value = map.serverpassword;
+	$("#id_KeepAliveTime")[0].value = map.keepalivetime;
+	$("#id_DeviceID")[0].value = map.deviceid;
+}
+
+function submit()
+{	
+	var str_idPPPOEEnable;
+	if(GetCheckBoxValue('id_GB28181Enable') == "false"){
+		str_idPPPOEEnable = "0";
+	}else{
+		str_idPPPOEEnable = "1";
+	}
+	
+	var msg = [
+				{"xtype":"enabled","text":str_idPPPOEEnable},
+				{"xtype":"serverid","text":$("#id_ServerID")[0].value},
+				{"xtype":"serverport","text":$("#id_ServerPort")[0].value},
+				{"xtype":"serverip","text":$("#id_ServerIP")[0].value},
+				{"xtype":"serverpassword","text":$("#id_ServerPassword")[0].value},
+				{"xtype":"keepalivetime","text":$("#id_KeepAliveTime")[0].value},
+				{"xtype":"deviceid","text":$("#id_DeviceID")[0].value}
+			];
+	
+	var resp = $.sendMsg("GB28181Param",msg,"/ISAPI/Network/GB28181Param","PUT");
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+$(function(){	
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+})
+</script> 
+ 
+</html>  

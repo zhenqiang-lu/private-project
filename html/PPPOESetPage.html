@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.PPPoeDiv{
+	left:0px;
+	right:0px;
+	height:180px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtPPPOES{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg PPPoeDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_PPPOEEnable"><script>InitCheckBox('id_PPPOEEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtPPPOEEnable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtPPPOEUsername">Username:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_PPPOEUsername" value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtPPPOES" id="id_txtPPPOEPassword">Password:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_PPPOEPassword" value="admin" type="password"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>  
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtPPPOEEnable',str_EnablePPPOE);
+	SetLang('id_txtPPPOEUsername',str_PPPOEUserName);
+	SetLang('id_txtPPPOEPassword',str_PPPOEPwd);
+	SetLang('id_submit',str_btnPPPOESave);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("PPPoEStatus",null,"/ISAPI/Network/PPPoE","POST");
+	if(resp.success == false){
+		alert("recv PPPoEStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	<!-- console.log( JSON.stringify(map)); -->
+	SetCheckBox('id_PPPOEEnable',TranslationStrAndBool(map.enabled));
+	$("#id_PPPOEUsername")[0].value = map.pppoename;
+	$("#id_PPPOEPassword")[0].value = map.pppoepassword;
+}
+
+function submit()
+{	
+	var str_idPPPOEEnable;
+	if(GetCheckBoxValue('id_PPPOEEnable') == "false"){
+		str_idPPPOEEnable = "0";
+	}else{
+		str_idPPPOEEnable = "1";
+		if (confirm(str_ConfirmContinue)==false){return false;}	
+	}
+	
+	
+	
+	var msg = [
+				{"xtype":"enabled","text":str_idPPPOEEnable},
+				{"xtype":"pppoename","text":$("#id_PPPOEUsername")[0].value},
+				{"xtype":"pppoepassword","text":$("#id_PPPOEPassword")[0].value}
+			];
+	
+	var resp = $.sendMsg("PPPoEStatus",msg,"/ISAPI/Network/PPPoE","PUT");
+	<!-- console.log(JSON.stringify(msg)); -->
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+$(function(){	
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+})
+</script> 
+ 
+</html>  

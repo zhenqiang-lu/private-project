@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//”Ô—‘∞¸≥ı ºªØ
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.BasicInforDiv{
+	left:0px;
+	right:0px;
+	height:200px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtDeviceModel{
+	width:160px;
+	float:left;
+}
+
+</style> 
+
+
+<body>   
+<div class="BasicInforDiv ContentBg" style="min-width:600px;">
+	<div style="width:100px;height:30px;"></div>
+	<div style="height:100%;margin:auto;width:600px;">	
+		<div class="DivLable txtDeviceModel" id="id_txtUPNPEnable">UPNP:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_UPNP">Disable</div>
+		<div class="DivContentSelectIco" id="id_UPNP_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_UPNP_option" style="margin-top:0px;" id="id_txtDisable">Disable</div>
+		<div class="ClassContentSelectOption" name="id_UPNP_option" style="margin-top:24px;" id="id_txtEnable">Enable</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//??????????
+function InitLang(){
+	SetLang('id_txtUPNPEnable',str_BasicIsUPNP);
+	SetLang('id_submit',str_btnBasicSave);
+	SetLang('id_txtDisable',str_Disable);
+	SetLang('id_txtEnable',str_Enable);
+};
+</script> 
+
+ <script  type="text/javascript"> 
+ 
+function InitPageParam()
+{
+	var resp = $.sendMsg("UPNPStatus",null,"/ISAPI/Network/UPNP","POST");
+	if(resp.success == false){
+		alert("recv DeviceInfo msg fail");
+		return;
+	}
+	var map = resp.data;
+	
+	//var map = {"devicename":"IPCAM","deviceid":"1701060000","devicemodel":null,"upnp":"0","softwarever":"0a-00-00-03-GW","factoryinfo":"IPCAM"};
+	//console.log(JSON.stringify(map));
+	SetSelectionOptID('id_UPNP',map.enabled);
+}
+ 
+function submit()
+{
+	if(GetOptionByVlaue('id_UPNP',GetSelectionVal('id_UPNP')) == 1)
+	{
+		if (confirm(str_ConfirmContinue)==true){ 
+			
+		}else{ 
+			return false; 
+		} 
+	}
+	var msg = [
+				{"xtype":"upnp","text":"" +GetOptionByVlaue('id_UPNP',GetSelectionVal('id_UPNP'))}
+			];
+	var resp = $.sendMsg("UPNPStatus",msg,"/ISAPI/Network/UPNP","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}	
+}
+ 
+ $(function (){
+		InitLang();
+		InitUdfSelect('id_UPNP');
+		InitPageParam();
+		BindEvent('id_submit','onmousedown',submit,null);
+	}
+ );
+	
+</script>
+</html>  

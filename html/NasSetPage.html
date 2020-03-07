@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.NasDiv{
+	left:0px;
+	right:0px;
+	height:180px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+.DivInputIpv4Param{
+	width:50px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.NastxtNature{
+	width:160px;
+	float:left;
+}
+
+.NastxtAction{
+	width:320px;
+	float:left;
+}
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg NasDiv" style="min-width:800px;">
+	<div style="height:100%;margin:auto;width:800px;">	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_NasEnable"><script>InitCheckBox('id_NasEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtNasEnable">Enable</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable NastxtNature" id="id_txtNasAddress">Server Address</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_NasAddress" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable NastxtNature" id="id_txtNasDirectory">Remote Directory</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_NasDirectory" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+			
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_NasSubmit">Save</div>
+
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtNasEnable',str_NASEnable);
+	SetLang('id_txtNasAddress',str_NASServerAddress);
+	SetLang('id_txtNasDirectory',str_NASDirectory);
+	SetLang('id_NasSubmit',str_SDSave);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("NASStatus",null,"/ISAPI/Network/NAS","POST");
+	if(resp.success == false){
+		alert("recv NASStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	$("#id_NasAddress")[0].value = map.nasserver;
+	$("#id_NasDirectory")[0].value = map.nasuploaddirectory;
+	SetCheckBox('id_NasEnable',TranslationStrAndBool(map.enabled));
+}
+
+function submit()
+{
+	var str_NasEnable;
+	if(GetCheckBoxValue('id_NasEnable') == "false"){
+		str_NasEnable = "0";
+	}else{
+		str_NasEnable = "1";
+	}
+	var msg = [
+				{"xtype":"enabled","text":str_NasEnable},
+				{"xtype":"nasserver","text":$("#id_NasAddress")[0].value},
+				{"xtype":"nasuploaddirectory","text":$("#id_NasDirectory")[0].value}
+			];
+	var resp = $.sendMsg("NASStatus",msg,"/ISAPI/Network/NAS","PUT");
+    //console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}	
+
+}
+
+$(function(){
+	InitLang();
+	InitPageParam();
+	BindEvent('id_NasSubmit','onmousedown',submit,null);
+})
+
+</script> 
+</html>  

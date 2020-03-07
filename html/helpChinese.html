@@ -1,0 +1,742 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="icon" href="data:;base64,=">
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<style type="text/css">
+h2{
+	color:#64b9fa;
+}
+
+h3{
+	color:#4586d8;
+}
+h4{
+	color:#f7ad51;
+	margin-left:20px;
+	float:left;
+}
+p{
+	margin-left:20px;
+}
+</style>
+<body>
+<div style="color:#ffffff">
+<h2>1. 网络连接</h2>
+<h3>1.1 网络连接</h3>
+<p>
+网络摄像机与电脑之间常用连接方式主要有两种<br/>
+在通过网络访问网络摄像机之前，首先需要获取它的IP地址，用户可以通过“GW Device Manager”软件来搜索网络摄机的IP地址。<br/>
+安装随机光盘里面的“GW Device<br/> Manager”软件，单击“搜索”。软件会显示当前局域网内中正在运行的网络摄像机的IP地址、端口号、MAC地址、S/N、UID、版本信息、型号等。<br/>
+若搜索出来的IP地址和电脑IP地址不在同一网段，请通过“GW Device Manager”软件修改网络摄像机IP地址、子网掩码等参数。<br/>
+在“GW Device Manager”软件中，选择要修改的摄像机，右击选择“网络配置”，然后输入新的IP地址、子网掩码等参数。<br/>
+<h4>说明:</h4><p>IPC IP地址出厂默认是开启DHCP，建议把IPC接入有DHCP Server的网络中，如果网络中没有DHCP Server，IP地址则会变成192.168.0.66。<br/>
+</p>
+</p>
+<br/><br/>
+<h3>1.2  登录WEB界面</h3>
+<p>
+第一次使用WEB客户端时，需要加载“VLC media player”，具体操作步骤如下:<br/>
+步骤1: 打开WEB客户端，在地址栏里输入网络摄像机的IP地址。<br/>
+步骤2:  连接成功后，选择合适的语言，输入用户名和密码。出厂默认管理员用户名为: admin,密码为: admin<br/>
+步骤3 如何运行WEB插件: <br/>
+•打开浏览器输入IPC IP地址<br/>
+•您会看到一个运行加载项提示，请按照提示进行<br/>
+通过浏览器客户端您可以:<br/>
+•实时查看图像<br/>
+•录像回放 Record <br/>
+•保存录像到本地电脑和设置IPC参数<br/>
+•您无需将IPC接入监视器，只需将IPC接入本地电脑中即可<br/>
+•快速简单设置IPC参数，更改设置，录像质量和时间。<br/>
+
+电脑最低配置要求：<br/>
+2.0GHZ或以上CPU<br/>
+2GB 或以上RAM <br/>
+10/100Mbps网络 <br/>
+1024x768或以上分辨率 
+<br/>
+支持电脑系统如下：<br/>
+Microsoft Windows XP, Microsoft Windows Vista, Microsoft Windows 7,Microsoft Windows 8,Microsoft Windows 10
+Mac OS<br/>
+<h4>说明:</h4><p>本文所涉及到的浏览器均为IE浏览器，请使用IE 9或以上浏览器。<br/>
+</p>
+</p>
+<br/><br/><br/>
+
+
+
+<h2>2. Preview</h2>
+<h3>2.1 菜单设置</h3>
+<p style="">
+菜单按钮详细介绍参见2预览、3回放、4、配置3个章节内容
+</p>
+<br/><br/>
+<h3>2.2 功能状态栏</h3>
+<p>
+①主码流:切换至主码流，一般用于存储和监视，分辨率高，清淅度好<br/>
+② 子码流:切换至子码流，在网络带宽不足时，用于代替主码流进行网络监视<br/>
+③ 探头报警:显示是否有探头报警输出，状态说明如下：<br/>
+白色：表示未设置探头报警<br/>
+蓝色：表示已开启探头报警<br/>
+红色且转动：表示探头报警进行中<br/>
+注：这里只显示状态，详细设置请参阅4.3.3<br/>
+④ 移动侦测	:显示是否有移动侦测报警输出，状态说明如下：<br/>
+白色：表示未设置移动侦测<br/>
+蓝色：表示已开启移动侦测<br/>
+红色且闪动：表示移动侦测报警进行中<br/>
+注：这里只显示状态，详细设置请参阅4.3.1<br/>
+⑤ 遮挡报警	:显示是否有遮挡报警输出，状态说明如下：<br/>
+白色：表示未设置遮挡报警<br/>
+蓝色：表示已开启遮挡报警<br/>
+红色且闪动：表示遮挡报警进行中<br/>
+注：这里只显示状态，详细设置请参阅4.3.2<br/>
+⑥ 全屏:单击此按钮，全屏显示图像，双击或按ESC退出全屏<br/>
+⑦ 手动录像:单击此按钮，对视频进行录像<br/>
+⑧ 定时录像:显示是否有定时录像，状态说明如下：<br/>
+白色：表示未设置定时录像计划<br/>
+蓝色：表示处于定时录像状态。<br/>
+⑨ 音频:单击此按钮，开启与关闭音频输入输出声音<br/>
+⑩ 抓图:单击此按钮，对视频进行抓图，图片存储路径请参阅5.1.1<br/>
+</p>
+<br/><br/>
+
+
+<h3>2.3 功能栏</h3>
+<p>
+变倍: 调节镜头的焦距，可通过单击或长按“+” “-”按钮调节<br/>
+聚焦: 调节镜头的清淅度，部分不支持自动对焦机型，请通过单击或长按“+” “-”按钮调节<br/>
+<h4>说明:</h4><p>变倍、聚焦等功能非电动镜头机型不支持<br/>
+</p>
+</p>
+<br/><br/>
+<h2>3. 回 放</h2>
+<br/><br/>
+<h2>4. 设置</h2>
+<p>
+WEB客户端的”配 置”页面分为”媒体配置、网络、告警、录像、系统”等五部分
+</p>
+<br/>
+<h3>4.1 媒体配置</h3>
+<p>Config Media分为”Audio Video、Privacy、Image、ROI、OSD”</p>
+<br/>
+
+
+<h3>4.1.1 Audio Video</h3>
+<p>
+步骤1 选择“Settings > Config Media > Audio Video”<br/>
+步骤2 “Audio Video”参数具体设置请参见如下:<br/>
+Standard:根据需要设置PAL或NTSC<br/>
+	PAL：1-25帧/秒或1-50帧/秒<br/>
+	NTSC：1-30帧/秒或1-60帧/秒<br/>
+Stream type:码流类型包括主码流和子码流。<br/>
+	主码流：用于摄像机录像及显示。高质量的视频流<br/>	子码流：摄像机将通过网络发送视频流至远程摄像机，此为低质量视频流，视频文件大小会缩减，便于网络传送<br/>
+Frame Rate:	表示摄像机1秒内录像多少幅图片。减少帧率将不会节省硬件存储空间，但是会提高每一帧的数据数率。帧率会随分辨率的不同而变化<br/>
+Codec:可选择H264或H265<br/>	
+	H264：能够在低码率情况下提供高质量的视频图像，可以工作在实时通信低延时模式下<br/>
+	H265 :在同样高质量的视频图像下，能够节省50%的存储空间<br/>
+Bitrate Mode:编码模式包括固定码流和变码流<br/>
+	固定码流：在任何场景中，码流大小不变化<br/>
+	变码流：在复杂和有移动物体的场景中，码流会增大，反之会减少，便于节省存储空间<br/>
+Resolution :表示有多少个像素点组成图像。值越大，像素点就越多，图像就越清晰<br/>
+Video Quality:图像质量包括“最好，好，较好，一般，较差”等五个选项<br/>
+Video Rate:	表示摄像机用于录像的实际数据量。比特率越高，录像占用存储空间就越大。简言之，录像编码比特率越高，图像效果越好<br/>
+I Frame Interval:	表示两个I帧之前的P帧的数量，数值越大，关键帧越少，反之，关键帧越多。增加关键帧个数可改善质量，但是同时增加带宽和网络负载。最大为100，建议设置为帧率的2倍，默认值为５０<br/>
+Audio Enable:勾选此项表示开启音频输入输出，反之则关闭音频输入输出<br/>
+Codec:选择音频编解码格式G.711U /G.77A，建议选择G.711A<br/>
+步骤3 单击“保存”，完成视频配置<br/>
+</p>
+<br/><br/>
+
+
+
+<h3>4.1.2 Privacy</h3>
+<p>
+步骤1 选择 “Settings > Config Media > Privacy”<br/>
+步骤2 勾选 “Enable”<br/>
+步骤3 单击 “Full Screen”选择全屏区域单击取消全屏区域设置区域后 ，单击“保存”，完成隐私遮蔽设置 to complete privacy area configuration.<br/>
+<h4>说明:</h4>
+<p>
+隐私遮蔽最多支持4个区域 Privacy block supports up to four areas<br/>
+</p>
+</p>
+<br/><br/>
+
+
+<h3>4.1.3 Image</h3>
+<p>
+•Hue: 调节色彩明暗程度。数值0-100可选，默认值为50<br/>
+•Brightness:	调节图像的整体亮度。值越大图像越亮，值越小图像越暗。值设的过大时，图像容易发朦。数值0-100可选，默认值为为50<br/>
+•Contrast:	调节图像的对比度。值越大图像明亮反差越大，反之越小。值设的过大时，图像暗的地方太暗，亮的地方容易过曝。数值0-100可选，默认值为50<br/>
+•Saturation:	调整颜色深浅。值越大彩色将越浓，反之相反。数值0-100可选，默认值为50<br/>
+•Sharpness:	调节图像的边缘的锐利程度，值越大边缘越明显，反这相反，设得较大时，图像容易产生噪点。数值0-100可选，默认值为50<br/>
+•Mirror:	调节图像水平镜像，左右可选。默认值为左<br/>
+•Turn:	调节图像垂直翻转：上下可选。默认值为上<br/>
+•Camera Angle:	该功能可改变图像的方向。正常、90°、180°、270° 可选。默认值为正常<br/>
+•3D DNR:	该功能可能会降低图像的噪点，值越大，效果越好，但是图像会朦，有拖尾的现象。关闭、开启可选。默认值为关<br/>
+•LUX:	该功能可设置CDS照度值，值越大LED越容易开启。当为0时，LED不开。当为9时，LED常开。LUX：0-9可选<br/>
+•Dewarping:	该功能可矫正鱼眼图像。关闭、开启可选。默认值为关闭<br/>
+•Led intensity:	该功能可设置LED强度，值越大电流越大。当为0时，LED关闭。LED强度：0-9可选<br/>
+•Exposure Mode:		自动：图像的整体亮度在正常曝光范围内根据不同场景亮度自动调整。<br/>
+	手动：可手动选曝光值。<br/>
+•曝光：自动、手动可选。默认值为自动<br/>
+•shutter:	该功能可调节快门速度，在固定光圈下，值越大图像越亮，但是会过曝。值越小图像越暗，快门调节范围：1/25-1/100000。默认值为不可用<br/>
+
+•BLC Mode:<br/>
+	WDR：该功能可以将高亮区亮度降低，低亮度区域亮度提高，尽量使高亮和低亮区域景物都能看清。数值0-100可选，默认值为为50<br/>	
+	DWDR：该功能可以将低亮区域亮度提高，高亮区域亮度不变。值越大时，会产生发朦现象。数值0-100可选，默认值为为50<br/>	
+	BLC：根据所处场景自动进行曝光，以看清图像中最暗的区域为目标。数值0-100可选，默认值为为50<br/>	
+	HLC：该功能会抑制高亮区域的亮度，减少光晕区域的大小，整个画面亮度降低。数值0-100可选，默认值为为50<br/>
+•背光补偿：关闭、WDR、DWDR、背光补偿、强光仰制。默认值为关闭<br/>
+•FLC	:<br/>
+	50Hz：在50Hz的情况下，根据场景亮度，自动调整曝光，确保图像不出现横条纹。<br/>
+	60Hz: 在60Hz的情况下，根据场景亮度，自动调整曝光，确保图像不出现横条纹。<br/>
+	室外：该模式下可切换曝光模光，达到相应曝光模式下的效果<br/>
+•防闪烁：室外、50Hz、60Hz可选。默认值为室外<br/>
+
+•Day/Night:<br/>
+	彩色：只显示彩色图像<br/>
+	黑白：只显示黑白图像<br/>
+	自动：根据CDS照度情况来切换显示彩色或黑白图像<br/>
+	时间：根据设定的时间来切换彩色或黑白图像<br/>
+•Day/Night：彩色、黑白、自动、时间可选。非红灯机默认值为彩色，红灯机默认值为自动<br/>
+</p>
+<br/><br/>
+
+
+
+<h3>4.1.4 ROI ROI-Region of Interest</h3>
+<p>
+步骤1 选择 Select“Settings > Conig Media > ROI”。<br/>
+步骤2 勾选 Check“Enable”，选择需要的模式:清淅或模糊，当选择清淅时，选择的区域是清淅的，区域外是模糊的，选择模糊则反之。<br/>
+步骤3 单击 Click“Full Screen”选择全屏区域 ，单击 click“Clear Screen”取消全屏区域，设置区域后，单击 click“保存””Save”，ROI设置完成。<br/>
+</p>
+<br/><br/>
+
+<h3>4.1.5 OSD</h3>
+<p>
+步骤1 选择 Select“Settings > Config Media > OSD”<br/>
+步骤2 OSD参数具体设置请参见如下<br/>
+•OSD Parameters<br/>Show clock	显示/隐藏时间 Display or Hide current time<br/>
+•Show Fps	显示/隐藏帧率 Display or Hide FPS info<br/>
+•Show Channel Name	显示/隐藏通道名称，可设置16个字符<br/>
+•Display or Hide Channel name. (up to 16 characters)<br/>
+•Show User Info	显示/隐藏用户自定义信息，可设置16字符<br/>
+•Display or Hide User info. (up to 16 characters)<br/>
+<h4>说明:</h4>
+<p>
+通过鼠标选择图像上叠加的OSD，可以拖动其位置<br/>
+</p>
+</p>
+<br/><br/><br/>
+
+
+<h3>4.2 Network</h3>
+<p>本地配置分为：”TCP/IP、PPPOE、DDNS Client、Email、FTP、Bonjour、SNMP、HTTPS、P2P“</p>
+<br/><br/>
+
+<h3>4.2.1 TCP/IP</h3>
+<p>
+步骤1 选择 Select“Settings > Network > TCP/IP”<br/>
+步骤2 TCP/IP参数具体设置请参见如下 TCP/IP Parameters<br/>
+•Max connection	表示同时可能多少用户访问此摄像机，最大支持10个用户。<br/>
+•Allows up to 10 devices log in at the same time.<br/>
+•DHCP	根据需要设置启用或不启用。Enable or Disable DHCP<br/>
+	启用DHCP: 一个连接你网络的摄像机（通常是一个路由器）会自动分配IP地址给网络连接的装置。
+	Enable DHCP: DHCP is a system where one device on your network (usually a router) will automatically assign IP address to device connected to the network.
+	不启用DHCP: 静态网络要求所有的摄像机都有他们手动定义的IP地址，因为没有专门的摄像机来自动分配IP地址。
+	Disable DHCP(Static): Static networks require all devices to have their IP addresses manually defined, as there is no device dedicated to automatically assign IP address.<br/>
+
+•IPv4/IPv6 Address	  正如家庭和办公室需要一个地址来确定它们在网络中的位置。<br/>
+	Just as Home and Office needs to have an address which identifies their location on the road network. The camera uses IPv4 addressing, which consists of four groups of numbers between 0 and 255, separated by periods. For example, a typical IP address might be “192.168.1.37”or similar.
+	IPv4地址:由0和255之间的四组数字组成，并由句点分隔。例如，一个典型的IP地址可能是“192.168.1.24”或与之类似的。
+	IPv6地址:IPv6的地址长度为128位，是IPv4地址长度的4倍，采用十六进制表示，并由冒号分隔。例如，一个典型的IP地址可以是“2001:250:3000:1::1:7”或与之类似的
+	The length of the IPv6 address is 128 bits, which is four times the length of the IPv4 address, expressed in hexadecimal and separated by colons. For example, a typical IP address can be "2001: 250: 3000: 1 :: 1: 7 "or similar.
+
+•IPv4 Subnet		If the IP address is like a street address, then a sub-network is like your neighborhood.<br/>
+	This will be formatted in a similar way to the IP address (ie. four numbers up to 255 separated by periods) but contain very different numbers.
+	In the above example, the Subnet might be something like:“255.255.255.0”.
+•Gateway		This is the address of the “way to the Internet.” To continue the road analogy, this is like your local access point to the highway. This is an IP address in the same format as the others, and is typically very similar to the IP address of the Camera. 
+	To continue the above example, it might be something such as: “192.168.1.1”.<br/>
+•DNS	设置DNS服务器地址。我建议你们这边做一个自动DNS，让人去设置，万一设错了就没法用了<br/>
+•MAC 
+MAC Address	网卡物理地址。这是一个独特的代码，你不能改变它-它是出厂时预设的。<br/>
+•The Media Access Control address. This is a unique code which nothing else should share. You can’t change this one - it’s pre-set when the Cmaera is manufactured.
+•Http Port	HTTP通讯提供的服务端口，默认为80，可采取http://ip:port方式登录设备<br/>
+	This is the port through which you will be able to log in to the Camera. it will need to be forwarded properly in order to ensure smooth, latency-free communication. 
+	The default value is “80”, if another device on your network is using this port, please change to other value. 
+	This is the port number you’ll need to remember when logging in remotely from a remote PC via the HTTP interface.
+•ie. http://ip:port (http://56.236.333.237:80)<br/>
+
+•Onvif Port	ONVIF通讯提供的服务端口，默认为85<br/>
+	ONVIF protocol communication port.
+	The default value is “85”
+•RTSPPort	RTSP通讯提供的服务端口，默认为554,<br/>
+	“Real Time Streaming Protocol”, you may use this port to send the streaming file to Realplayer.
+	The default RTSP port is 554
+•ie.<br/>
+rtsp://192.168.0.83:554/H264?channel=0&subtype=0&unicast=true&proto=Onvif 
+Main Stream path example<br/>
+rtsp://192.168.0.83:554/H264?channel=0&subtype=1&unicast=true&proto=Onvif 
+Sub Stream path example。<br/>
+</p>
+<br/></br>
+
+
+<h3>4.2.2 PPPOE</h3>
+<p>
+步骤1 选择 Select“Settings > Network > PPPOE”<br/>
+步骤2 勾选 Check“启用PPPOE””Enable”<br/>
+步骤3 输入Input username & password from ISP（Internet服务提供商 Internet Service Provider）提供的PPPOE用户名和密码<br/>
+步骤4 单击 Click“保存”，摄像机会重启，PPPOE设置完成。 Camera will reboot to complete PPPOE configuration.<br/>
+<h4>说明:</h4>
+<p>
+PPPOE：一种先进的协议，使摄像机通过调制解调器直接连接。仅适用于高级用户的一个选项。设置成功后网络摄像机会自动以PPPOE方式建立网络连接，IP地址将被自动修改为获得的广域网的动态IP地址。<br/>
+</p>
+</p>
+<br/></br>
+
+
+<h3>4.2.3 DDNS Client</h3>
+<p>
+步骤1 选择 Select“Settings > Network > DDNS Client”<br/>
+步骤2 DDNS Client参数具体设置请参见如下<br/>
+•Provider	3322.org、DynDDNS、Noip可选<br/>
+•Choose a server that you’re using from 3322.org, DynDDNS, Noip.<br/>
+•Server	输入域名运营商的DDNS服务器地址<br/>
+•Enter the server address from your DDNS service provider.<br/>
+•Hostname	输入设置的DDNS服务的主机名。这是用来访问网络的地址。<br/>
+•Enter the Hostname that you set up in your DDNS service. This is the address you use to acceess your network.<br/>
+•Username	输入DDNS服务器设置的用户名<br/>
+•Enter the username you setup with your DDNS server.<br/>
+•Password	输入DDNS服务器设置的密码。这些密码组合不必跟您的摄像机或路由器匹配。（为了安全起见，我们建议它们不同）<br/>
+•Enter the password you setup with your DDNS server. These do not have to match your username/password combination in either your Camera or router. (For the sake of security, we suggest making them different).<br/>
+步骤3 单击 Click“保存””Save”，摄像机会重启，DDNS Client设置完成 Camera will reboot to complete DDNS Client configuration.<br/>
+<h4>说明:</h4>
+<p>
+DDNS：许多互联网供应商不给客户一个静态的IP地址。IP经常变动，而导致无法通过互联网远程访问摄像机，如果你想通过互联网远程访问摄像机，请使用DDNS，它可以自动更新IP。<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.2.4 Email</h3>
+<p>
+步骤1 选择 Select“Settings > Network >Email”<br/>
+步骤2 Email参数具体设置请参见如下<br/>
+•Enable Email	启用/不启用E-mail功能 Enable or Disable Email Function<br/>
+•Motion Subject	移动侦测标题，可自定义<br/>
+•This field allows the user to define the Motion Subject line of the email that is sent to the receivers.<br/>
+•Alarm Subject	探头报警标题，可自定义<br/>
+•This field allows the user to define the Alarm Subject line of the email that is sent to the receivers.<br/>
+•SMTP Server	输入服务器地址，如smtp.163.com<br/>
+•SMTP stands for Simple Mail Transfer Protocol. <br/>
+•This field allows the user to enter the SMTP server used by the email service.<br/>
+•For example: “smtp.gmail.com”<br/>
+•SMTP Port	选择电子邮件供应商使用的SMTP端口。默认为25<br/>
+The SMTP Port used by the email provider of your choice. <br/>
+The default value is “25”<br/>
+•Sender 发送人的邮箱地址<br/>
+The address you’re sending the emails from.<br/>
+For example: “youraddress@gmail.com” or similar.<br/>
+•Receiver 收件人的邮箱地址，收件人最多可选置4个<br/>
+<h4>说明:</h4>
+<p>
+ E-mail:是—种用电子手段提供信息交换的通信方式，通过网络的电子邮件系统，用户可以非常快速
+得到大量信息。当移动侦测报警、探头报警、遮挡报警发生时，以邮件的方式通知用户<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.2.5 FTP</h3>
+<p>
+步骤1 选择 Select“Settings > Network >FTP”<br/>
+步骤2 FTP参数具体设置请参见如下<br/>
+•Server	输入FTP服务器的地址，可以是IP地址或是FTP链接地址<br/>
+Enter your FTP server address, can be IP address or the FTP link address.<br/>
+•Port	设置FTP端口，默认为21<br/>
+Enter the FTP port number.<br/>
+The default value is “21”<br/>
+•Mode	设置FTP传送模式:主动或被动  这边主动和被动分别起到什么作用你得写出来我才能翻译<br/>
+•Username	输入你的FTP的用户名<br/>
+Enter the username used to login to the FTP server.<br/>
+•Password	输入你的FTP的密码。<br/>
+Enter the password used to login to the FTP server.<br/>
+•Upload Path<br/>
+Upload Directory	输入上传文件夹名称<br/>
+Enter the upload folder name here to receive the recorded files.<br/>
+<h4>说明:</h4>
+<p>
+ FTP:是一种文件传输协议。用于网络上的控制文件的双向传输。在FTP的使用当中，有两个概念："下载"和"上传"。"下载"文件就是从远程主机拷贝文件至自己的计算机上；"上传"文件就是将文件从自己的计算机中拷贝至远程主机上。此功能就是摄像机“上传”图片或视频至FTP Server。<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.2.6 Bonjour</h3>
+<p>
+步骤1 选择 Select“Settings > Network > Bonjour”<br/>
+步骤2 勾选 Check“Enable”,单击 Click“保存””Save”，Bonjour设置完成。 to complete Bonjour configuration.<br/>
+<h4>说明:</h4>
+<p>
+ Bonjour功能启用后，在支持Bonjour的操作系统和客户端中，摄像机会被自动检测到，当摄像机被自动检测到的时候，显示用户配置的“服务器名称”。此功能部分摄像机不支持<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.2.7 SNMP</h3>
+<p>
+步骤1 选择 Select“Settings > Network > SNMP”<br/>
+步骤2 SNMP参数具体设置请参见如下<br/>
+SNMP
+SNMP Version		勾选SNMP v1，摄像机只能处理v1版本的信息
+	勾选SNMP v2，摄像机只能处理v2版本的信息
+These check-boxes allow the user to select the SNMP version to use.
+SNMP Port	摄像机上代理程序监听端口，默认为161
+This field allows the user to write in a port for SNMP to use. 
+The default value is “161”
+
+
+Read Community	以指定的名称，只读访问所以支持SNMP的对象，默认配置为：public
+This field shows which SNMP community has read access. 
+The default setting is： public
+
+Write Community	以指定的名称，读/写访问所以支持SNMP的对象，默认配置为：private
+This field shows which SNMP community has write access. 
+The default setting is: Private
+
+Trap Address	摄像机上代理程序发送Trap信息给目的地址
+This field allows the user to write in a trap address. 
+
+Trap Port	摄像机上代理程序发送Trap信息给目的端口，默认为162
+This field allows the user to write in a trap port number. The trap port number should not be the same as the SNMP port. 
+The default value is “162”
+步骤3 单击 Click“保存” “Save”，Bonjour设置完成。 to complete Bonjour configuration.
+<h4>说明:</h4>
+<p>
+ SNMP:简单网络管理协议，充许网络管理工作站软件与被管理设备中的代理进行通信<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.2.8 HTTPS</h3>
+<p>
+步骤1 选择 Select“Settings > Network > HTTPS”<br/>
+步骤2 勾选 Check“Enable”,单击 Click“保存””Save”，HTTPs设置完成。to complete HTTPs configuration<br/>
+<h4>说明:</h4>
+<p>
+HTTPS功能启用后，通过WEB客户端访问摄像机时数据将会加密保护，提高数据的安全性，可采取https://ip:port方式登录摄像机,如端口为默认443，则可采用https://ip登录 <br/>
+</p></p>
+<br/></br>
+
+<h3>4.2.9 P2P</h3>
+<p>
+步骤1 选择 Select“Settings > Network >P2P”
+步骤2 勾选 Check“P2P”to enable the P2P feature for the camera. This feature must be enabled for the camera to connect to a smartphone or tablet via the GW App. It is enabled by default.
+注意，我们默认是开启P2P的。
+步骤3 扫描Scan APP二维码下载APP后安装 the APP’s QR Code to download the GW Mobile App.
+步骤4 使用APP扫描UUID二维码即可添加摄像机，P2P用户名为admin，密码为：88888888。
+单击 Click“保存”“Save”，P2P设置完成。
+<h4>说明:</h4>
+<p>
+通过P2P功能，可使用手机APP远程查看摄像机实时视频。实现手机端录像和抓图，对摄像机进行参数设置、报警信息提示等功能。 <br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.3 Alarm Config</h3>
+<p> 报警分为”Motion Detection、Video Blind、Alarm“</p>
+<br/><br/>
+
+<h3>4.3.1 HTTPS</h3>
+<p>
+步骤1 选择 Select“Settings > Alarm Config > Motion Detection”<br/>
+步骤2 勾选 Check“Enable” 根据需要勾选“报警输出和录像输出”<br/>
+•报警输出：表示启动/关闭报警联动输出端口，勾选此项时，发生报警时可联动相应报警输出设备<br/>
+•录像输出：勾选此项时，移动侦测报警时将进行录像<br/>
+步骤3 单击 Click“Regional Edit”<br/>
+•设置移动侦测区域，你可以拖动鼠标选择区域。<br/>
+Use the mouse to select detection areas. Areas with blue squares are selected.<br/>
+•侦测灵敏度：如果移动侦测灵敏度太高，那么摄像机将记录太频繁或连续-任何运动检测的优势将丢失。如果运动检测灵敏度太低，那么摄摄机将不会记录，当它应该和可能没有记录任何东西。在这里，你可以设置不同的时间的灵敏度。<br/>
+•Sensitivity: the higher the sensitivity, the less movement is required to trigger a motion event.<br/>
+           The lower the sensitivity, the more movement is required to trigger a motion event.<br/>
+•Threshold：阀值越小越容易产生移动侦测<br/>
+•Threshold: the level that the motion detection needs to reach in order to trigger a detection.<br/>
+           The lower the threshold, the more likely that motion will trigger a detection.<br/>
+•Full Screen:全选区域意味着全区域是移动侦测区域<br/>
+•Full Screen: one click to select all areas for motion detection.<br/>
+	Clear Screes：清空区域意味着没有移动侦测的区域<br/>
+•Clear Screen: one click to remove all areas for motion detection.<br/>
+步骤4 单击 Click“Save”后，then click再单击”Back ”to complete the configuration.<br/>
+步骤5 根据需要设置“报警持续时间、预录时间、报警后持续录像时间”<br/>
+Set up "Alarm Duration", "Pre-record Time", "Record Time" for different circumstances<br/>
+•报警持续时间：表示当报警时，报警会延长一段时间停止（此时间为报警持续设定时间）。在此时间内，如有报警产生，将不作反应，待此时间结束后，报警才会再次产生。<br/>
+Alarm Duration: when alarm triggered, the alarm duration will last for a certain period. <br/>
+               (range from 5 to 300 seconds) <br/>
+               The alarm will not be triggered again till this period is ended.<br/>
+•预录时间：移动侦测报警后，提前按设定时间录像<br/>
+Pre-record Time: this field specifies in seconds how long the surveillance footage is recorded before motion detection is triggered.<br/>
+•报警后持续录像时间：表示当报警结束时，报警录像会延长一段时间停止（此时间为报警后持续设定时间），在此时间内如有报警将不再录像，待此时间结束后，报警发生时才会再次录像。建议报警持续时间要小于报警后持续录像时间，反之，则会导致部分录像丢失。<br/>
+•Record Time: this field specifies in seconds how long the surveillance footage will be recorded after motion<br/>
+detection is triggered. The record time will not be triggered again till this period is ended. <br/>
+
+步骤Step 6 在设置时间中设置移动侦测报警的时间段，在设置的时间范围内才会启动报警事件。每天有四个时间 段供设置<br/>
+Set up “Time Periods”for motion alarm, only scheduled periods will trigger alarm event. <br/>
+You can set up 4 periods per day maximum.<br/>
+步骤Step 7 选择星期数（默认为当天），如果选择全选，则表示将设置应用整个星期，也可选择星期数前面的复选框，对某几天进行单独设置。<br/>
+You can duplicate the same settings to different days as you select, or all days by checking “Select All”.<br/>
+步骤8 单击 Click“保存” “Save”，移动侦测设置完成 to complete motion detection configuration.<br/>
+<h4>说明:</h4>
+<p>
+报警输出需报警输出接口支持
+Only certain models support Alarm Output function.<br/>
+</p></p>
+<br/></br>
+
+<h3>4.3.2 Video Bind</h3>
+<p>
+步骤1:选择“Settings > Alarm Config > Video Bind”<br/>
+步骤2:勾选“启用遮挡报警”，根据需要勾选“报警输出和录像输出”<br/>
+•报警输出：表示启动/关闭报警联动输出端口，勾选此项时，发生报警时可联动相应报警输出设备<br/>
+•录像输出：勾选此项时，视频遮挡报警时将进行录像<br/>
+步骤3 根据需要设置报警持续时间间隔,5-300秒可选，及侦测灵敏度:高、中、低可选<br/>
+•报警持续时间：表示当报警结束时，报警会延长一段时间停止<br/>
+•侦测灵敏度：如果侦测灵敏度太高，那么摄像机将记录太频繁或连续-任何遮挡检测的优势将丢失。如果遮挡侦测灵敏度太低，那么摄摄机将不会记录，当它应该和可能没有记录任何东西。在这里，你可以设置不同的时间的灵敏度。<br/>
+步骤4:在设置时间中设置视频遮挡报警的时间段，在设置的时间范围内才会启动报警事件。每天有四个时间 段供设置<br/>
+步骤5:选择星期数（默认为当天），如果选择全选，则表示将设置应用整个星期，也可选择星期数前面的复选框，对某几天进行单独设置。<br/>
+步骤6:单击“保存”，提示“保存成功”，遮挡报警设置完成<br/>
+<h4>说明:</h4>
+<p>
+报警输出需报警输出接口支持 <br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.3.3 Alarm</h3>
+<p>
+步骤1：选择“Settings > Alarm Config > Alarm”<br/>
+步骤2：勾选“启用探头报警”，根据需要勾选“报警输出和录像输出”<br/>
+报警输出：表示启动/关闭报警联动输出端口，勾选此项时，发生报警时可联动相应报警输出设备<br/>
+录像输出：勾选此项时，移动侦测报警时将进行录像<br/>
+步骤3： 根据需要设置报警持续时间间隔,5-300秒可选，及探头类型:常闭或常开<br/>
+•报警持续时间：表示当报警结束时，报警会延长一段时间停止（此时间为报警持续设定时间）。在此时间内，如有报警产生，将不作反应，待此时间结束后，报警才会再次产生。<br/>
+•探头类型：表示探头工作状态，分常闭和常开两种状态。当设置为常闭时，表示线路闭合时报警。当设置为常开时，线路断开时报警。<br/>
+步骤4：在设置时间中设置探头报警的时间段，在设置的时间范围内才会启动报警事件。每天有四个时间段供设置<br/>
+步骤5：选择星期数（默认为当天），如果选择全选，则表示将设置应用整个星期，也可选择星期数前面的复选框，对某几天进行单独设置。<br/>
+步骤6：单击“保存”，探头报警设置完成<br/>
+<h4>说明:</h4>
+<p>
+报警输出需报警输出接口支持,部分摄像机不支持<br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.4 Storage</h3>
+<p>
+Storage分为”Schedule、SD Storage、Snapshot、Destination、NAS“<br/>
+</p>
+<br/></br>
+
+<h3>4.4.1 Schedule</h3>
+<p>
+步骤1 选择“Settings > Storage > Schedule”。<br/>
+步骤2 勾选 “Enable”。<br/>
+步骤3 在设置时间中设置录像的时间段，在设置的时间范围内才会启动录像。每天有四个时间段供设置。<br/>
+步骤4 选择星期数（默认为当天），如果选择全选，则表示将设置应用整个星期，也可选择星期数前面的复选框，对某几天进行单独设置。<br/>
+步骤5 单击 “保存”，录像计划设置完成<br/>
+<h4>说明:</h4>
+<p>
+ <br/>
+</p>
+</p>
+<br/></br>
+
+<h3>4.4.2 SD Storage</h3>
+<p>
+步骤1 选择“Settings > Storage > SD Storage”<br/>
+步骤2 第一次使用请单击“Format”，里面的数据将会全部清除，请谨慎使用<br/>
+步骤3 根据需要选择SD卡已录满是停止录像还是循环录像（停止录像：表示当SD卡录满后，即不再录像。循环录像：表示当SD卡录满后，会继续录像，且会覆盖SD卡内最早的录像，如此反复），单击“保存”设置完成。<br/>
+</p>
+<br/></br>
+
+<h3>4.4.3 Snapshot</h3>
+<p>
+步骤1 选择“Settings > Storage > Snapshot”<br/>
+步骤2 勾选“Enable”<br/>
+步骤3 根据需要设置抓拍时间间隔,1-600秒可选<br/>
+步骤4 在设置时间中设置抓拍的时间段，在设置的时间范围内才会启动抓拍。每天有四个时间段供设置<br/>
+步骤5 选择星期数（默认为当天），如果选择全选，则表示将设置应用整个星期，也可选择星期数前面的复选框，对某几天进行单独设置。<br/>
+步骤6 单击“保存”，抓拍设置完成<br/>
+</p>
+<br/></br>
+
+<h3>4.4.4 Destination</h3>
+<p>
+步骤1 选择“Settings > Storage > Destination”<br/>
+步骤2 Destination参数具体设置请参见如下<br/>
+•Local	当选择此项时，录像、报警录像及抓图将存于SD中<br/>
+•FTP	当选择此项时，录像、报警录像及抓图将存于FTP服务器中<br/>
+•NAS	当选择此项时，录像、报警录像及抓图将存于NAS中<br/>
+步骤3 单击“保存”设置完成。<br/>
+</p>
+<br/></br>
+
+<h3>4.4.5 NAS</h3>
+<p>
+步骤1 选择“Settings > Storage > NAS”<br/>
+步骤2 NAS参数具体设置<br/>
+步骤3 单击“保存”，NAS设置完成。<br/>
+</p>
+<br/></br>
+
+<h3>4.5 System</h3>
+<p>
+System分为”Maintenance、Device info、Set Time、User Admin“</br>
+</p>
+<br/></br>
+
+<h3>4.5.1 Maintenance</h3>
+<p>
+步骤1 选择“Settings > System > Maintenance”<br/>
+步骤2 维护参数具体设置请参见如下<br/>
+•Factory Default	恢复出厂时参数 <br/>
+•Reboot	可重启摄像机<br/>
+•Auto Restart 定时重启摄像机<br/>
+步骤3 单击“Save”，Maintenance设置完成。<br/>
+</p>
+<br/></br>
+
+<h3>4.5.2 Device lnfo</h3>
+<p>
+步骤1 选择 Select“Setting > System > Device Info”<br/>
+步骤2 硬件参数具体设置<br/>
+•Device Model	显示摄像机型号 model number for the IP Camera<br/>
+•Address	云台地址，数值0-255，默认为1<br/>
+•UPnP	通过UPnP协议在局域网与广域网间建产映射关系，默认为“不启用”<br/>
+•IPC Version	显示摄像机固件版本号信息 IP Camera firmware version<br/>
+步骤3 单击“保存”，Device Info设置完成。<br/>
+</p>
+<br/></br>
+
+<h3>4.5.3 Set Time</h3>
+<p>
+步骤1 选择“Settings > System > Set Time”<br/>
+步骤2 时间参数具体设置如下<br/>
+•Time zone	摄像机所在地的时区<br/>
+•Time	根据需要手动设置时间<br/>
+•PC Time Sync	设置与PC的系统时间一致，默认为“否”<br/>
+•NTP	设置是否启用网络时间同步功能,默认为“启用”<br/>
+•NTP Server	设置NTP服务器的地址，默认为“time.windows.com”<br/>
+</p>
+<br/></br>
+
+<h3>4.5.4 User Admin</h3>
+<p>
+步骤1 选择“Settings > System > User Admin”<br/>
+步骤2 单击“Add User”添加用户<br/>
+•User：输入用户名<br/>
+•Group：分为管理员、维护人员、一般用户<br/>
+•Password：修改用户的密码<br/>
+•Confirm：确认修改用户的密码<br/>
+<h4>说明:</h4>
+<p>
+Admin,user1,user2等用户名不能删除，只能修改密码。添加的用户则可以删除。<br/>
+</p>
+</p>
+<br/></br>
+
+<h2>Appendix 1 Glossary of Terms<h2>
+
+<h3>1 WDR</h3>
+<p>
+当在强光源照射下的高亮度区域及阴影、逆光等相对亮度较低的区域在图像中同时存在时，摄像机输出的图像会出现明亮区域因曝光过度成为白色，而黑暗区域因曝光不足成为黑色，严重影响图像质量。宽动态这一技术是同一时间曝光两次，对明亮部分进行最合适的快门速度曝光，然后再对暗的部分用最合适的快门速度曝光，然后将两个图像进行DSP处理重新组合，使明亮的部分和暗的部分可以看得清楚。
+</p>
+<br/><br/>
+
+<h3>2 DWDR</h3>
+<p> 通过层次补偿来提高摄像主体的对比度，图像的层次感，在低亮度和高亮度区域，经过DWDR功能提供最佳的图像灰度等级补偿，提高了整个画面的可视性及明度。
+</p>
+<br/><br/>
+
+<h3>3 BLC</h3>
+<p> 
+BLC，也称为逆光补偿，是把画面分成几个不同的区域，每个区域分别曝光。使监视器上的主体画面明朗，大大降低背景画面与主体画面的主观亮度差，虽然改善了拍摄主体的亮度，整个视场的可视性得到改善.但是图像质量或多或少会劣化下降。
+</p>
+<br/><br/>
+
+<h3>4 HLC</h3>
+<p> 
+HLC的功能就是采用DSP技术。有效抑制强光照射造成的光晕偏大，视频图像模糊，开启该功能后能自动分辨强光点，对强光进行抑制，然后再对强光点附近区域进行补偿以获得较清晰的图像。
+</p>
+<br/><br/>
+
+<h3>5 3DNR</h3>
+<p> 
+3D降噪（3D DNR）监控摄像机通过对前后两帧的图像进行对比筛选处理，从而将噪点位置找出，对其进行增益控制，从而减少噪点。采用3D降噪的摄像机，图像噪点会明显减少，但是图像会比较蒙，出现有拖尾的情况。
+</p>
+<br/><br/>
+
+<h3>6 IPv6</h3>
+<p> 
+IPv6是IETF（互联网工程任务组，Internet Engineering Task Force）设计的用于替代现行版本IP协议（IPv4）的下一代IP协议。由于IPv4最大的问题在于网络地址资源有限，严重制约了互联网的应用和发展。IPv6的使用，不仅能解决网络地址资源数量的问题，而且也解决了多种接入设备连入互联网的障碍。
+</p>
+<br/><br/>
+
+<h3>7 FTP</h3>
+<p> 
+FTP 是文件传输协议，用于Internet上的控制文件的双向传输。同时，它也是一个应用程序。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，有两个概念："下载"（Download）和"上传"（Upload）。"下载"文件就是从远程主机拷贝文件至自己的计算机上；"上传"文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。
+</p>
+<br/><br/>
+
+<h3>8 E-mail</h3>
+<p> 
+E-mail是—种用电子手段提供信息交换的通信方式，是互联网应用最广的服务。通过网络的电子邮件系统，用户可以以非常低廉的价格（不管发送到哪里，都只需负担网费）、非常快速的方式（几秒钟之内可以发送到世界上任何指定的目的地），与世界上任何一个角落的网络用户联系。
+</p>
+<br/><br/>
+
+<h3>9 DHCP</h3>
+<p>DHCP是一个局域网的网络协议，使用UDP协议工作，通常被应用在大型的局域网络环境中，主要作用是集中的管理、分配IP地址，使网络环境中的主机动态的获得IP地址、Gateway地址、DNS服务器地址等信息，并能够提升地址的使用率。DHCP协议采用客户端/服务器模型，主机地址的动态分配任务由网络主机驱动。当DHCP服务器接收到来自网络主机申请地址的信息时，才会向网络主机发送相关的地址配置等信息，以实现网络主机地址信息的动态配置。
+</p>
+<br/><br/>
+
+<h3>10 DDNS</h3>
+<p> 
+DDNS是将用户的动态IP地址映射到一个固定的域名解析服务上，用户每次连接网络的时候客户端程序就会通过信息传递把该主机的动态IP地址传送给位于服务商主机上的服务器程序，服务器程序负责提供DNS服务并实现动态域名解析。也就是说DDNS捕获每次变化的IP地址，然后将其与域名相对应，这样其他上网用户就可以通过域名来进行交流。而最终客户所要记忆的全部，就是记住动态域名商给予的域名即可，而不用去管他们是如何实现的。
+</p>
+<br/><br/>
+
+<h3>11 PPPOE</h3>
+<p> 
+PPPOE是一种先进的协议（点到点连接协议），使摄像机通过调制解调器直接连接。它利用以太网将大量主机组成网络，通过一个远端接入设备连入因特网，并对接入的每一个主机实现控制、计费等功能。
+</p>
+<br/><br/>
+
+<h3>12 RTSP</h3>
+<p> 
+RTSP是实时流传输协议，是TCP/IP协议体系中的一个应用层协议。该协议定义了一对多应用程序如何有效地通过IP网络传送多媒体数据。用来控制声音或影像的多媒体串流协议，并允许同时多个串流需求控制。
+</p>
+<br/><br/>
+
+<h3>13 ONVIF</h3>
+<p> 
+ONVIF标准为网络视频设备之间的信息交换定义通用协议，包括装置搜寻、实时视频、音频、元数据和控制信息等。确保不同厂商生产的网络视频产品具有互通性。
+</p>
+<br/><br/>
+
+<h3>14 H265</h3>
+<p>H.265是H.264之后所制定的新的视频编码标准。H.265标准围绕着现有的视频编码标准H.264，保留原来的某些技术，同时对一些相关的技术加以改进。新技术使用先进的技术用以改善码流、编码质量、延时和算法复杂度之间的关系，达到最优化设置。相同的图像质量H265比H264要节省一半的码流，从而减少网络占用率和存储空间。
+</p>
+<br/><br/>
+
+<h3>15 HTTPS</h3>
+<p> 
+HTTP协议被用于在Web浏览器和网站服务器之间传递信息。HTTP协议以明文方式发送内容，不提供任何方式的数据加密，如果攻击者截取了Web浏览器和网站服务器之间的传输报文，就可以直接读懂其中的信息。为了解决HTTP协议的这一缺陷，需要使用另一种协议：HTTPS。为了数据传输的安全，HTTPS在HTTP的基础上加入了SSL协议，SSL依靠证书来验证服务器的身份，并为浏览器和服务器之间的通信加密。
+</p>
+<br/><br/>
+
+</div> 
+</body>
+</html>

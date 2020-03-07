@@ -1,0 +1,442 @@
+﻿
+*{margin:0px;padding:0px;}
+
+html,body{
+width:100%;
+height:100%;
+margin:0px;
+padding:0px;
+background:#dcdcdc;
+/*overflow:hidden;*/
+}
+
+.ContentBg{
+	background:#c8c8c8;
+	left:0px;
+	right:0px;
+	height:500px;
+}
+
+.ClassOption{
+	text-align:center;
+	line-height: 36px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	width:282px;
+	height:36px;
+	cursor: pointer;
+	background:#ffffff;
+	border-bottom:1px solid #1e3b56;
+	border-left:1px solid #1e3b56;
+	border-right:1px solid #1e3b56;
+	display:none;
+	z-index:99;
+	position:absolute;
+}
+
+.ClassOption:hover{
+	background:#64b9fa;
+}
+
+.ClassSelect{
+	text-align:left;
+	line-height: 36px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	width:194px;
+	height:36px;
+	cursor: pointer;
+	background:#ffffff;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	float:left;
+}
+
+
+.DivSelectIco{
+	width:43px;
+	height:36px;
+	float:left;
+	cursor: pointer;
+	border-right:1px solid #1e3b56;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	background:url(../img/normal.png) -143px -6px;
+}
+
+
+.ClassContentSelectOption{
+	text-align:center;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	width:282px;
+	height:23px;
+	cursor: pointer;
+	background:#ffffff;
+	border-bottom:1px solid #1e3b56;
+	border-left:1px solid #1e3b56;
+	border-right:1px solid #1e3b56;
+	display:none;
+	z-index:99;
+	position:absolute;
+}
+
+.ClassContentSelectOption:hover{
+	background:#64b9fa;
+}
+
+.ClassContentSelect{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	width:258px;
+	height:23px;
+	cursor: pointer;
+	background:#ffffff;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	border-left:1px solid #1e3b56;
+	float:left;
+}
+
+
+.DivContentSelectIco{
+	width:23px;
+	height:23px;
+	float:left;
+	cursor: pointer;
+	border-right:1px solid #1e3b56;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	background:url(../img/normal.png) -163px -12px;
+}
+
+
+.DivInput{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	width:235px;
+	height:23px;
+	cursor: pointer;
+	background:#ffffff;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	border-right:1px solid #1e3b56;
+	border-left:1px solid #1e3b56;
+	float:left;
+}
+
+.DivButton{
+	text-align:center;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#ffffff;
+	width:90px;
+	height:23px;
+	background:#646464;
+	border-bottom:1px solid #646464;
+	border-top:1px solid #646464;
+	border-right:1px solid #646464;
+	border-left:1px solid #646464;
+	cursor: pointer;
+}
+
+.DivButton:active{
+	background:#c8c8c8;
+	width:88px;
+	height:22px;
+}
+
+.DivCheckBox{
+	width:10px;
+	height:10px;
+	border:2px solid #323232;
+	background:#c8c8c8;
+	font-size:10px;
+	line-height:10px;
+	color:#646464;
+	margin-top:5px;
+}
+.DivCheckBoxChecked{
+	background:#646464;
+}
+
+.BoxlineBlock{
+	width:18px;
+	height:18px;
+	z-index:2;
+	position:absolute;
+	border:1px solid blue; 
+	display:none;
+}
+
+.BoxlineBlockSelected{
+	background:yellow;
+}
+
+.DivLable{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:16px;
+	color:#323232;
+	height:23px;
+	cursor: pointer;
+}
+
+.DivRadio{
+	width:10px;
+	height:10px;
+	background:#1c1d22;
+	border:2px solid #1e3b56;
+	border-radius: 50%;      
+	-moz-border-radius: 50%;      
+	-webkit-border-radius: 50%;
+	margin-top:5px;
+}
+
+.DivRadioChecked{
+	background:#64b8fa;
+}
+
+.DivSliderBarLine{
+	width:120px;
+	height:4px;
+	background:#323232;
+}
+.DivSliderBarButton{
+	width:10px;
+	height:10px;
+	background:#646464;
+	border:3px solid #646464; 
+	margin-top:-7px;
+}
+
+/*时间波形组件Css*/
+.scaleSmall{
+	width:3px;
+	height:2px;
+	border-bottom:1px solid #1e3b56;;
+	border-right:1px solid #1e3b56;;
+	margin-left:23px;
+}
+.scaleBig{
+	width:6px;
+	height:2px;
+	border-right:1px solid #1e3b56;;
+	border-bottom:1px solid #1e3b56;;
+	float:left;
+}
+.DivLableScale{
+	text-align:left;
+	line-height: 12px;
+	font-family:arial;
+	font-style:regular;
+	font-size:8px;
+	color:#323232;
+	height:12px;
+	cursor: pointer;
+	float:left;
+	width:20px;
+}
+.ScaleH{
+	width:240px;
+	height:2px;
+	border-bottom:1px solid #1e3b56;;
+	margin-left:23px;
+}
+
+div.line {  
+    position:absolute;  
+    z-index:2;  
+    width:1px;  
+    height:1px;  
+    font-size:1px;  
+    background-color:red;  
+    overflow:hidden;  
+} 
+
+
+.BoxDivArea{
+	width:5px;
+	height:5px;
+	z-index:2;
+	position:absolute;
+	border:1px solid blue; 
+	display:none;
+}
+
+.BlockCss{
+	background:rgb(128,128,128);
+	margin-left:0px;
+	width:0px;
+	height:0px;
+	opacity: 0.5;
+	//overflow: hidden;
+}
+
+
+/*上下数字选择组件css*/
+.DivSelectInputIco{
+	width:12px;
+	height:11px;
+	cursor: pointer;
+	border-right:1px solid #1e3b56;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	border-left:1px solid #1e3b56;
+	background:url(../img/normal.png) -169px -21px;
+}
+.DivSelectInputIcoUp{
+	border-top:0px solid #1e3b56;
+	transform: rotate(180deg);
+	-ms-transform: rotate(180deg); /* IE 9 */
+	-webkit-transform: rotate(180deg); /* Safari and Chrome */
+	-o-transform: rotate(180deg); /* Opera */
+	-moz-transform: rotate(180deg); /* Firefox */
+}
+
+.TimescaleSmall{
+	width:3px;
+	height:6px;
+	/*border-bottom:1px solid #1e3b56;*/
+	border-right:1px solid #1e3b56;
+	margin-left:69px;
+}
+
+.TimeLableScale{
+	text-align:right;
+	line-height: 12px;
+	font-family:arial;
+	font-style:regular;
+	font-size:12px;
+	color:#323232;
+	height:12px;
+	cursor: pointer;
+	float:left;
+	width:66px;
+	margin-top:10px;
+}
+
+.TimeTableBarText{
+	margin-left:0px;
+	width:20px;
+	height:10px;
+	float:left;
+	text-align:right;
+	font-size:10px;
+	color:#323232;
+}
+
+.TimeTableGop{
+	width:20px;
+	height:5px;
+	border-right:1px solid #1e3b56;
+	float:left;
+}
+.TimeTableNoGop{
+	width:19px;
+	height:5px;
+	float:left;
+}
+.TimeTableLine{
+	width:19px;
+	height:1px;
+	background:#1e3b56;
+	border-right:1px solid #1e3b56;
+	float:left;
+}
+
+.TimeTableSmallBox{
+	background:;
+	width:480px;
+	height:210px;
+	position:absolute;
+	margin-top:0px;
+	margin-left:73px;
+	cursor: crosshair;
+	overflow: hidden;
+}
+
+
+.TimeTableSmallDiv{
+	width:9px;
+	height:9px;
+	border-right:1px solid #1e3b56; 
+	border-bottom:1px solid #1e3b56; 
+	float:left;
+}
+
+.TimeDisplay{
+	background:green;
+	height:10px;
+	position:absolute;
+}
+.reaizeL,.reaizeR{
+	top:0;
+	width:5px;
+	height:100%;
+	cursor:w-resize;
+	position:absolute;
+	background:#000;
+	overflow:hidden;
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+.reaizeR{
+	right: 0;
+}
+/*时间表旁边的设置按钮*/
+
+.DivAllBtn{
+	text-align:center;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#ffffff;
+	width:70px;
+	height:23px;
+	background:#646464;
+	border-bottom:1px solid #646464;
+	border-top:1px solid #646464;
+	border-right:1px solid #646464;
+	border-left:1px solid #646464;
+	cursor: pointer;
+}
+
+
+.InputSetByLable{
+	width: 62px;
+	height: 20px;
+	margin-left: 10px;
+	background:#646464;
+	clear:both;
+}
+
+.InputSetByLable:hover{
+	background:#323232;
+}
+
+.ButtonSelectedLable{
+	color:red;
+}
+
+

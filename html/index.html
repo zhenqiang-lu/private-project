@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="icon" href="data:;base64,=">
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+
+<style type="text/css">
+.LoginBack{
+	background:#ffffff;
+	width:362px;
+	height:436px;
+	margin:auto; 
+	margin-top:150px;
+}
+
+.LoginLog{
+	/*background:url(./img/Logo.png) 0 0;*/
+	width:280px;
+	height:52px;
+	margin-top:30px;
+	margin-left:60px;
+	color:#323232;
+	font-size:30px;
+	font-family:Arial;
+	font-weight:bold;
+	line-height:52px;
+}
+.LoginContent{
+	height:265px;
+	width:282px;
+	background:#ffffff;
+	margin-left:40px;
+}
+
+.DivInputTitleIco{
+	width:43px;
+	height:36px;
+	cursor: pointer;
+	border-left:1px solid #1e3b56;
+	border-bottom:1px solid #1e3b56;
+	border-top:1px solid #1e3b56;
+	float:left;	
+}
+.DivInput_Login{
+	line-height:36px;
+	height:36px;
+	border-left:0px solid;
+}
+.LoginCotentGap{
+	padding-bottom:24px;
+}
+
+
+#id_LoginButton{
+	width:280px;
+	font-size:14px;
+	font-weight:bold;
+}
+
+#id_LoginButton:hover{
+	background:#dc0000;
+}
+
+#id_LoginDownLoadTxt{
+	font-family:arial;
+	font-style:italic;
+	font-size:14px;
+	color:#323232;
+	cursor: pointer;
+}
+</style> 
+
+<body>   
+<div class="LoginBack">
+<div style="height:28px;width:100px;"></div>
+<div class="LoginLog">WEB IPCAMERA</div>
+<div style="height:35px;width:100px;"></div>
+<div class="LoginContent">
+<div class="LoginCotentGap">
+<div class="DivInputTitleIco" style="background:url(./img/normal.png) 0 -6px"></div>
+<div class="ClassSelect"  id="ids">English</div>
+<div class="DivSelectIco"  id="ids_selectico"></div>
+<div style="clear:both"></div>
+<div class="ClassOption" name="ids_option" style="margin-top:37px;">English</div>
+<div class="ClassOption" name="ids_option" style="margin-top:0px;">繁体中文</div>
+<div class="ClassOption" name="ids_option" style="margin-top:74px;">中文</div>
+</div>
+
+<div class="LoginCotentGap">
+<div class="DivInputTitleIco" style="background:url(./img/normal.png) -50px -6px;"></div>
+<input class="DivInput DivInput_Login" id="id_usrname" value="admin"></input>
+<div style="clear:both"></div>
+</div>
+
+<div style="padding-bottom:12px;">
+<div class="DivInputTitleIco" style="background:url(./img/normal.png) -100px -6px;"></div>
+<input class="DivInput DivInput_Login" id="id_password"  type="password" value="" ></input>
+<div style="clear:both"></div>
+</div>
+
+<div style="padding-bottom:12px;">
+<!-- <u id="id_LoginDownLoadTxt">Install plug-in to view live video</u> -->
+</div>
+<div class="DivButton" style="line-height: 36px;width:282px;height:36px;" id="id_LoginButton">Login</div>
+</div>
+</div>
+</body>   
+<script type="text/javascript">
+document.body.onkeydown=function(e)
+{
+	if(e != null && e.which == 13){
+		login();
+		return;
+	}
+	if(window.event != null && window.event.keyCode == 13){
+		login();
+		return;
+	}
+}
+</script>
+<script  type="text/javascript"> 
+function login()
+{
+
+	//var language =  document.getElementById('ids').innerHTML;
+	var usrname =  document.getElementById('id_usrname').value;
+	var password =  document.getElementById('id_password').value;
+
+    
+	/*为了方便本地调试*/
+	/*
+	$.SetCookie('usrname','admin');
+	$.SetCookie('password','admin');
+	//$.SetCookie('language',language);
+	$.SetCookie('sessionid',"Ver1-123");
+	self.location='Navigation.html';
+	//console.log(language);
+	return;
+	*/
+	
+
+	var msg = [{"xtype":"username","text":usrname},
+						{"xtype":"password","text":password}];
+	var resp = $.sendMsg("UserCheck",msg,"/ISAPI/Security/Login","POST");
+	if(resp.success != true){
+		alert("Login Error");
+		return;
+	}
+	var data = resp.data;
+	if(data.statuscode == "200"){
+		$.SetCookie('usrname',usrname);
+		$.SetCookie('password',password);
+		if(data.sessionid != null){
+			$.SetCookie('sessionid',data.sessionid);
+		}else{
+			$.SetCookie('sessionid',"Ver1-123");
+		}
+		self.location='Navigation.html';
+		return ;
+	}
+	alert("Login Error!");
+}
+
+function ChangeLang()
+{
+	var language = document.getElementById('ids').innerHTML;
+	//alert(language);
+	if(language == "English"){
+		document.getElementById('id_LoginButton').innerHTML = "Login";
+		$.SetCookie('language','English');
+	}else if(language == "中文"){
+		document.getElementById('id_LoginButton').innerHTML = "登 录";
+		$.SetCookie('language','chinese');
+	}else{
+		document.getElementById('id_LoginButton').innerHTML = "登 錄";
+		$.SetCookie('language','chinese2');
+	}
+}
+
+$(function() {//页面初始化
+	InitUdfSelect('ids',ChangeLang);
+	BindEvent("id_LoginButton","onmousedown",login,null);
+	$.SetCookie('usrname','');
+	$.SetCookie('password','');
+	$.SetCookie('language','English');
+	
+});
+</script> 
+
+</html>  

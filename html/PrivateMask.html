@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/plugin.js"></script>
+	<script src="js/videomask.js"></script>
+
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.ContentDiv{
+	left:0px;
+	right:0px;
+	height:430px;
+}
+</style> 
+
+
+
+<body>   
+<div class="ContentBg ContentDiv"  style="min-width:600px;">
+	<div style="width:100px;height:30px;"></div>
+	 <div style="height:100%;margin:auto;width:600px;" id="id_BoxPIC">
+		<div  style="width:352px;height:288px;display:block;z-index:99;background:black;opacity:1;" id="id_plugin_img">
+			<img  style="width:352px;height:288px;z-index:1;position:absolute;margin-top:0px;" src="" id="id_pic" ondragstart="return false;"></img>
+			<div  ondragstart="return false;" class="BoxDivArea" style="background:black;margin-top:20px;margin-left:0px;display:none;width:0px;height:0px;" id="id_block_0"></div>
+			<div  ondragstart="return false;" class="BoxDivArea" style="background:black;margin-top:20px;margin-left:0px;display:none;width:0px;height:0px;" id="id_block_1"></div>
+			<div  ondragstart="return false;" class="BoxDivArea" style="background:black;margin-top:20px;margin-left:0px;display:none;width:0px;height:0px;" id="id_block_2"></div>
+			<div  ondragstart="return false;" class="BoxDivArea" style="background:black;margin-top:20px;margin-left:0px;display:none;width:0px;height:0px;" id="id_block_3"></div>
+		</div>		
+		<div style="height:20px;"></div>
+		<div class="DivCheckBox" style="float:left;margin-top:5px;" id="id_PrivateMaskEnable"><script>InitCheckBox('id_PrivateMaskEnable','false')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtPrivateMaskEnable">Enable</div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtSupportStr">(支持4个区域)</div>
+		<div style="clear:both;"/>
+		<div style="height:20px;"></div>
+		<div class="DivButton" style="float:left;" id="id_FullScreen" >全屏</div>
+		<div class="DivButton" style="float:left;margin-left:20px;" id="id_ClearScreen">清屏</div>
+		<div class="DivButton" style="float:left;margin-left:20px;" id="id_Submit">提交</div>
+	</div> 
+</div>
+</body>
+<script  type="text/javascript"> 
+var BoxAreaCount = 0;
+var drage = false;
+
+function EventCall_MouseOver(ev)
+{
+	var xx = ev.pageX; 
+	var yy = ev.pageY;  
+	document.getElementById('id_plugin_img').style.display = "block";
+}
+
+function EventCall_Mouseout(ev)
+{
+	if(drage == true){
+		BoxAreaCount++;
+	}
+	drage = false;
+}
+$("#id_plugin_img").mousedown(function(ev)
+{
+	var xx = ev.pageX; 
+	var yy = ev.pageY;
+	if (BoxAreaCount >= 4)
+	{
+		return;
+	}
+	if (drage == false)
+	{
+		ClearBoxDiv(BoxAreaCount);
+		document.getElementById('id_block_'+BoxAreaCount).style.display = "block";
+		var top = document.getElementById('id_plugin_img').getBoundingClientRect().top; 
+		var left = document.getElementById('id_plugin_img').getBoundingClientRect().left; 
+		document.getElementById('id_block_'+BoxAreaCount).style.marginLeft = xx - left + "px";
+		document.getElementById('id_block_'+BoxAreaCount).style.marginTop = yy - top + 'px';
+		drage = true;
+	}
+	else
+	{
+		return ;
+	}
+})
+
+$("#id_plugin_img").mouseup(function(ev)
+{
+	if(drage == true){
+		BoxAreaCount++;
+	}
+	drage = false;
+})
+$("#id_plugin_img").mousemove(function(ev)
+{
+	if(drage == false) return;
+	var xx = ev.pageX; 
+	var yy = ev.pageY;
+	var top = document.getElementById('id_block_'+BoxAreaCount).getBoundingClientRect().top; 
+	var left = document.getElementById('id_block_'+BoxAreaCount).getBoundingClientRect().left; 
+	$("#"+'id_block_'+BoxAreaCount).width(xx-left);
+	$("#"+'id_block_'+BoxAreaCount).height(yy-top);	
+})
+
+function ClearBoxDiv(index)
+{
+	document.getElementById('id_block_'+index).style.marginLeft = 0 + "px";
+	document.getElementById('id_block_'+index).style.marginTop = 0 + "px";
+	$("#"+'id_block_'+index).width(0);
+	$("#"+'id_block_'+index).height(0);	
+}
+
+function  FullScreenBoxDiv()
+{
+	BoxAreaCount = 0;
+	document.getElementById('id_block_'+0).style.display = "block";
+	document.getElementById('id_block_'+1).style.display = "none";
+	document.getElementById('id_block_'+2).style.display = "none";
+	document.getElementById('id_block_'+3).style.display = "none";
+	ClearBoxDiv(0);
+	ClearBoxDiv(1);
+	ClearBoxDiv(2);
+	ClearBoxDiv(3);
+	document.getElementById('id_block_'+0).style.marginLeft = 0 + "px";
+	document.getElementById('id_block_'+0).style.marginTop = 0 + "px";
+	$("#"+'id_block_'+0).width(352);
+	$("#"+'id_block_'+0).height(288);		
+}
+
+function ClearScreenBoxDiv()
+{
+
+	BoxAreaCount = 0;
+	document.getElementById('id_block_'+0).style.display = "none";
+	document.getElementById('id_block_'+1).style.display = "none";
+	document.getElementById('id_block_'+2).style.display = "none";
+	document.getElementById('id_block_'+3).style.display = "none";
+	ClearBoxDiv(0);
+	ClearBoxDiv(1);
+	ClearBoxDiv(2);
+	ClearBoxDiv(3);
+}
+
+function SetBoxDiv(x,y,width,height)
+{
+	if(width <= 4 && height <= 4){
+		return;
+	}
+		
+	ClearBoxDiv(BoxAreaCount);
+	document.getElementById('id_block_'+BoxAreaCount).style.display = "block";
+	document.getElementById('id_block_'+BoxAreaCount).style.marginLeft = x + "px";
+	document.getElementById('id_block_'+BoxAreaCount).style.marginTop = y + 'px';
+	$("#"+'id_block_'+BoxAreaCount).width(width);
+	$("#"+'id_block_'+BoxAreaCount).height(height);		
+	BoxAreaCount++;
+}
+
+
+
+
+var httpport = 80;
+function GetPort()
+{
+	var resp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		//alert("recv ThirdServer msg fail");
+		return;  
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	return  Number(map.option_1.port);
+}
+	
+
+function updateBgPic()
+{
+	var ip = GetIp();  
+	var usr = $.GetCookie('usrname');
+	var passwd = $.GetCookie('password');
+	//var str = 'http://'+usr+':'+passwd+'@'+ip+'/ISAPI/Snap/GetImg'+Math.random();
+	var str = 	'http://'+ip+':'+httpport+'/ISAPI/Snap/GetImg'+Math.random();
+	//console.log(str);
+	document.getElementById('id_pic').src = str;
+}
+
+function ZoneSetingMakeMap(index)
+{
+	var x = document.getElementById('id_block_'+index).style.marginLeft;
+	var y = document.getElementById('id_block_'+index).style.marginTop;
+	var w = $("#"+'id_block_'+index).width();
+	var h = $("#"+'id_block_'+index).height();		
+
+	h = translateHeightToPos1000(h);
+	w = translateWidthToPos1000(w);
+	x = translateWidthToPos1000(x);
+	y = translateHeightToPos1000(y);
+	
+	var map = {"xtype":"zonesetting_"+index,"items":[
+													{"xtype":"enabled","text":""+CheckboxToInt(GetCheckBoxValue('id_PrivateMaskEnable'))},
+													{"xtype":"posx","text":""+parseInt(x)},
+													{"xtype":"posy","text":""+parseInt(y)},
+													{"xtype":"width","text":""+parseInt(w)},
+													{"xtype":"height","text":""+parseInt(h)}
+												]};
+	return map;
+}
+function SubmitMask()
+{
+	//console.log(document.getElementById('id_block_'+0).style.marginLeft);
+	//console.log(document.getElementById('id_block_'+0).style.marginTop);
+	var msg = [
+				ZoneSetingMakeMap(0),
+				ZoneSetingMakeMap(1),
+				ZoneSetingMakeMap(2),
+				ZoneSetingMakeMap(3)
+			];
+	//console.log("msg ="+JSON.stringify(msg));
+	var resp = $.sendMsg("PrivacyMask",msg,"/ISAPI/PrivacyMask","PUT");
+	if(resp.success == false){
+		alert("Set fail");
+		return ;
+	}else{
+		alert(str_SetSuccess);
+		return ;
+	}
+}
+
+
+function  InitParam()
+{
+	var resp = $.sendMsg("PrivacyMask",null,"/ISAPI/PrivacyMask","POST");
+	if(resp.success == false){
+		alert("Get PrivacyMask fail");
+		return ;
+	}
+	
+	var map = resp.data;
+	
+	/*
+	//console.log(map.zonesetting_1);
+	if(map.zonesetting_0 != undefined){
+		//console.log(map.zonesetting_0.nposx);
+		//console.log(map.zonesetting_0.nposy);
+		SetBoxDiv(map.zonesetting_0.nposx,map.zonesetting_0.nposy,map.zonesetting_0.nwidth,map.zonesetting_0.nheight);
+	}
+	if(map.zonesetting_1 != undefined){ 
+		//console.log(map.zonesetting_1.nposx);
+		//console.log(map.zonesetting_1.nposy);
+		SetBoxDiv(map.zonesetting_1.nposx,map.zonesetting_1.nposy,map.zonesetting_1.nwidth,map.zonesetting_1.nheight);
+	}
+	if(map.zonesetting_2 != undefined){
+		//console.log(map.zonesetting_2.nposx);
+		//console.log(map.zonesetting_2.nposy);
+		SetBoxDiv(map.zonesetting_2.nposx,map.zonesetting_2.nposy,map.zonesetting_2.nwidth,map.zonesetting_2.nheight);
+	}
+	if(map.zonesetting_3 != undefined){
+		//console.log(map.zonesetting_3.nposx);
+		//console.log(map.zonesetting_3.nposy);
+		SetBoxDiv(map.zonesetting_3.nposx,map.zonesetting_3.nposy,map.zonesetting_3.nwidth,map.zonesetting_3.nheight);
+	}	*/
+	
+	SetCheckBox('id_PrivateMaskEnable',TranslationStrAndBool(map.zonesetting_0.enabled))
+}
+
+function InitLang(){
+	SetLang('id_txtPrivateMaskEnable',str_ROIEnable);	
+	SetLang('id_FullScreen',str_FullScreen);
+	SetLang('id_ClearScreen',str_ClearScreen);
+	SetLang('id_Submit',str_Save);
+	SetLang('id_txtSupportStr',str_SupportZone);
+}
+
+$(function() {//页面初始化
+	BindEvent("id_FullScreen","onmousedown",FullScreenBoxDiv,null);
+	BindEvent("id_ClearScreen","onmousedown",ClearScreenBoxDiv,null);
+	BindEvent("id_Submit","onmousedown",SubmitMask,null);
+	
+	InitLang();
+	CreateRoiMask(0);
+	InitBoxLine();
+	httpport = GetPort();
+	setInterval("updateBgPic()",200);
+	InitParam();
+});
+
+</script>
+   
+</html>  

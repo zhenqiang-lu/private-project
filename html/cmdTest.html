@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Cmd Test</title>
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+</head>
+
+<body>   
+<div  style="width:70px;height:30px;float:left;margin-top:5px;" >上抛方式:</div><input style="width:100px;height:30px;float:left;" value="POST" id="id_postmothod"></input>
+<div  style="width:40px;height:30px;float:left;margin-top:5px;">URL:</div><input style="width:200px;height:30px;float:left;" value="/ISAPI/Network/Bonjour" id="id_url"></input>
+<div style="clear:both;width:1px; height:1px;"></div>
+<textarea style="width:350px;height:300px;margin-left:70px;"  id="id_content"></textarea>
+<textarea style="width:350px;height:300px;margin-left:70px;"  id="id_recvmsg"></textarea>
+<div style="clear:both;width:1px; height:1px;"></div>
+<input type="button" value="发送" style="width:70px;height:30px;margin-left:70px;" onclick="msgsend()"></input>
+</body> 
+
+<script  type="text/javascript">
+function msgsend()
+{	
+	var xml = document.getElementById('id_content').value;
+	var mothod = document.getElementById('id_postmothod').value;
+	var url = document.getElementById('id_url').value;
+	xml = '<?xml version="1.0" encoding="utf-8"?>' + xml;
+	//alert(xml);
+	//alert(mothod);
+	//alert(url);
+	//alert(xml);
+	$.ajax({
+				url: url,
+				async: false,
+				type:mothod,
+				timeout:1000,
+				dataType:"text",
+				data: xml
+			}).done(function(response) {
+				alert(response);
+			}).fail(function(){
+			
+			})		
+}
+</script> 
+  
+</html>  

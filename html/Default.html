@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.DefaultDiv{
+	left:0px;
+	right:0px;
+	height:140px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:50px;
+	float:left;
+}
+
+.DivInputIpv4Param{
+	width:50px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.SystemDefaulttxtNature{
+	width:160px;
+	float:left;
+}
+
+.SelectFile{
+	width:292px;
+	float:left;
+}
+
+
+
+.SystemDefaulttxtAction{
+	width:320px;
+	float:left;
+}
+
+.TimeLable{
+	width:100px;
+	float:left;
+}
+
+.TimeSelect{
+	width:123px;
+}
+.TimeSpaceLable{
+	width:10px;
+	float:left;
+}
+
+.alert-block{
+	background:#2e3339;
+	border:2px solid #1c1d22;
+}
+
+.btndanger{
+	width:80px;
+	height:25px;
+	margin-left:40px;
+	background:#1e3856;
+	border:2px solid #1c1d22;
+}
+
+.alertheading{
+	font-family:arial;
+	font-size:14px;
+}
+</style> 
+
+
+
+<body>   
+<div class="ContentBg DefaultDiv"  style="min-width:640px;">
+	<div style="height:100%;margin:auto;width:640px;">		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable SystemDefaulttxtNature" id="id_txtSystemDefaultSize">Default:</div>
+		<div class="DivButton" style="float:left;" id="id_SystemDefault">Default</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable SystemDefaulttxtNature" id="id_txtSystemDefaultUsed">Reboot:</div>
+		<div class="DivButton" style="float:left;" id="id_SystetReboot">Reboot</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SystemDefaultRestart"><script>InitCheckBox('id_SystemDefaultRestart','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtSystemDefaultRestart">Auto Restart</div>
+		
+		<div style="float:left;margin-left:46px;"> 
+		<div class="ClassContentSelect TimeLable" id="id_SystemRestart" >EveryDay</div>
+		<div class="DivContentSelectIco" id="id_SystemRestart_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay8" style="margin-top:0px;">EveryDay</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay1" style="margin-top:24px;">Monday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay2" style="margin-top:48px;">Tuesday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay3" style="margin-top:72px;">Wednesday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay4" style="margin-top:96px;">Thursday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay5" style="margin-top:120px;">Friday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay6" style="margin-top:144px;">Saturday</div>
+		<div class="ClassContentSelectOption TimeSelect" name="id_SystemRestart_option" id="id_SystemDefaultDay0" style="margin-top:168px;">Sunday</div>
+		</div>
+		
+		<div style="float:left;margin-left:46px;">
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SystemRestartStartTime" value="0"></input>
+		<div class="DivLable TimeSpaceLable" style="float:left;margin-left:10px;">:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SystemRestartEndTime" value="0"></input>
+		</div>	
+		<div class="DivButton" style="float:left;margin-left:25px;" id="id_SystemDefaultSubmit">Save</div>
+<!--
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable SystemDefaulttxtNature" id="id_txtSelectFile">Select File:</div>
+		<input class="DivInput SelectFile" id="id_SelectFile" value="admin"></input>
+		<div class="DivButton" style="float:left;margin-left:25px;" id="id_BrowseFile">Browse</div>
+		<div style="clear:both"></div> -->
+	</div>
+</div>
+</body>  
+<script  type="text/javascript"> 
+function InitLang(){
+	SetLang('id_txtSystemDefaultSize',str_DefaultEnable);
+	SetLang('id_SystemDefault',str_Comletely);
+	SetLang('id_txtSystemDefaultUsed',str_RebootEnable);
+	SetLang('id_SystetReboot',str_RebootSure);
+	SetLang('id_txtSystemDefaultRestart',str_Restart);
+	SetLang('id_SystemDefaultDay8',str_Weekly);
+	SetLang('id_SystemDefaultDay0',str_AlarmSunday);
+	SetLang('id_SystemDefaultDay1',str_AlarmMonday);
+	SetLang('id_SystemDefaultDay2',str_AlarmThrsday);
+	SetLang('id_SystemDefaultDay3',str_AlarmWensday);
+	SetLang('id_SystemDefaultDay4',str_AlarmThusday);
+	SetLang('id_SystemDefaultDay5',str_AlarmFriday);
+	SetLang('id_SystemDefaultDay6',str_AlarmSatDay);
+	SetLang('id_SystemDefaultSubmit',str_RebootSure);
+	SetLang('id_txtDownLoad',str_txtDownLoad);
+	SetLang('id_BrowseLoadFileDown',str_btnBrowse);
+	SetLang('id_txtUpload',str_txtUpload);
+	SetLang('id_txtSelectUploadFile',str_txtSelectUploadFile);
+	SetLang('id_BrowseUploadFile',str_btnBrowse);
+	SetLang('id_BrowseUploadStart',str_StartUpgrade);
+	SetLang('id_txtUpgrade',str_txtUpgrade);
+	SetLang('id_txtSelectUpgradeFileFile',str_txtSelectUploadFile);
+	SetLang('id_BrowseUpgradeFile',str_btnBrowse);
+	SetLang('id_BrowseUpgradeStart',str_StartUpgrade);
+	SetLang('id_BrowseUpgradeCancel',str_CancelUpgrade);
+}
+
+function InitPageParam()
+{
+	var resp = $.sendMsg("AutoMaintenance",null,"/ISAPI/System/AutoMaintenance","POST");
+	if(resp.success == false){
+		alert("recv AutoMaintenance msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	SetCheckBox('id_SystemDefaultRestart',TranslationStrAndBool(map.timedrebootenable));
+	SetSelectionOptID('id_SystemRestart',map.weekdayofreboot);
+	$("#id_SystemRestartStartTime")[0].value = map.hourofreboot;
+	$("#id_SystemRestartEndTime")[0].value = map.minofreboot;
+}
+
+function submit()
+{	
+	var str_rebootEnable,str_rebootWeek;
+	if(GetCheckBoxValue('id_SystemDefaultRestart') == "false"){
+		str_rebootEnable = "0";
+	}else{
+		str_rebootEnable = "1";
+	}
+	
+	if(GetSelectionOption('id_SystemRestart') == 0){
+		str_rebootWeek = "0";
+	}else if(GetSelectionOption('id_SystemRestart') == 1){
+		str_rebootWeek = "1";
+	}else if(GetSelectionOption('id_SystemRestart') == 2){
+		str_rebootWeek = "2";
+	}else if(GetSelectionOption('id_SystemRestart') == 3){
+		str_rebootWeek = "3";
+	}else if(GetSelectionOption('id_SystemRestart') == 4){
+		str_rebootWeek = "4";
+	}else if(GetSelectionOption('id_SystemRestart') == 5){
+		str_rebootWeek = "5";
+	}else if(GetSelectionOption('id_SystemRestart') == 6){
+		str_rebootWeek = "6";
+	}else if(GetSelectionOption('id_SystemRestart') == 7){
+		str_rebootWeek = "7";
+	}
+	
+	if($("#id_SystemRestartStartTime")[0].value > 23){
+		$("#id_SystemRestartStartTime")[0].value = 23;
+	}
+
+	if($("#id_SystemRestartEndTime")[0].value > 59){
+		$("#id_SystemRestartEndTime")[0].value = 59;
+	}
+	
+	var msg =	[
+					{"xtype":"timedrebootenable","text":str_rebootEnable},
+					{"xtype":"weekdayofreboot","text":str_rebootWeek},
+					{"xtype":"hourofreboot","text":$("#id_SystemRestartStartTime")[0].value},
+					{"xtype":"minofreboot","text":$("#id_SystemRestartEndTime")[0].value}
+				];
+	
+	var resp = $.sendMsg("AutoMaintenance",msg,"/ISAPI/System/AutoMaintenance","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+function DefaultconfirmCbFun(val)
+{
+	if(val == true){
+		var msg =	[
+					{"xtype":"Enabled","text":'1'}
+				];
+		var resp = $.sendMsg("RestoreDefault",msg,"/ISAPI/System/RestoreDefault","PUT");
+		//console.log(JSON.stringify(msg));
+		if(resp.success == false){
+			alert("submit msg fail");
+		}else{
+			alert(str_SetSuccess);
+		}
+	}
+}
+
+function SetDefault()
+{
+	//var c = new Confirm(str_DefaultEnable,str_RebootSure,str_CancelUpgrade,DefaultconfirmCbFun);
+	if (confirm(str_DefaultEnable)==true){ 
+		DefaultconfirmCbFun(true);
+	}else{ 
+		return false; 
+	} 
+	
+}
+
+function RebootconfirmCbFun(val)
+{
+	if(val == true){
+		var msg =	[
+						{"xtype":"Enabled","text":'1'}
+					];
+		var resp = $.sendMsg("Reboot",msg,"/ISAPI/System/Reboot","PUT");
+		//console.log(JSON.stringify(msg));
+		if(resp.success == false){
+			alert("submit msg fail");
+		}else{
+			alert(str_SetSuccess);
+		}
+	}
+}
+
+
+
+function SetReboot(){
+  //var c = new Confirm(str_RebootEnable,str_RebootSure,str_CancelUpgrade,RebootconfirmCbFun);
+  if (confirm(str_RebootEnable)==true){ 
+		RebootconfirmCbFun(true);
+	}else{ 
+		return false; 
+	} 
+}
+
+$(function(){
+	//InitUdfSelect('id_SystemDefaultOverwrite');
+	//InitLang();
+	//InitPageParam();
+	
+	InitUdfSelect('id_SystemRestart');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_SystemDefaultSubmit','onmousedown',submit,null);
+	BindEvent('id_SystemDefault','onmousedown',SetDefault,null);
+	BindEvent('id_SystetReboot','onmousedown',SetReboot,null);
+})
+
+
+
+function Confirm(msg,oksrt,cancelstr,cbfun) {
+        var alertFram = $(document.createElement("div"));
+        alertFram.attr('id', 'confirmFram');
+        alertFram.attr('class', 'alert alert-block');
+        alertFram.width('300px');
+        alertFram.height('100px');
+        alertFram.css({
+            "position": "absolute",
+            "left": "40%",
+            "top": "20%",
+            "margin-left": "-75px",
+            "text-align": "center",
+            "line-height": "50px"
+        });
+ 
+        strHtml = ' <div class="alertheading">'+msg+'</div>';
+        //strHtml += msg;
+        strHtml += "<p></p>";
+        alertFram.html(strHtml);
+        $('body').append(alertFram);
+
+        var btnok = $(document.createElement('input')), btncancel = $(document.createElement('input'));
+        var me = this;
+		btncancel.attr('class', 'btndanger');
+		btnok.attr('class', 'btndanger');
+        btncancel.attr({type:"button",value: cancelstr }).click(function () { me.cancel(); });
+        btnok.attr({type:"button",value: oksrt }).click(function () { me.ok(); });
+        alertFram.find('p').append(btncancel).append(btnok);
+
+        this.ok = function () {
+			cbfun(true);
+            alertFram.hide();
+            return true;
+        }
+        this.cancel = function () {
+			cbfun(false);
+            alertFram.hide();
+            return false;
+        }
+ 
+        return false;
+    }
+</script>  
+</html>  

@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/Login.js"></script>
+	
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.ContentDiv{
+	left:0px;
+	right:0px;
+}
+
+.DivLable{
+	text-align:center;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:16px;
+	color:#ffffff;
+	height:23px;
+	cursor: pointer;
+}
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+.UsrTableTitle{
+	width:170px;
+	float:left;
+	border:1px solid #1c1d22;
+	background:#646464;
+}
+
+.ClassButton{
+	color:#034a7e;
+}
+
+.ClassButton:hover{
+	color:#64b9fa;
+}
+
+.UsrName{
+	width:260px;
+}
+
+</style> 
+<body>   
+<div class="ContentDiv ContentBg"  style="min-width:1000px;">
+	<div style="width:100px;height:30px;"></div>
+	<div style="height:100%;margin:auto;width:1000px;">
+		<div class="DivLable UsrTableTitle" id="id_txtNum" >No.</div>
+		<div class="DivLable UsrTableTitle UsrName" id="id_txtUsrname">UsrName</div>
+		<div class="DivLable UsrTableTitle" id="id_txtGroup" >Group</div>
+		<div class="DivLable UsrTableTitle" id="id_txtOpt" style="width:342px;">Option</div>
+		<div style="clear:both;"></div>
+		<div id="id_usrtable"></div>
+		<div style="width:100px;height:20px;"></div>
+		<div class="DivButton" style="width:160px;" id="id_addusr">添加用户</div>
+		
+	</div>
+
+	<div style="width:100px;height:30px;"></div>
+</div>
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+//	SetLang('id_txtNum',str_NetLink);
+	SetLang('id_txtUsrname',str_User);
+	SetLang('id_txtGroup',str_UserLevel);
+	SetLang('id_txtOpt',str_Useroperate);
+	SetLang('id_addusr',str_AddUser);
+};
+</script> 
+
+<script  type="text/javascript"> 
+var modifyUsrname;
+var group;
+function ModifyFun(index)
+{
+	//document.getElementById('id_Modify').style.display = "block";
+	Login("123", 'UsrModify.html', '380', '215', true, 0, '', '');
+	if(-1 == index)
+	{
+		modifyUsrname = "";
+		group = document.getElementById("id_group"+0).innerHTML;
+	}else{
+		modifyUsrname = document.getElementById("id_divusr"+index).innerHTML;
+		group = document.getElementById("id_group"+index).innerHTML;
+	}
+
+}
+
+function UpdateUsrTab()
+{
+	//alert(1);
+	var obj = document.getElementById("id_usrtable").childNodes;
+	var length = obj.length;
+	//alert(length);
+	for(var i = 0;i < length;i++){
+		//alert(obj[0].innerHTML);
+		document.getElementById("id_usrtable").removeChild(obj[0]);
+	}
+	Init();
+	///test();
+}
+
+
+function DelFun(index)
+{
+
+	if(index >= 0 && index < 3){
+		alert(str_ForbiddenDelete);
+		return ;
+	}	
+	var msg = [{"xtype":"UserName","text":document.getElementById("id_divusr"+index).innerHTML}];
+	var resp = $.sendMsg("DelUsr",msg,"/ISAPI/UserManagement/DelUsr","PUT");
+	//location.reload();
+	//location.reload();
+	//$("#id_usrLine"+index).remove();
+	UpdateUsrTab();
+	return ;
+}
+
+function addUsrTab(index,usrname,group)
+{
+	var str =' <div id="id_usrLine'+index+'">'
+		str +='	<div class="DivLable UsrTableTitle" >'+index+'</div>';
+		str +='		<div class="DivLable UsrTableTitle UsrName" id="id_divusr'+index+'">'+usrname+'</div>';
+		str +='		<div class="DivLable UsrTableTitle" id="id_group'+index+'">'+group+'</div>';
+		str +='		<div class="DivLable UsrTableTitle ClassButton" onclick="ModifyFun('+index+')">'+str_UserUpdate+'</div>';
+		str +='		<div class="DivLable UsrTableTitle ClassButton" onclick="DelFun('+index+')">'+str_DelUser+'</div>';
+		str +='		<div style="clear:both;"></div>';
+		str +='	</div>';
+		$("#id_usrtable").append(str);
+}
+
+
+function  test()
+{
+	addUsrTab(0,"admin","admin");
+	addUsrTab(1,"usrname123","option");
+	addUsrTab(2,"admin","admin");
+	addUsrTab(3,"tanfan","admin");
+	addUsrTab(4,"tanfan","admin");
+}
+
+function ReturnPrivilegeValue(val)
+{
+	if(val == '0'){
+		return str_UserMana;
+	}
+	if(val == '1'){
+		return str_Userweihu;
+	}
+	if(val == '2'){
+		return str_Useryiban;
+	}
+}
+
+function Init()
+{
+	var resp = $.sendMsg("UserManagement",null,"/ISAPI/UserManagement/UsrConfig","POST");
+	var map = resp.data;
+	//console.log(JSON.stringify(map));
+	for(var i = 0; i < map.usercount;i++){
+		var str = 'map.user_'+i;
+		var obj = 	eval(str);
+		//alert(str);
+		//alert(eval(str));
+		//alert(eval(str).username);
+		addUsrTab(i,obj.username,ReturnPrivilegeValue(obj.privilege));
+	}
+}
+function addusr()
+{
+	ModifyFun(-1);
+}
+$(function(){
+	InitLang();
+	//test();
+	BindEvent('id_addusr','onmousedown',addusr,null);
+	Init();
+	
+});
+</script>
+</body> 
+</html>  

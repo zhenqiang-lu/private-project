@@ -1,0 +1,1412 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.Videoiv{
+	background:#c8c8c8;
+	left:0px;
+	right:0px;
+	height:500px;
+}
+
+.DivLable{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:16px;
+	color:#1c1d22;
+	height:23px;
+	cursor: pointer;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+.DivInputAtBitrate{
+	width:153px;
+	float:left;
+}
+
+.DivInputAtIFrame{
+	width:177px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtVideo{
+	width:175px;
+	float:left;
+}
+
+
+
+</style> 
+
+
+<body>   
+<div class="Videoiv" style="min-width:1100px;">
+	<div style="height:100%;margin:auto;width:1100px;">
+		<div style="clear:both;height:15px;"></div>	
+		<div class="DivLable txtVideo" id="id_txtVideoStandard">Standard:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_Standard" >NTSC</div>
+		<div class="DivContentSelectIco" id="id_Standard_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_Standard_option" style="margin-top:0px;">NTSC</div>
+		<div class="ClassContentSelectOption" name="id_Standard_option" style="margin-top:24px;">PAL</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+
+		<div class="DivLable txtVideo" id="id_txtVideoMainStreamType">StreamType:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_txtMainStreamType" value="Main"></input>
+		<div class="DivLable txtVideo" id="id_txtVideoSubStreamType" style="float:left;margin-left:100px;">StreamType:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_txtSubStreamType" value="Sub"></input>
+		<!--
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_StreamType" >Sub</div>
+		
+		<div class="DivContentSelectIco" id="id_StreamType_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_StreamType_option" style="margin-top:0px;">Sub</div>
+		<div class="ClassContentSelectOption" name="id_StreamType_option" style="margin-top:24px;">Third</div>
+		</div>-->
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtVideo" id="id_txtVideoMainFPS">FPS:</div>
+		
+		<div style="float:left" id="id_select_MainfpsBox"> 
+		<div class="ClassContentSelect" id="id_MainFps" >20</div>
+		<div class="DivContentSelectIco" id="id_MainFps_selectico"></div>
+		<div style="clear:both"></div>		
+		</div>
+		
+		<div class="DivLable txtVideo" id="id_txtVideoSubFPS" style="float:left;margin-left:100px;">FPS:</div>
+		<div style="float:left" id="id_select_SubfpsBox"> 
+		<div class="ClassContentSelect" id="id_SubFps" >20</div>
+		<div class="DivContentSelectIco" id="id_SubFps_selectico"></div>
+		<div style="clear:both"></div>		
+		</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtVideo" id="id_txtMainCodec">Codec:</div>
+		<div style="float:left" id="id_select_MainCodecBox"> 
+		<div class="ClassContentSelect" id="id_MainCodec" >H264</div>
+		<div class="DivContentSelectIco" id="id_MainCodec_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_MainCodec_option" style="margin-top:0px;">H264B</div>
+		<div class="ClassContentSelectOption" name="id_MainCodec_option" style="margin-top:24px;">H264</div>
+		<div class="ClassContentSelectOption" name="id_MainCodec_option" style="margin-top:48px;">H264H</div>
+		<div class="ClassContentSelectOption" name="id_MainCodec_option" style="margin-top:72px;">H265</div>
+		</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubCodec" style="float:left;margin-left:100px;">Codec:</div>
+		<div style="float:left"  id="id_select_SubCodecBox"> 
+		<div class="ClassContentSelect" id="id_SubCodec" >H264</div>
+		<div class="DivContentSelectIco" id="id_SubCodec_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_SubCodec_option" style="margin-top:0px;">H264B</div>
+		<div class="ClassContentSelectOption" name="id_SubCodec_option" style="margin-top:24px;">H264</div>
+		<div class="ClassContentSelectOption" name="id_SubCodec_option" style="margin-top:48px;">H264H</div>
+		<div class="ClassContentSelectOption" name="id_SubCodec_option" style="margin-top:72px;">H265</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtVideo" id="id_txtMainMode">Mode:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_MainMode" >CBR</div>
+		<div class="DivContentSelectIco" id="id_MainMode_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_MainMode_option" style="margin-top:0px;" id="id_txtMainModeCBR">CBR</div>
+		<div class="ClassContentSelectOption" name="id_MainMode_option" style="margin-top:24px;"id="id_txtMainModeVBR">VBR</div>
+		</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubMode" style="float:left;margin-left:100px;">Mode:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_SubMode" >CBR</div>
+		<div class="DivContentSelectIco" id="id_SubMode_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_SubMode_option" style="margin-top:0px;" id="id_txtSubModeCBR">CBR</div>
+		<div class="ClassContentSelectOption" name="id_SubMode_option" style="margin-top:24px;" id="id_txtSubModeVBR">VBR</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtVideo" id="id_txtMainResolution">Resolution:</div>
+		<div style="float:left" id="id_select_MainResolutionBox"> 
+		<div class="ClassContentSelect" id="id_MainResolution" >1920*1080(1080P)</div>
+		<div class="DivContentSelectIco" id="id_MainResolution_selectico"></div>
+		<div style="clear:both"></div>		
+		</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubResolution" style="float:left;margin-left:100px;">Resolution:</div>
+		<div style="float:left" id="id_select_SubResolutionBox"> 
+		<div class="ClassContentSelect" id="id_SubResolution" >1920*1080(1080P)</div>
+		<div class="DivContentSelectIco" id="id_SubResolution_selectico"></div>
+		<div style="clear:both"></div>		
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtVideo" id="id_txtMainVideoQuality">Video quality:</div>
+		<div style="float:left" id="id_select_MainVideoQualityBox"> 
+		<div class="ClassContentSelect" id="id_MainVideoQuality" >Best</div>
+		<div class="DivContentSelectIco" id="id_MainVideoQuality_selectico"></div> 
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_MainVideoQuality_option" style="margin-top:0px;" id="id_txtMainVideoQualityWorst">Worst</div>
+		<div class="ClassContentSelectOption" name="id_MainVideoQuality_option" style="margin-top:24px;" id="id_txtMainVideoQualityNormal">Normal</div>
+		<div class="ClassContentSelectOption" name="id_MainVideoQuality_option" style="margin-top:48px;" id="id_txtMainVideoQualityGood">Good</div>
+		<div class="ClassContentSelectOption" name="id_MainVideoQuality_option" style="margin-top:72px;" id="id_txtMainVideoQualityBetter">Better</div>
+		<div class="ClassContentSelectOption" name="id_MainVideoQuality_option" style="margin-top:96px;" id="id_txtMainVideoQualityBest">Best</div>		
+		</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubVideoQuality" style="float:left;margin-left:100px;">Video quality:</div>
+		<div style="float:left" id="id_select_SubVideoQualityBox"> 
+		<div class="ClassContentSelect" id="id_SubVideoQuality" >Best</div>
+		<div class="DivContentSelectIco" id="id_SubVideoQuality_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_SubVideoQuality_option" style="margin-top:0px;" id="id_txtSubVideoQualityWorst">Worst</div>
+		<div class="ClassContentSelectOption" name="id_SubVideoQuality_option" style="margin-top:24px;" id="id_txtSubVideoQualityNormal">Normal</div>
+		<div class="ClassContentSelectOption" name="id_SubVideoQuality_option" style="margin-top:48px;" id="id_txtSubVideoQualityGood">Good</div>
+		<div class="ClassContentSelectOption" name="id_SubVideoQuality_option" style="margin-top:72px;" id="id_txtSubVideoQualityBetter">Better</div>
+		<div class="ClassContentSelectOption" name="id_SubVideoQuality_option" style="margin-top:96px;" id="id_txtSubVideoQualityBest">Best</div>		
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtVideo" id="id_txtMainBitrate">Bitrate:</div>
+		<input class="DivInput DivInputAtBitrate" id="id_MainBitrate" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Kbit)(36-10240)</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubBitrate" style="float:left;margin-left:100px;">Bitrate:</div>
+		<input class="DivInput DivInputAtBitrate" id="id_SubBitrate" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Kbit)(36-2048)</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtVideo" id="id_txtMainIFrameInterval">I Frame Interval:</div>
+		<input class="DivInput DivInputAtIFrame" id="id_MainIFrameInterval" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(FPS)(1-150)</div>
+		
+		<div class="DivLable txtVideo" id="id_txtSubIFrameInterval" style="float:left;margin-left:100px;">I Frame Interval:</div>
+		<input class="DivInput DivInputAtIFrame" id="id_SubIFrameInterval" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(FPS)(1-150)</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_AudioEnable"><script>InitCheckBox('id_AudioEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;"id="id_txtAudioEnable">Audio Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtVideo" id="id_txtAudioCodec">Audio Codec:</div>
+		<div style="float:left" id="id_select_AudioCodecBox"> 
+		<div class="ClassContentSelect" id="id_AudioCodec" >G711U</div>
+		<div class="DivContentSelectIco" id="id_AudioCodec_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_AudioCodec_option" style="margin-top:0px;">G711U</div>
+		<div class="ClassContentSelectOption" name="id_AudioCodec_option" style="margin-top:24px;">G711A</div>	
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:500px;" id="id_SubMit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtVideoStandard',str_VedioStandard);
+	SetLang('id_txtVideoMainStreamType',str_VedioStreamType);
+	SetLang('id_txtVideoSubStreamType',str_VedioStreamType);
+	$(id_txtMainStreamType)[0].value = str_MainStream;
+	$(id_txtSubStreamType)[0].value = str_SubStream;
+	SetLang('id_txtVideoMainFPS',str_Vediofps);
+	SetLang('id_txtVideoSubFPS',str_Vediofps);
+	SetLang('id_txtMainCodec',str_VedioReType);
+	SetLang('id_txtSubCodec',str_VedioReType);
+	SetLang('id_txtMainMode',str_VedioMode);
+	SetLang('id_txtSubMode',str_VedioMode);
+	SetLang('id_txtMainModeCBR',str_VedioFixed);
+	SetLang('id_txtMainModeVBR',str_VedioChange); 
+	SetLang('id_txtSubModeCBR',str_VedioFixed);
+	SetLang('id_txtSubModeVBR',str_VedioChange);
+	SetLang('id_txtMainResolution',str_VedioResolution);
+	SetLang('id_txtSubResolution',str_VedioResolution);
+	SetLang('id_txtMainVideoQuality',str_VedioPic);
+	SetLang('id_txtSubVideoQuality',str_VedioPic);
+	
+	SetLang('id_txtMainVideoQualityBest',str_VedioBest);
+	SetLang('id_txtMainVideoQualityBetter',str_VedioBetter);
+	SetLang('id_txtMainVideoQualityGood',str_VedioGood);
+	SetLang('id_txtMainVideoQualityNormal',str_Vedionormal);
+	SetLang('id_txtMainVideoQualityWorst',str_VedioWorst);
+				
+	SetLang('id_txtSubVideoQualityBest',str_VedioBest);
+	SetLang('id_txtSubVideoQualityBetter',str_VedioBetter);
+	SetLang('id_txtSubVideoQualityGood',str_VedioGood);
+	SetLang('id_txtSubVideoQualityNormal',str_Vedionormal);
+	SetLang('id_txtSubVideoQualityWorst',str_VedioWorst);
+
+	SetLang('id_txtMainBitrate',str_VedioStream);
+	SetLang('id_txtSubBitrate',str_VedioStream);
+	SetLang('id_txtMainIFrameInterval',str_VedioI);
+	SetLang('id_txtSubIFrameInterval',str_VedioI);
+	SetLang('id_txtAudioEnable',str_AudioEnable);
+	SetLang('id_txtAudioCodec',str_VedioReType);
+	SetLang('id_SubMit',str_btnBasicSave);
+}
+</script> 
+<script  type="text/javascript"> 
+
+var MainVideoOptionMap ;
+var MainVideoMap;
+var SubVideoOptionMap;
+var SubVideoMap;
+var MainMaxFps;
+var MainWidth,MainHeight;
+
+function addSelectFps(id,streamtype,num)
+{
+	for(var i =1;i <= num; i ++){
+		var addstr = '<div class="ClassContentSelectOption" name="id_'+streamtype+'Fps_option" style="margin-top:'+(i - 1)*24+'px;">'+i+'</div>';
+		$("#"+id).append(addstr);
+	}
+}
+
+function addSelectResolution(id,streamtype,num,width,height)
+{
+	var Resolution = width+'*'+height;
+	var Resolution1;
+	switch (Resolution)
+	{
+		case '3840*2160':
+				Resolution1 = width+'*'+height+'(8M)';
+			break;
+		case '2592*1944':
+		case '2560*1920':
+				Resolution1 = width+'*'+height+'(5M)';
+			break;
+		case '2592*1520':
+		case '2560*1440':
+				Resolution1 = width+'*'+height+'(4M)';
+			break;
+		case '2048*1536':
+		case '2304*1296':
+				Resolution1 = width+'*'+height+'(3M)';
+			break;
+		case '1600*1200':
+				Resolution1 = width+'*'+height+'(2M)';
+			break;
+		case '1920*1080':
+				Resolution1 = width+'*'+height+'(1080P)';
+			break;
+		case '1280*960':
+				Resolution1 = width+'*'+height+'(960P)';
+			break;
+		case '1280*720':
+				Resolution1 = width+'*'+height+'(720P)';
+			break;
+		case '720*576':
+		case '704*576':
+		case '704*480':
+		case '640*440':
+		case '640*480':
+				Resolution1 = width+'*'+height+'(D1)';
+			break;
+		case '320*240':
+		case '352*288':
+		case '352*240':
+				Resolution1 = width+'*'+height+'(CIF)';
+			break;
+		case '176*144':
+		case '176*112':
+				Resolution1 = width+'*'+height+'(QCIF)';
+			break;
+		default:	break;	
+	} 
+	//var Resolution = width+'*'+height;
+	var addstr = '<div class="ClassContentSelectOption" name="id_'+streamtype+'Resolution_option" style="margin-top:'+(num - 1)*24+'px;">'+Resolution1+'</div>';
+	$("#"+id).append(addstr);
+}
+
+
+function FuncMainFPs()
+{
+	$("#id_MainIFrameInterval")[0].value = GetSelectionVal('id_MainFps') * 2;
+}
+
+function FuncSubFPs()
+{
+	$("#id_SubIFrameInterval")[0].value = GetSelectionVal('id_SubFps') * 2;
+}
+
+
+//更改制式时分辨率以及帧率的联动
+function StardMainResolution()
+{	
+	var obj = document.getElementById("id_select_MainfpsBox").childNodes;
+	var objopt = document.getElementsByName("id_MainFps_option");
+	var str_MainResolution,str_MainWidth,str_MainHeight,str_MainHeight1;
+	
+	var length = obj.length;
+	for(var i = 7;i < length;i++){
+		document.getElementById("id_select_MainfpsBox").removeChild(obj[7]);
+	}
+	var Num;
+	
+	str_MainResolution = GetSelectionVal('id_MainResolution').split("*");
+	str_MainWidth = str_MainResolution[0];
+	str_MainHeight1 = str_MainResolution[1].split("(");
+	str_MainHeight = str_MainHeight1[0];
+	MainWidth = str_MainWidth;
+	MainHeight = str_MainHeight;
+	
+	//console.log('str_MainWidth = '+str_MainWidth);
+	//console.log('str_MainHeight = '+str_MainHeight);
+	
+	for(var i = 1;i <= MainVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		//console.log('a = '+a);
+		//console.log('b = '+b);
+		if((str_MainWidth == a) && (str_MainHeight == b))
+		{
+			Num = i;
+			//console.log('Num = '+Num);
+		}
+	}
+	
+	if(GetSelectionOption('id_Standard') == 0)
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange'));
+	else
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange'));
+		
+	InitUdfSelect('id_MainFps',FuncMainFPs);
+	
+	var MainResolutionOption;
+	var MainResolutionCur;
+
+	if(GetSelectionOption('id_Standard') == 0)
+	{
+		MainResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange');		
+		if(MainResolutionOption > 30)
+			SetSelectionVal('id_MainFps',30);
+		else
+			SetSelectionVal('id_MainFps',MainResolutionOption);
+	}
+	else
+	{
+		MainResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange');	
+		if(MainResolutionOption > 25)
+			SetSelectionVal('id_MainFps',25);
+		else
+			SetSelectionVal('id_MainFps',MainResolutionOption);
+	}
+		
+	$("#id_MainIFrameInterval")[0].value = GetSelectionVal('id_MainFps') * 2;
+}
+
+//更改制式时分辨率以及帧率的联动
+function StardSubResolution()
+{
+	var obj = document.getElementById("id_select_SubfpsBox").childNodes;
+	var objopt = document.getElementsByName("id_SubFps_option");
+	var str_SubResolution,str_SubWidth,str_SubHeight,str_SubHeight1;
+	var str_MainResolution,str_MainWidth,str_MainHeight,str_MainHeight1;
+	var PMainFps,NMainFps;
+	
+	var length = obj.length;
+	for(var i = 7;i < length;i++){
+		document.getElementById("id_select_SubfpsBox").removeChild(obj[7]);
+	}
+	var MainNum,SubNum;
+	
+	str_MainResolution = GetSelectionVal('id_MainResolution').split("*");
+	str_MainWidth = str_MainResolution[0];
+	str_MainHeight1 = str_MainResolution[1].split("(");
+	str_MainHeight = str_MainHeight1[0];
+	
+//	console.log('str_MainWidth = '+str_MainWidth);
+//	console.log('str_MainHeight = '+str_MainHeight);
+	
+	for(var i = 1;i <= MainVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		//console.log('a = '+a);
+		//console.log('b = '+b);
+		if((str_MainWidth == a) && (str_MainHeight == b))
+		{
+			MainNum = i;
+			//console.log('Num = '+Num);
+		}
+	}
+	
+	str_SubResolution = GetSelectionVal('id_SubResolution').split("*");
+	str_SubWidth = str_SubResolution[0];
+	str_SubHeight1 = str_SubResolution[1].split("(");
+	str_SubHeight = str_SubHeight1[0];
+	
+	//console.log('id_SubResolution = '+GetSelectionVal('id_SubResolution'));
+	//console.log('str_SubWidth = '+str_SubWidth);
+	//console.log('str_SubHeight = '+str_SubHeight);
+	
+	for(var i = 1;i <= SubVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+	//	console.log('a = '+a);
+	//	console.log('b = '+b);
+		if((str_SubWidth == a) && (str_SubHeight == b))
+		{
+			SubNum = i;
+//			console.log('Num = '+SubNum);
+		}
+	}
+
+	if(GetSelectionOption('id_Standard') == 0)
+	{
+		NMainFps = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange'); //获取主码流当前分辨率的帧率
+		if(NMainFps >= 30)
+		{
+			if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720)) //4689 主码流4M时 子码流720P 子码流帧率10帧 
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',5);
+			}
+			else
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange'));
+			}
+		}
+		else
+		{
+			if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720)) //4689 主码流4M时 子码流720P 子码流帧率10帧 
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',5);
+			}
+			else
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.n_frameraterange'));
+			}
+		}
+	}
+	else
+	{
+		PMainFps = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange');
+		if(PMainFps >= 25)
+		{
+			if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720)) //4689 主码流4M时 子码流720P 子码流帧率10帧 
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',5);
+			}
+			else
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange'));
+			}
+		}
+		else
+		{
+			if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720)) //4689 主码流4M时 子码流720P 子码流帧率10帧 
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',5);
+			}
+			else
+			{
+				addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.p_frameraterange'));
+			}
+		}
+	}
+		
+	InitUdfSelect('id_SubFps',FuncSubFPs);
+	
+	var ResolutionOption = 0;
+	var ResolutionCur = 0;
+	
+	if(GetSelectionOption('id_Standard') == 0)
+	{	
+		if(NMainFps >= 30)
+		{
+			ResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange');
+			if(ResolutionOption > 30)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+					SetSelectionVal('id_SubFps',5);
+				else
+					SetSelectionVal('id_SubFps',30);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+		}
+		else
+		{
+			ResolutionOption = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.n_frameraterange');
+			if(ResolutionOption > 30)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+					SetSelectionVal('id_SubFps',5);
+				else
+					SetSelectionVal('id_SubFps',30);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);	
+			}
+		}
+		
+	}
+	else
+	{
+		if(PMainFps >= 25)
+		{
+			ResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange');
+			if(ResolutionOption > 25)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+					SetSelectionVal('id_SubFps',5);
+				else
+					SetSelectionVal('id_SubFps',25);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+		}
+		else
+		{
+			ResolutionOption = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.p_frameraterange');
+			if(ResolutionOption > 25)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+					SetSelectionVal('id_SubFps',5);
+				else
+					SetSelectionVal('id_SubFps',25);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+		}
+		
+	}
+		
+	$("#id_SubIFrameInterval")[0].value = GetSelectionVal('id_SubFps') * 2;
+}
+
+function ChangeMainMode(){
+	var id_MainVideoQuality=document.getElementById('id_MainVideoQuality');
+	if(GetSelectionOption('id_MainMode') == 0) {
+		id_MainVideoQuality.disabled = true;
+		document.getElementById('id_MainVideoQuality_selectico').disabled = true;
+		id_MainVideoQuality.style.color="#858585";
+	}
+	else {
+		id_MainVideoQuality.disabled = false;
+		document.getElementById('id_MainVideoQuality_selectico').disabled = false;
+		id_MainVideoQuality.style.color="#000";
+	}
+}
+
+function ChangeSubMode() {
+	var id_SubVideoQuality=document.getElementById('id_SubVideoQuality');
+	if(GetSelectionOption('id_SubMode') == 0) {
+		id_SubVideoQuality.disabled = true;
+		document.getElementById('id_SubVideoQuality_selectico').disabled = true;
+		id_SubVideoQuality.style.color="#858585";
+	}
+	else {
+		id_SubVideoQuality.disabled = false;
+		document.getElementById('id_SubVideoQuality_selectico').disabled = false;
+		id_SubVideoQuality.style.color="#000";
+	}
+}
+
+
+
+function MainResolution(param)
+{
+	var obj = document.getElementById("id_select_MainfpsBox").childNodes;
+	var objopt = document.getElementsByName("id_MainFps_option");
+	var str_MainResolution,str_MainWidth,str_MainHeight,str_MainHeight1;
+	
+	var length = obj.length;
+	for(var i = 7;i < length;i++){
+		document.getElementById("id_select_MainfpsBox").removeChild(obj[7]);
+	}
+	var Num;
+	
+	str_MainResolution = GetSelectionVal('id_MainResolution').split("*");
+	str_MainWidth = str_MainResolution[0];
+	str_MainHeight1 = str_MainResolution[1].split("(");
+	str_MainHeight = str_MainHeight1[0];
+	
+	MainWidth = str_MainWidth;
+	MainHeight = str_MainHeight;
+	
+	//console.log('str_MainWidth = '+str_MainWidth);
+	//console.log('str_MainHeight = '+str_MainHeight);
+	
+	for(var i = 1;i <= MainVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		//console.log('a = '+a);
+		//console.log('b = '+b);
+		if((str_MainWidth == a) && (str_MainHeight == b))
+		{
+			Num = i;
+			//console.log('Num = '+Num);
+		}
+	}
+	
+	if(GetSelectionOption('id_Standard') == 0)
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange'));
+	else
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange'));
+		
+	InitUdfSelect('id_MainFps',FuncMainFPs);
+	
+	var MainResolutionOption;
+	var MainResolutionCur;
+
+	if(GetSelectionOption('id_Standard') == 0)
+	{
+		MainResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange');
+		MainResolutionCur = GetSelectionVal('id_MainFps');
+		
+		if(MainResolutionCur > MainResolutionOption)
+			SetSelectionVal('id_MainFps',MainResolutionOption);
+		else
+			SetSelectionVal('id_MainFps',MainResolutionCur);
+	}
+	else
+	{
+		MainResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange');
+		MainResolutionCur = GetSelectionVal('id_MainFps');
+		
+		if(MainResolutionCur > MainResolutionOption)
+			SetSelectionVal('id_MainFps',MainResolutionOption);
+		else
+			SetSelectionVal('id_MainFps',MainResolutionCur);
+	}
+		
+	$("#id_MainIFrameInterval")[0].value = GetSelectionVal('id_MainFps') * 2;
+	
+	SubResolution();
+}
+
+function SubResolution(param)
+{
+	var obj = document.getElementById("id_select_SubfpsBox").childNodes;
+	var objopt = document.getElementsByName("id_SubFps_option");
+	var str_SubResolution,str_SubWidth,str_SubHeight,str_SubHeight1;
+	var str_MainResolution,str_MainWidth,str_MainHeight,str_MainHeight1;
+	var PMainFps,NMainFps;
+	
+	var length = obj.length;
+	for(var i = 7;i < length;i++){
+		document.getElementById("id_select_SubfpsBox").removeChild(obj[7]);
+	}
+	var MainNum,SubNum;
+	
+	str_MainResolution = GetSelectionVal('id_MainResolution').split("*");
+	str_MainWidth = str_MainResolution[0];
+	str_MainHeight1 = str_MainResolution[1].split("(");
+	str_MainHeight = str_MainHeight1[0];
+	
+	//console.log('str_MainWidth = '+str_MainWidth);
+//	console.log('str_MainHeight = '+str_MainHeight);
+	
+	for(var i = 1;i <= MainVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		//console.log('a = '+a);
+		//console.log('b = '+b);
+		if((str_MainWidth == a) && (str_MainHeight == b))
+		{
+			MainNum = i;
+			//console.log('Num = '+Num);
+		}
+	}
+	
+	str_SubResolution = GetSelectionVal('id_SubResolution').split("*");
+	str_SubWidth = str_SubResolution[0];
+	str_SubHeight1 = str_SubResolution[1].split("(");
+	str_SubHeight = str_SubHeight1[0];
+	
+//	console.log('id_SubResolution = '+GetSelectionVal('id_SubResolution'));
+//	console.log('str_SubWidth = '+str_SubWidth);
+//	console.log('str_SubHeight = '+str_SubHeight);
+	
+	for(var i = 1;i <= SubVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+//		console.log('a = '+a);
+//		console.log('b = '+b);
+		if((str_SubWidth == a) && (str_SubHeight == b))
+		{
+			SubNum = i;
+//			console.log('Num = '+SubNum);
+		}
+	}
+	
+	if(GetSelectionOption('id_Standard') == 0)
+	{
+		NMainFps = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange'); //获取主码流当前分辨率的帧率
+		if(NMainFps >= 30)
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange'));
+		}
+		else
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.n_frameraterange'));
+		}
+		
+		if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+		{
+//			console.log('length = '+length);
+			for(var i = 7;i < length;i++){
+				document.getElementById("id_select_SubfpsBox").removeChild(obj[7]);
+			}
+			addSelectFps('id_select_SubfpsBox','Sub',5);
+		}
+	}
+	else
+	{
+		PMainFps = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange');
+		if(PMainFps >= 25)
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange'));
+		}
+		else
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.p_frameraterange'));
+		}
+		if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+		{
+//			console.log('length = '+length);
+			for(var i = 7;i < length;i++){
+				document.getElementById("id_select_SubfpsBox").removeChild(obj[7]);
+			}
+			addSelectFps('id_select_SubfpsBox','Sub',5);
+		}
+	}
+
+	InitUdfSelect('id_SubFps',FuncSubFPs);
+	
+	var ResolutionOption = 0;
+	var ResolutionCur = 0;
+
+	
+	if(GetSelectionOption('id_Standard') == 0)
+	{	
+		if(NMainFps >= 30)
+		{
+			ResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.n_frameraterange');
+			ResolutionCur = GetSelectionVal('id_SubFps');
+			if(ResolutionCur > ResolutionOption)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionCur > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionCur);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionCur);
+			}
+		}
+		else
+		{
+			ResolutionOption = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.n_frameraterange');
+			ResolutionCur = GetSelectionVal('id_SubFps');
+			if(ResolutionCur > ResolutionOption)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionCur > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionCur);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionCur);
+			}
+		}
+		
+	}
+	else
+	{
+		if(PMainFps >= 25)
+		{
+			ResolutionOption = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+MainNum+'.p_frameraterange');
+			ResolutionCur = GetSelectionVal('id_SubFps');
+			if(ResolutionCur > ResolutionOption)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionCur > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionCur);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionCur);
+			}
+		}
+		else
+		{
+			ResolutionOption = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+SubNum+'.p_frameraterange');
+			ResolutionCur = GetSelectionVal('id_SubFps');
+			if(ResolutionCur > ResolutionOption)
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionOption > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionOption);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionOption);
+			}
+			else
+			{
+				if((MainWidth == 2592) &&(MainHeight == 1520) && (str_SubWidth == 1280) && (str_SubHeight == 720))//4689 主码流4M时 子码流720P 子码流帧率10帧
+				{
+					if(ResolutionCur > 5)
+						SetSelectionVal('id_SubFps',5);
+					else
+						SetSelectionVal('id_SubFps',ResolutionCur);
+				}
+				else
+					SetSelectionVal('id_SubFps',ResolutionCur);
+			}
+		}
+	}
+	$("#id_SubIFrameInterval")[0].value = GetSelectionVal('id_SubFps') * 2;	
+}
+
+//获取主码流参数
+function GetMainVideoParam()
+{
+
+	var Mainmsg =	[
+					{"xtype":"Channel","text":"0"},
+					{"xtype":"StreamType","text":"0"}
+				];
+				
+	var MainVideoOptionResp = $.sendMsg("GetVideoEncodeOptions",Mainmsg,"/ISAPI/VideoInfo/GWVideoEncodeOptions","POST");
+	if(MainVideoOptionResp.success == false){
+		alert("recv GetVideoEncodeOptions msg fail");
+	}
+	
+	var MainVideoResp = $.sendMsg("VideoParam",Mainmsg,"/ISAPI/VideoInfo/GWVideoConfig","POST");
+	if(MainVideoResp.success == false){
+		alert("recv VideoParam msg fail");
+	}
+	
+	MainVideoOptionMap = MainVideoOptionResp.data;
+	MainVideoMap = MainVideoResp.data;
+	
+	//MainVideoOptionMap = {"channel":"0","streamtype":"0","qualityrange":{"min":"1","max":"5"},"qualitycontroltype":"CBR/VBR","h264option":{"encodetype":"H264","resolutionsavailable_1":{"width":"1280","height":"720","frameraterange":"25"},"resolutionsavailable_2":{"width":"1920","height":"1080","frameraterange":"25"},"resolutionsavailable_3":{"width":"1600","height":"1200","frameraterange":"25"},"resolutionsavailable_4":{"width":"2304","height":"1296","frameraterange":"25"},"resolutionsavailable_5":{"width":"2592","height":"1520","frameraterange":"20"},"resolutionsavailable_6":{"width":"2592","height":"1944","frameraterange":"15"},"resolutionscount":"6","encodingintervalrange":{"min":"0","max":"2"},"constantbitraterange":{"min":"36","max":"10240"},"govlengthrange":{"min":"1","max":"150"}},"h265option":{"encodetype":"H265","resolutionsavailable_1":{"width":"1280","height":"720","frameraterange":"25"},"resolutionsavailable_2":{"width":"1920","height":"1080","frameraterange":"25"},"resolutionsavailable_3":{"width":"1600","height":"1200","frameraterange":"25"},"resolutionsavailable_4":{"width":"2304","height":"1296","frameraterange":"25"},"resolutionsavailable_5":{"width":"2592","height":"1520","frameraterange":"20"},"resolutionsavailable_6":{"width":"2592","height":"1944","frameraterange":"15"},"resolutionscount":"6","encodingintervalrange":{"min":"0","max":"0"},"constantbitraterange":{"min":"36","max":"2048"},"govlengthrange":{"min":"1","max":"150"}}};
+	//MainVideoMap = {"system":"PAL","channel":"0","streamtype":"0","videocodectype":"H264","videoresolutionwidth":"2592","videoresolutionheight":"1944","videoqualitycontroltype":"VBR","constantbitrate":"4096","fixedquality":"5","maxframerate":"15","snapshotimagetype":"JPEG","govlength":"50"};
+	
+	var Mainvideoqualitycontroltype;
+	
+	//console.log( JSON.stringify(MainVideoOptionMap));
+	//console.log( JSON.stringify(MainVideoMap));
+	SetSelectionVal('id_Standard',MainVideoMap.system);
+	
+	SetSelectionVal('id_MainCodec',MainVideoMap.videocodectype);
+	//console.log( "id_MainMode ="+MainVideoMap.videoqualitycontroltype );
+	if(MainVideoMap.videoqualitycontroltype == 'VBR')
+		Mainvideoqualitycontroltype = 1;
+	else if(MainVideoMap.videoqualitycontroltype == 'CBR')
+		Mainvideoqualitycontroltype = 0;
+		
+	SetSelectionOptID('id_MainMode',Mainvideoqualitycontroltype);
+	
+	var Num;
+/*	
+	if(MainVideoOptionMap.h265option != undefined)
+	{
+		var codec_str = '<div class="ClassContentSelectOption" name="id_MainCodec_option" style="margin-top:24px;">H265</div>';
+		$("#id_select_MainCodecBox").append(codec_str);
+	}
+*/	
+	for(var i = 1;i <= MainVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		addSelectResolution('id_select_MainResolutionBox','Main',i,a,b);	
+		if((a == 1920) && (b == 1080))
+		{
+			MainMaxFps = eval('MainVideoOptionMap.h264option.resolutionsavailable_'+i+'.n_frameraterange');
+//			console.log('MainMaxFps ='+MainMaxFps);
+		}
+		if((MainVideoMap.videoresolutionwidth == a) && (MainVideoMap.videoresolutionheight == b))
+		{
+			MainWidth = a;
+			MainHeight = b;
+			Num = i;
+		}
+	}
+	InitUdfSelect('id_MainResolution',MainResolution);
+	//SetSelectionVal('id_MainResolution',MainVideoMap.videoresolutionwidth+'*'+MainVideoMap.videoresolutionheight);
+	SetSelectionOptID('id_MainResolution',Num - 1);
+	
+	if(MainVideoMap.system == 'PAL')
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange'));
+	else
+		addSelectFps('id_select_MainfpsBox','Main',eval('MainVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange'));
+		
+	InitUdfSelect('id_MainFps',FuncMainFPs);
+	SetSelectionVal('id_MainFps',MainVideoMap.maxframerate);
+	
+	SetSelectionOptID('id_MainVideoQuality',MainVideoMap.fixedquality - 1);
+	$("#id_MainBitrate")[0].value = MainVideoMap.constantbitrate;
+	$("#id_MainIFrameInterval")[0].value = MainVideoMap.govlength;
+	
+}
+
+//获取子码流参数
+function GetSubVideoParam()
+{
+	var obj = document.getElementById("id_select_SubfpsBox").childNodes;
+	var objopt = document.getElementsByName("id_SubFps_option");
+	var length = obj.length;
+	
+	var Submsg =	[
+					{"xtype":"Channel","text":"0"},
+					{"xtype":"StreamType","text":"1"}
+				];
+				
+	var SubVideoOptionResp = $.sendMsg("GetVideoEncodeOptions",Submsg,"/ISAPI/VideoInfo/GWVideoEncodeOptions","POST");
+	if(SubVideoOptionResp.success == false){
+		alert("recv GetVideoEncodeOptions msg fail");
+		return;
+	}
+		
+	var SubVideoResp = $.sendMsg("VideoParam",Submsg,"/ISAPI/VideoInfo/GWVideoConfig","POST");
+	if(SubVideoResp.success == false){
+		alert("recv VideoParam msg fail");
+		return;
+	}
+	
+	SubVideoOptionMap = SubVideoOptionResp.data;
+	SubVideoMap = SubVideoResp.data;
+	var Subvideoqualitycontroltype;
+	//console.log( JSON.stringify(SubVideoOptionMap));
+//	console.log("CBR = " + JSON.stringify(SubVideoMap));
+	
+	//SetSelectionVal('id_Standard',SubVideoMap.system);
+	
+	
+	
+	SetSelectionVal('id_SubCodec',SubVideoMap.videocodectype);
+	
+	if(SubVideoMap.videoqualitycontroltype == 'VBR')
+		Subvideoqualitycontroltype = 1;
+	else if(SubVideoMap.videoqualitycontroltype == 'CBR')
+		Subvideoqualitycontroltype = 0;
+	
+	SetSelectionOptID('id_SubMode',Subvideoqualitycontroltype);
+	var Num;
+	/*
+	if(SubVideoOptionMap.h265option != undefined)
+	{
+		var codec_str = '<div class="ClassContentSelectOption" name="id_SubCodec_option" style="margin-top:24px;">H265</div>';
+		$("#id_select_SubCodecBox").append(codec_str);
+	}*/
+	for(var i = 1;i <= SubVideoOptionMap.h264option.resolutionscount;i++){
+		var a = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.width');
+		var b = eval('SubVideoOptionMap.h264option.resolutionsavailable_'+i+'.height');
+		addSelectResolution('id_select_SubResolutionBox','Sub',i,a,b);
+		if((SubVideoMap.videoresolutionwidth == a) && (SubVideoMap.videoresolutionheight == b))
+		{
+			Num = i;
+		}
+	}
+	InitUdfSelect('id_SubResolution',SubResolution);
+	//SetSelectionVal('id_SubResolution',SubVideoMap.videoresolutionwidth+'*'+SubVideoMap.videoresolutionheight);
+	SetSelectionOptID('id_SubResolution',Num - 1);
+	
+	if(MainVideoMap.system == 'PAL')
+	{
+		if((MainWidth == 2592) &&(MainHeight == 1520) && (SubVideoMap.videoresolutionwidth == 1280) && (SubVideoMap.videoresolutionheight == 720))
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',5);
+		}
+		else
+			addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+Num+'.p_frameraterange'));
+		
+	}
+	else
+	{
+		
+		if((MainWidth == 2592) &&(MainHeight == 1520) && (SubVideoMap.videoresolutionwidth == 1280) && (SubVideoMap.videoresolutionheight == 720))
+		{
+			addSelectFps('id_select_SubfpsBox','Sub',5);
+		}
+		else 
+			addSelectFps('id_select_SubfpsBox','Sub',eval('SubVideoOptionMap.h264option.resolutionsavailable_'+Num+'.n_frameraterange'));
+	}
+		
+	InitUdfSelect('id_SubFps',FuncSubFPs);
+		
+	if((MainWidth == 2592) &&(MainHeight == 1520) && (SubVideoMap.videoresolutionwidth == 1280) && (SubVideoMap.videoresolutionheight == 720))
+	{
+		if(SubVideoMap.maxframerate > 5)
+			SetSelectionVal('id_SubFps',5);
+		else
+			SetSelectionVal('id_SubFps',SubVideoMap.maxframerate);
+	}
+	else
+		SetSelectionVal('id_SubFps',SubVideoMap.maxframerate);
+	
+	SetSelectionOptID('id_SubVideoQuality',SubVideoMap.fixedquality - 1);
+	$("#id_SubBitrate")[0].value = SubVideoMap.constantbitrate;
+	$("#id_SubIFrameInterval")[0].value = SubVideoMap.govlength;
+}
+
+//获取音频参数
+function GetAudioParam()
+{
+	var AudioOptionResp = $.sendMsg("GetAudioEncodeOptions",null,"/ISAPI/AudioInfo/GWAudioEncodeOptions","POST");
+	if(AudioOptionResp.success == false){
+		alert("recv GetAudioEncodeOptions msg fail");
+		return;
+	}
+		
+	var AudioResp = $.sendMsg("AudioConfig",null,"/ISAPI/AudioInfo/GWAudioConfig","POST");
+	if(AudioResp.success == false){
+		alert("recv AudioConfig msg fail");
+		return;
+	}
+	
+	var AudioOptionMap = AudioOptionResp.data;
+	var AudioMap = AudioResp.data;
+	
+	//console.log( JSON.stringify(AudioOptionMap));
+	//console.log( JSON.stringify(AudioMap));
+	
+	SetCheckBox('id_AudioEnable',TranslationStrAndBool(AudioMap.audioenable));
+	//console.log(AudioMap.audioenable);
+	if(AudioMap.audioenable == 0)
+	{
+		AudioMap.encoding = 'G711A';
+		//console.log(AudioMap.encoding);
+	}
+	SetSelectionVal('id_AudioCodec',AudioMap.encoding);
+	
+}
+
+function SetMainVideoParam()
+{
+	var str_MainWidth,str_MainHeight,str_MainQuality,str_MainResolution,Mainvideoqualitycontroltype,str_MainHeight1;
+	
+	//console.log("str_MainQuality"+GetSelectionVal('id_MainVideoQuality'));
+	if(GetSelectionVal('id_MainVideoQuality') == str_VedioBest){
+		str_MainQuality = "5";
+	}else if(GetSelectionVal('id_MainVideoQuality') == str_VedioBetter){
+		str_MainQuality = "4";
+	}else if(GetSelectionVal('id_MainVideoQuality') == str_VedioGood){
+		str_MainQuality = "3";
+	}else if(GetSelectionVal('id_MainVideoQuality') == str_Vedionormal){
+		str_MainQuality = "2";
+	}else if(GetSelectionVal('id_MainVideoQuality') == str_VedioWorst){
+		str_MainQuality = "1";
+	}
+	//console.log("str_MainQuality"+str_MainQuality);
+	str_MainResolution = GetSelectionVal('id_MainResolution').split("*");
+	str_MainWidth = str_MainResolution[0];
+	str_MainHeight1 = str_MainResolution[1].split("(");
+	str_MainHeight = str_MainHeight1[0];
+	//console.log("str_MainResolution"+str_MainResolution);
+	//console.log("str_MainWidth"+str_MainWidth);
+	//console.log("id_MainMode"+GetSelectionOption('id_MainMode'));
+	if(0 == GetSelectionOption('id_MainMode'))
+		Mainvideoqualitycontroltype = 'CBR';
+	else
+		Mainvideoqualitycontroltype = 'VBR';
+	var msg =	[
+					{"xtype":"Channel","text":"0"},
+					{"xtype":"StreamType","text":"0"},
+					{"xtype":"videocodectype","text":GetSelectionVal('id_MainCodec')},
+					{"xtype":"videoresolutionwidth","text":str_MainWidth},
+					{"xtype":"videoresolutionheight","text":str_MainHeight},
+					{"xtype":"videoqualitycontroltype","text":Mainvideoqualitycontroltype},
+					{"xtype":"constantbitrate","text":$("#id_MainBitrate")[0].value},
+					{"xtype":"fixedquality","text":str_MainQuality},
+					{"xtype":"maxframerate","text":GetSelectionVal('id_MainFps')},
+					{"xtype":"govlength","text":$("#id_MainIFrameInterval")[0].value}
+				];
+				
+	
+	var resp = $.sendMsg("VideoParam",msg,"/ISAPI/VideoInfo/GWVideoConfig","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		return -1;
+	}else{
+		return 0;
+	}
+}
+
+function SetSubVideoParam(){
+	var str_SubWidth,str_SubHeight,str_SubQuality,str_SubResolution,Subvideoqualitycontroltype,str_SubHeight1;
+	
+	//console.log("str_SubQuality"+GetSelectionVal('id_SubVideoQuality'));
+	if(GetSelectionVal('id_SubVideoQuality') == str_VedioBest){
+		str_SubQuality = "5";
+	}else if(GetSelectionVal('id_SubVideoQuality') == str_VedioBetter){
+		str_SubQuality = "4";
+	}else if(GetSelectionVal('id_SubVideoQuality') == str_VedioGood){
+		str_SubQuality = "3";
+	}else if(GetSelectionVal('id_SubVideoQuality') == str_Vedionormal){
+		str_SubQuality = "2";
+	}else if(GetSelectionVal('id_SubVideoQuality') == str_VedioWorst){
+		str_SubQuality = "1";
+	}
+	//console.log("str_SubQuality"+str_SubQuality);
+	str_SubResolution = GetSelectionVal('id_SubResolution').split("*");
+	str_SubWidth = str_SubResolution[0];
+	str_SubHeight1 = str_SubResolution[1].split("(");
+	str_SubHeight = str_SubHeight1[0];
+	
+	if(0 == GetSelectionOption('id_SubMode'))
+		Subvideoqualitycontroltype = 'CBR';
+	else
+		Subvideoqualitycontroltype = 'VBR';
+	var msg =	[
+					{"xtype":"system","text":GetSelectionVal('id_Standard')},
+					{"xtype":"Channel","text":"0"},
+					{"xtype":"StreamType","text":"1"},
+					{"xtype":"videocodectype","text":GetSelectionVal('id_SubCodec')},
+					{"xtype":"videoresolutionwidth","text":str_SubWidth},
+					{"xtype":"videoresolutionheight","text":str_SubHeight},
+					{"xtype":"videoqualitycontroltype","text":Subvideoqualitycontroltype},
+					{"xtype":"constantbitrate","text":$("#id_SubBitrate")[0].value},
+					{"xtype":"fixedquality","text":str_SubQuality},
+					{"xtype":"maxframerate","text":GetSelectionVal('id_SubFps')},
+					{"xtype":"govlength","text":$("#id_SubIFrameInterval")[0].value}
+				];
+				
+	
+	
+	var resp = $.sendMsg("VideoParam",msg,"/ISAPI/VideoInfo/GWVideoConfig","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		return -1;
+	}else{
+		return 0;
+	}
+}
+
+function SetAudioParam(){
+	var str_AudioEnable;
+	if(GetCheckBoxValue('id_AudioEnable') == "false"){
+		str_AudioEnable = "0";
+	}else{
+		str_AudioEnable = "1";
+	}
+	
+	var msg =	[
+					{"xtype":"audioenable","text":str_AudioEnable},
+					{"xtype":"encoding","text":GetSelectionVal('id_AudioCodec')}
+				];
+	
+	var resp = $.sendMsg("AudioConfig",msg,"/ISAPI/AudioInfo/GWAudioConfig","PUT");
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		return -1;
+	}else{
+		return 0;
+	}
+}
+
+function submit()
+{
+	var MainFlag,SubFlag,AudioFlag;
+	AudioFlag = SetAudioParam();
+	SubFlag = SetSubVideoParam();
+	MainFlag = SetMainVideoParam();
+	//SubFlag = SetSubVideoParam();
+
+	
+	if(0 == MainFlag && 0 == SubFlag && 0 == AudioFlag)
+		alert(str_SetSuccess);
+	else
+		alert("submit submit msg fail");
+}
+
+function MainBitrateCon()
+{
+	if($('#id_MainBitrate')[0].value < 36){
+		$('#id_MainBitrate')[0].value = 36;
+	}
+	if($('#id_MainBitrate')[0].value > 10240){
+		$('#id_MainBitrate')[0].value = 10240;
+	}
+}
+
+function SubBitrateCon()
+{
+	if($('#id_SubBitrate')[0].value < 36){
+		$('#id_SubBitrate')[0].value = 36;
+	}
+	if($('#id_SubBitrate')[0].value > 2048){
+		$('#id_SubBitrate')[0].value = 2048;
+	}
+}
+
+function MainIFrameIntervalCon()
+{
+	if($('#id_MainIFrameInterval')[0].value < 1){
+		$('#id_MainIFrameInterval')[0].value = 1;
+	}
+	if($('#id_MainIFrameInterval')[0].value > 150){
+		$('#id_MainIFrameInterval')[0].value = 150;
+	}
+	
+}
+
+function SubIFrameIntervalCon()
+{
+	if($('#id_SubIFrameInterval')[0].value < 1){
+		$('#id_SubIFrameInterval')[0].value = 1;
+	}
+	if($('#id_SubIFrameInterval')[0].value > 150){
+		$('#id_SubIFrameInterval')[0].value = 150;
+	}
+}
+
+function InitPageParam()
+{
+	GetMainVideoParam();
+	GetSubVideoParam();
+	GetAudioParam();
+}
+
+function Standard()
+{
+	if (confirm(str_ConfirmContinue)==false){return false;}	
+	StardSubResolution();
+	StardMainResolution();
+}
+
+
+$(function(){
+	InitUdfSelect('id_Standard',Standard);
+	//InitUdfSelect('id_StreamType');
+	
+	InitUdfSelect('id_MainCodec');
+	InitUdfSelect('id_SubCodec');
+	
+	InitUdfSelect('id_MainMode',ChangeMainMode);
+	InitUdfSelect('id_SubMode',ChangeSubMode);
+	
+	InitUdfSelect('id_MainVideoQuality');
+	InitUdfSelect('id_SubVideoQuality');
+	
+	InitUdfSelect('id_AudioCodec');
+	
+	
+	//addSelectFps('id_select_SubfpsBox','Sub','60');
+	//InitUdfSelect('id_SubFps');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_SubMit','onmousedown',submit,null);
+	BindEvent('id_MainBitrate','onchange',MainBitrateCon,null);
+	BindEvent('id_SubBitrate','onchange',SubBitrateCon,null);
+	BindEvent('id_MainIFrameInterval','onchange',MainIFrameIntervalCon,null);
+	BindEvent('id_SubIFrameInterval','onchange',SubIFrameIntervalCon,null);
+}
+)
+</script> 
+
+</html>  

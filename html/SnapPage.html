@@ -1,0 +1,1001 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>	
+	<script src="js/common.js"></script>
+
+</head>
+
+<style type="text/css">
+.SnapshotDiv{
+	left:0px;
+	right:0px;
+	height:580px;
+}
+
+
+
+
+.DivInputAtLoacalRecord{
+	width:60px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:90px;
+	float:left;
+}
+
+.txtSnap{
+	width:112px;
+	float:left;
+}
+
+.txtSnapshotPage{
+	width:90px;
+	float:left;
+}
+
+.WeekRadio{
+	width:81px;
+	float:left;
+}
+
+
+.TimeLable{
+	width:50px;
+	float:left;
+}
+
+.StartTimeLable{
+	width:80px;
+	float:left;
+}
+
+.TimeSpaceLable{
+	width:10px;
+	float:left;
+}
+
+.StartSpaceEndLable{
+	width:20px;
+	float:left;
+}
+
+.TimeSelect{
+	width:81px;
+}
+
+.CopyButton{
+	width:70px;
+}
+
+.MarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.WeekMarignLeft{
+	float:left;
+	margin-left:10px;
+}
+
+.DivTime{
+	width:40px;
+	height:23px;
+	float:left;
+}
+
+
+
+.ButtonSelectedLable{
+	color:red;
+}
+
+</style> 
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtSnapshotEnable',str_SnapEnable);
+	
+	SetLang('id_txtSnapshotInterval',str_Snapinterval);
+	
+	SetLang('id_SnapshotPara1',str_SnapParaTime1);
+	SetLang('id_SnapshotPara2',str_SnapParaTime2);
+	SetLang('id_SnapshotPara3',str_SnapParaTime3);
+	SetLang('id_SnapshotPara4',str_SnapParaTime4);
+	
+	
+	SetLang('id_SnapshotCopyTo',str_SelectAll);
+	
+	SetLang('id_txtSnapshotday0',str_SnapSunday);
+	SetLang('id_txtSnapshotday1',str_SnapMonday);
+	SetLang('id_txtSnapshotday2',str_AlarmThrsday);
+	SetLang('id_txtSnapshotday3',str_AlarmWensday);
+	SetLang('id_txtSnapshotday4',str_AlarmThusday);
+	SetLang('id_txtSnapshotday5',str_AlarmFriday);
+	SetLang('id_txtSnapshotday6',str_AlarmSatDay);
+	
+	SetLang('id_SnapshotSubmit',str_SnapSave);
+	SetLang('id_button0',str_Setup);
+	SetLang('id_button1',str_Setup);
+	SetLang('id_button2',str_Setup);
+	SetLang('id_button3',str_Setup);
+	SetLang('id_button4',str_Setup);
+	SetLang('id_button5',str_Setup);
+	SetLang('id_button6',str_Setup);
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+var map;
+var time;
+var AllFlag = 0;
+var selectDay;
+var StartHour0,StartMin0,StartSec0,EndHour0,EndMin0,EndSec0,StartHour1,StartMin1,StartSec1,EndHour1,EndMin1,EndSec1;
+var StartHour2,StartMin2,StartSec2,EndHour2,EndMin2,EndSec2,StartHour3,StartMin3,StartSec3,EndHour3,EndMin3,EndSec3;
+
+function addSelectSnapshotTime(id,num,streamtype)
+{
+	for(var i =0;i < num; i ++){
+		var addstr = '<div class="ClassContentSelectOption TimeSelect" name="id_'+streamtype+'_option" style="margin-top:'+i*24+'px;">'+i+'</div>';
+		$("#"+id).append(addstr);
+	}
+}
+
+function GetNetMap()
+{
+	var resolutionsavailable,begintime,endtime;
+	var resp = $.sendMsg("SnapshotChannel",null,"/ISAPI/Snapshot","POST");
+	if(resp.success == false){
+		alert("recv /Event/Snapshot msg fail");
+		return;
+	}
+	return resp.data;
+}
+
+function InitPageParam(){
+
+	//map = resp.data;
+	//console.log( "1111"+JSON.stringify(map));
+	var myDate = new Date();
+	var today = myDate.getDay();
+	selectDay = today;
+	SetCheckBox('id_SnapshotEnable',TranslationStrAndBool(map.enabled));
+	$("#id_SnapshotInterval")[0].value = map.snapintervaltime;
+	 
+	
+	var startTime,startTimeHour,startTimeMin,startTimeSec;
+	var EndTime,endTimeHour,endTimeMin,endTimeSec;
+	
+	//SetRaioChanged('id_Snapshotday'+today+'radio','SnapshotRadioWeekDay');
+	SetCheckBox('id_Snapshotday'+today+'Enable','1');
+	
+	
+	for(var i = 0; i < 7; i++)
+	{
+		if(today == i)
+		{
+			$("#id_txtSnapshotday"+i+"").addClass("ButtonSelectedLable");
+		}
+		else
+		{
+			$("#id_txtSnapshotday"+i+"").removeClass("ButtonSelectedLable");
+		}
+	}
+	for(i = 0 ; i < 4; i++){	
+		var paraEnable = eval('map.weekday_'+today+'.section_'+i+'.plantimeenabled');		
+		startTime = eval('map.weekday_'+today+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+today+'.section_'+i+'.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_SnapshotPara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			var paraEnable = eval('map.weekday_'+i+'.section_'+j+'.plantimeenabled');		
+			startTime = eval('map.weekday_'+i+'.section_'+j+'.begintime').split(":");
+			EndTime = eval('map.weekday_'+i+'.section_'+j+'.endtime').split(":");
+			
+			startTimeHour = parseInt(startTime[0]);
+			startTimeMin = parseInt(startTime[1]);
+			startTimeSec = parseInt(startTime[2]);
+			
+			endTimeHour = parseInt(EndTime[0]);
+			endTimeMin = parseInt(EndTime[1]);
+			endTimeSec = parseInt(EndTime[2]);
+			
+			iEnable[i][j] = parseInt(paraEnable); 
+			iStartTime[i][j] = [startTimeHour, startTimeMin, startTimeSec];
+			iEndTime[i][j] = [endTimeHour, endTimeMin, endTimeSec];
+			
+			if(paraEnable == "1")
+			{
+				time.SetTime(i,j,startTimeHour,startTimeMin,startTimeSec
+							,endTimeHour,endTimeMin,endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i,j);
+			}
+		}
+	}
+	
+}
+
+function SetPlanTime(iEnable, iStartTime, iEndTime)
+{	
+	var startTimeHour, startTimeMin, startTimeSec;
+	var endTimeHour, endTimeMin, endTimeSec;
+	
+	for(var i = 0; i < 4; i++)
+	{
+		var paraEnable = iEnable[selectDay][i];
+		//console.log("InitPageParam StartHour=" + iStartTime[0][i][0] + ", EndHour=" + iEndTime[0][i][0]);
+		//console.log("InitPageParam StartMi=" + iStartTime[0][i][1] + ", EndMi=" + iEndTime[0][i][1]);
+		
+		startTimeHour = iStartTime[selectDay][i][0];
+		startTimeMin = iStartTime[selectDay][i][1];
+		startTimeSec = iStartTime[selectDay][i][2];			
+				
+		endTimeHour = iEndTime[selectDay][i][0];
+		endTimeMin = iEndTime[selectDay][i][1];
+		endTimeSec = iEndTime[selectDay][i][2];
+		
+		SetCheckBox('id_SnapshotPara' + i + 'Enable', TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+	
+	for(var i = 0; i < 7; i++)
+	{
+		for(var j = 0 ; j < 4; j++)
+		{
+			startTimeHour = iStartTime[i][j][0];
+			startTimeMin = iStartTime[i][j][1];
+			startTimeSec = iStartTime[i][j][2];
+			
+			endTimeHour = iEndTime[i][j][0];
+			endTimeMin = iEndTime[i][j][1];
+			endTimeSec = iEndTime[i][j][2];
+								
+			if (iEnable[i][j] == 1)
+			{
+//				console.log("SetPlanTime i=" + i + ", j=" + j + ", StartTimeHour=" + startTimeHour + 
+//					", StartTimeMin=" + startTimeMin + ", EndTimeHour=" + endTimeHour + 
+//					", EndTimeMin=" + endTimeMin + " iEnable=" + iEnable[i][j]);
+//			
+				time.SetTime(i, j, startTimeHour, startTimeMin, startTimeSec,
+					endTimeHour, endTimeMin, endTimeSec);
+			}
+			else
+			{
+				time.ClearSingle(i, j);
+			}
+		}
+	}
+}
+
+function time1(i, j){
+	var str_ParaEnable;
+	if (iEnable[i][j] == 1)
+	{
+		str_ParaEnable = "1";
+	}
+	else
+	{
+		str_ParaEnable = "0";
+	}
+	
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+
+	var Snapshotmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return Snapshotmap;	
+}
+
+function section(i,j)
+{
+	var Snapshotmap = {"xtype":"section_"+j,"items":time1(i,j)};
+	return Snapshotmap;
+}
+
+
+function week(i)
+{
+	var map0 = {"xtype":"weekday_"+i,"items":[section(i,0),section(i,1),section(i,2),section(i,3)]};	
+	return map0;
+	
+}
+
+function currenttime(i, j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_SnapshotPara'+j+'Enable') == "false")
+	{
+		str_ParaEnable = "0";
+	}
+	else
+	{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = iStartTime[i][j][0] + ':' + iStartTime[i][j][1] + ':' + iStartTime[i][j][2];
+	EndTime = iEndTime[i][j][0] + ':' + iEndTime[i][j][1] + ':' + iEndTime[i][j][2];
+	var currentmap = [{"xtype":"plantimeenabled","text":str_ParaEnable},
+				{"xtype":"begintime","text":StartTime},
+				{"xtype":"endtime","text":EndTime}];
+	return currentmap;	
+}
+
+function currentsection(i, j)
+{
+	var Snapshotmap = {"xtype":"section_"+j,"items":currenttime(i, j)};
+	return Snapshotmap;
+}
+
+function submit()
+{
+	SnapshotCon();
+	var str_SnapshotEnable,str_SnapshotSensitivity;
+	if(GetCheckBoxValue('id_SnapshotEnable') == "false")
+	{
+		str_SnapshotEnable = "0";
+	}
+	else
+	{
+		str_SnapshotEnable = "1";
+	}
+	
+	if (AllFlag == 1) // 表示选择全选，把选中那天的时间替换其它天
+	{
+		for(var i = 0; i < 7; i++)
+		{			
+			iStartTime[i] = iStartTime[selectDay];
+			iEndTime[i] = iEndTime[selectDay];				
+			iEnable[i] = iEnable[selectDay];
+		}
+	}
+	
+	EditSetPlanTime()
+
+	var respflag = 0;
+	var msg =	[
+					{"xtype":"enabled","text":str_SnapshotEnable},
+					{"xtype":"snapintervaltime","text":$("#id_SnapshotInterval")[0].value},
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	
+
+	
+	for(var i = 0; i < 7; i++)
+	{
+		var mapsend = [msg[0],msg[1],msg[i+2]];
+		var resp = $.sendMsg("SnapshotChannel",mapsend,"/ISAPI/Snapshot","PUT");
+		if(resp.success == false)
+		{
+			alert("submit submit msg fail");
+		}
+		else
+		{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+	{
+		SnapshotTime();
+		map = GetNetMap();
+		alert(str_SetSuccess);
+		InitPlanTime();	
+		InitPageParam();
+	}
+}
+
+function copysubmit()
+{
+	var myDate = new Date();
+	var today = myDate.getDay();
+	var respflag = 0;
+	var msg =	[
+					week(0),week(1),week(2),week(3),week(4),week(5),week(6)
+				];
+	var todaymap = {"xtype":"weekday_"+today+"","items":[currentsection(today,0),currentsection(today,1),currentsection(today,2),currentsection(today,3)]};
+	msg[today] = todaymap;
+
+//	var resp = $.sendMsg("SnapshotAlarmParam",msg,"/ISAPI/Event/SnapshotAlarmParam","PUT");
+
+/*	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert("设置成功");
+	}*/
+	
+	for(var i = 0; i < 7; i++){
+		var mapsend = [msg[i]];
+		var resp = $.sendMsg("SnapshotChannel",mapsend,"/ISAPI/Snapshot","PUT");
+		if(resp.success == false){
+			alert("submit submit msg fail");
+		}else{
+			//alert("设置成功");
+			respflag++;
+		}
+	}
+	
+	//onsole.log("respflag = "+respflag);
+	if(respflag == 7)
+		alert("设置成功");
+}
+
+function submitcurrenttime(j){
+	var str_ParaEnable;
+	if(GetCheckBoxValue('id_SnapshotPara'+j+'Enable') == "false"){
+		str_ParaEnable = "0";
+	}else{
+		str_ParaEnable = "1";
+	}
+	var StartTime,EndTime;
+	StartTime = eval('StartHour'+j+'').GetValue()+':'+ eval('StartMin'+j+'').GetValue()+':'+eval('StartSec'+j+'').GetValue();
+	EndTime = eval('EndHour'+j+'').GetValue()+':'+ eval('EndMin'+j+'').GetValue()+':'+eval('EndSec'+j+'').GetValue();
+	var currentmap ={"plantimeenabled":str_ParaEnable,"begintime":StartTime,"endtime":EndTime};
+	return currentmap;	
+}
+
+function submitcurrentsection(i,j)
+{
+	var a = submitcurrenttime(j);
+	//var str = '{"section_'+j+'":'+JSON.stringify(a)+'}';
+	var str = '"section_'+j+'"'+':'+JSON.stringify(a);
+	//var Snapshotmap = JSON.parse(str);
+	return str;
+}
+
+function CopyTo()
+{
+	//console.log('flag ='+AllFlag);
+	if(AllFlag == 0)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Snapshotday'+i+'Enable','true');
+			SnapshotTime();
+		}
+		AllFlag = 1;
+		return;
+	}
+	else if(AllFlag == 1)
+	{
+		for(var i = 0;i < 7; i++)
+		{
+			SetCheckBox('id_Snapshotday'+i+'Enable','false');
+		}
+		AllFlag = 0;
+	}
+	
+/*
+	var myDate = new Date();
+	var today = myDate.getDay();
+	//var todaymap = {submitcurrentsection(today,0),submitcurrentsection(today,1),submitcurrentsection(today,2),submitcurrentsection(today,3)};	
+	var str = '{';
+	for(var i = 0; i < 4;i++){
+		if(0 != i){
+			str += ',';
+		}
+		str += submitcurrentsection(today,i);
+	}
+	str += '}';
+	
+	var todaymap = JSON.parse(str);	
+	//console.log('111111'+JSON.stringify(map['weekday_0'])); 
+	//console.log('111111'+JSON.stringify(map['weekday_1']));
+	for(var i = 0;i < 7; i++){
+		if(GetCheckBoxValue('id_Snapshotday'+i+'Enable') == 'true'){
+			switch(i)
+			{
+				case 0: 
+						map['weekday_0'] = todaymap;
+				break;
+				case 1: 
+						map['weekday_1'] = todaymap;
+				break;
+				case 2: 
+						map['weekday_2'] = todaymap;
+				break;
+				case 3: 
+						map['weekday_3'] = todaymap;
+				break;
+				case 4: 
+						map['weekday_4'] = todaymap;
+				break;
+				case 5: 
+						map['weekday_5'] = todaymap;
+				break;
+				case 6: 
+						map['weekday_6'] = todaymap;
+				break;
+				default: break;
+			}
+				
+		}
+	}	
+	//console.log('444444'+JSON.stringify(map['weekday_1']));
+	
+	copysubmit();
+	*/
+	
+}
+
+function RadioEvent()
+{
+	var radiostr = GetRaioIndex('SnapshotRadioWeekDay');
+	//console.log("111 = "+radiostr);
+	for(var i = 0;i < 7;i++)
+	{
+		if(i == radiostr)
+			SetCheckBox('id_Snapshotday'+radiostr+'Enable','true');
+		else
+			SetCheckBox('id_Snapshotday'+i+'Enable','false');
+	}
+	for(i = 0 ; i < 4; i++){
+		var paraEnable = eval('map.weekday_'+radiostr+'.section_'+i+'.plantimeenabled');		
+		startTime = eval('map.weekday_'+radiostr+'.section_'+i+'.begintime').split(":");
+		EndTime = eval('map.weekday_'+radiostr+'.section_'+i+'.endtime').split(":");
+		
+		startTimeHour = startTime[0];
+		startTimeMin = startTime[1];
+		startTimeSec = startTime[2];
+		
+		endTimeHour = EndTime[0];
+		endTimeMin = EndTime[1];
+		endTimeSec = EndTime[2];
+		
+		SetCheckBox('id_SnapshotPara'+i+'Enable',TranslationStrAndBool(paraEnable));
+		eval('StartHour'+i+'').SetValue(startTimeHour);
+		eval('StartMin'+i+'').SetValue(startTimeMin);
+		eval('StartSec'+i+'').SetValue(startTimeSec);
+		eval('EndHour'+i+'').SetValue(endTimeHour);
+		eval('EndMin'+i+'').SetValue(endTimeMin);
+		eval('EndSec'+i+'').SetValue(endTimeSec);
+	}
+}
+
+function SnapshotCon()
+{
+	if($('#id_SnapshotInterval')[0].value < 5){
+		$('#id_SnapshotInterval')[0].value = 5;
+	}
+	if($('#id_SnapshotInterval')[0].value > 600){
+		$('#id_SnapshotInterval')[0].value = 600;
+	}
+}
+
+function EditSetPlanTime()
+{
+	for (var i = 0; i < 7; i++)
+	{
+		if (GetCheckBoxValue('id_Snapshotday' + i + 'Enable') == "true")
+		{		
+			for (var j = 0; j < 4; j++)
+			{
+				if (GetCheckBoxValue('id_SnapshotPara' + j + 'Enable') == "true")
+					iEnable[i][j] = 1
+				else
+					iEnable[i][j] = 0;
+
+				iStartTime[i][j][0]	= parseInt(eval('StartHour' + j + '').GetValue());
+				iStartTime[i][j][1] = parseInt(eval('StartMin' + j + '').GetValue());
+				iStartTime[i][j][2] = parseInt(eval('StartSec' + j + '').GetValue());
+				iEndTime[i][j][0] = parseInt(eval('EndHour' + j + '').GetValue());
+				iEndTime[i][j][1] = parseInt(eval('EndMin' + j + '').GetValue());
+				iEndTime[i][j][2] = parseInt(eval('EndSec' + j + '').GetValue());			
+			}
+		}
+	}
+	
+	var MinIndex, OldStartTime; 
+	var StartTimeHour, StartTimeHour, EndTimeHour, EndTimeMin;
+	var tempStartTimeHour, tempStartTimeMin, tempEndTimeHour, tempEndTimeMin;
+	var tempEnable = 0;
+	for(var i = 0; i < 7; i++)
+	{	
+		if (GetCheckBoxValue('id_Snapshotday' + i + 'Enable') == "true")
+		{
+			for(var j = 0; j < 4; j++)
+			{	
+				MinIndex = -1;
+				OldStartTime = 30 * 60 + 60;
+				for(var n = j; n < 4; n++)
+				{						
+					StartTimeHour = parseInt(iStartTime[i][n][0]);
+					StartTimeMin = parseInt(iStartTime[i][n][1]);
+					EndTimeHour = parseInt(iEndTime[i][n][0]);
+					EndTimeMin = parseInt(iEndTime[i][n][1]);
+					if (StartTimeHour * 60 + StartTimeMin > 0)
+					{
+						if (OldStartTime > StartTimeHour * 60 + StartTimeMin) // 找出最小的
+						{
+							MinIndex = n;
+							OldStartTime = StartTimeHour * 60 + StartTimeMin;
+							//console.log("1==== i=" + i + ", j=" + j + ", n=" + n + ", StartTimeHour=" + StartTimeHour);
+							tempStartTimeHour = StartTimeHour;
+							tempStartTimeMin = StartTimeMin;
+							tempEndTimeHour = EndTimeHour;
+							tempEndTimeMin = EndTimeMin;
+							tempEnable = iEnable[i][n];
+						}
+					}				
+				}
+									
+				if (MinIndex >= 0)
+				{
+					iStartTime[i][MinIndex] = iStartTime[i][j];													
+					iEndTime[i][MinIndex] = iEndTime[i][j];
+					iEnable[i][MinIndex] = iEnable[i][j];
+					iStartTime[i][j] = [tempStartTimeHour, tempStartTimeMin, 0];					
+					iEndTime[i][j] = [tempEndTimeHour, tempEndTimeMin, 59];
+					iEnable[i][j] = tempEnable;
+					//console.log("2==== i=" + i + ", j=" + j + ", MinIndex=" + MinIndex + ", StartTimeHour=" + StartTimeHour);
+				}
+			}
+		}
+	}	
+}
+
+function SnapshotTime()
+{
+	var STimeHour, STimeMin, STimeSec;
+	var ETimeHour, ETimeMin, ETimeSec;
+	var Temp1, Temp2;
+	var endTimeHour, endTimeMin, endTimeSec
+	for(var i = 0; i < 7; i++)
+	{
+		if(GetCheckBoxValue('id_Snapshotday'+i+'Enable') == "true")
+		{		
+			for(var j = 0 ; j < 4; j++)
+			{
+				STimeHour = parseInt(eval('StartHour' + j + '').GetValue());
+				STimeMin = parseInt(eval('StartMin' + j + '').GetValue());
+				STimeSec = parseInt(eval('StartSec' + j + '').GetValue());
+				
+				ETimeHour = parseInt(eval('EndHour' + j + '').GetValue());
+				ETimeMin = parseInt(eval('EndMin' + j + '').GetValue());
+				ETimeSec = parseInt(eval('EndSec' + j + '').GetValue());
+				
+				Temp1 = STimeHour * 3600 + STimeMin * 60 + STimeSec; 
+				Temp2 = ETimeHour * 3600 + ETimeMin * 60 + ETimeSec;
+				if (Temp1 > Temp2)
+				{
+					eval('EndHour' + j + '').SetValue(eval('StartHour' + j + '').GetValue());
+					eval('EndMin' + j + '').SetValue(eval('StartMin' + j + '').GetValue());
+					eval('EndSec' + j + '').SetValue(eval('StartSec' + j + '').GetValue());;
+				}
+				time.ClearSingle(i,j);
+				if(GetCheckBoxValue('id_SnapshotPara'+j+'Enable') == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue()
+								,eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());
+				}else{
+					time.ClearSingle(i,j);
+				}
+			}
+		}
+	}
+}
+
+
+function funbutton(id)
+{
+	selectDay = id.substring(id.length - 1,id.length);
+	//console.log(selectDay);
+	for(var i = 0; i < 7; i++)
+	{
+		if(selectDay == i)
+		{
+			SetCheckBox('id_Snapshotday'+i+'Enable','true');
+			$("#id_txtSnapshotday"+i+"").addClass("ButtonSelectedLable");
+			for(j = 0 ; j < 4; j++){	
+				var paraEnable = iEnable[selectDay][j];
+//				console.log("funbutton StartHour=" + iStartTime[selectDay][j][0] + ", EndHour=" + iEndTime[selectDay][j][0]);
+//				console.log("funbutton StartMin=" + iStartTime[selectDay][j][1] + ", EndMin=" + iEndTime[selectDay][j][1]);
+				
+				startTimeHour = iStartTime[selectDay][j][0];
+				startTimeMin = iStartTime[selectDay][j][1];
+				startTimeSec = iStartTime[selectDay][j][2];			
+				
+				endTimeHour = iEndTime[selectDay][j][0];
+				endTimeMin = iEndTime[selectDay][j][1];
+				endTimeSec = iEndTime[selectDay][j][2];
+				
+				SetCheckBox('id_SnapshotPara'+j+'Enable',TranslationStrAndBool(paraEnable));
+				eval('StartHour'+j+'').SetValue(startTimeHour);
+				eval('StartMin'+j+'').SetValue(startTimeMin);
+				eval('StartSec'+j+'').SetValue(startTimeSec);
+				eval('EndHour'+j+'').SetValue(endTimeHour);
+				eval('EndMin'+j+'').SetValue(endTimeMin);
+				eval('EndSec'+j+'').SetValue(endTimeSec);
+				
+				if(TranslationStrAndBool(paraEnable) == "true")
+				{
+					time.SetTime(i,j,eval('StartHour'+j+'').GetValue(),eval('StartMin'+j+'').GetValue(),eval('StartSec'+j+'').GetValue()
+									,eval('EndHour'+j+'').GetValue(),eval('EndMin'+j+'').GetValue(),eval('EndSec'+j+'').GetValue());
+				}
+				else
+				{
+					time.ClearSingle(i,j);
+				}
+			}
+		}
+		else
+		{
+			SetCheckBox('id_Snapshotday'+i+'Enable','false');
+			$("#id_txtSnapshotday"+i+"").removeClass("ButtonSelectedLable");
+		}
+	}
+}
+
+$(function(){
+
+	StartHour0 = new SelectInput("id_SnapshotStartHour0",0,23,0,SnapshotTime);
+	StartMin0 = new SelectInput("id_SnapshotStartMin0",0,59,0,SnapshotTime);
+	StartSec0 = new SelectInput("id_SnapshotStartSec0",0,59,0,SnapshotTime);
+
+	EndHour0 = new SelectInput("id_SnapshotEndHour0",23,23,0,SnapshotTime);
+	EndMin0 = new SelectInput("id_SnapshotEndMin0",59,59,0,SnapshotTime);
+	EndSec0 = new SelectInput("id_SnapshotEndSec0",59,59,0,SnapshotTime);
+	
+	StartHour1 = new SelectInput("id_SnapshotStartHour1",0,23,0,SnapshotTime);
+	StartMin1 = new SelectInput("id_SnapshotStartMin1",0,59,0,SnapshotTime);
+	StartSec1 = new SelectInput("id_SnapshotStartSec1",0,59,0,SnapshotTime);
+	
+	EndHour1 = new SelectInput("id_SnapshotEndHour1",23,23,0,SnapshotTime);
+	EndMin1 = new SelectInput("id_SnapshotEndMin1",59,59,0,SnapshotTime);
+	EndSec1 = new SelectInput("id_SnapshotEndSec1",59,59,0,SnapshotTime);
+	
+	StartHour2 = new SelectInput("id_SnapshotStartHour2",0,23,0,SnapshotTime);
+	StartMin2 = new SelectInput("id_SnapshotStartMin2",0,59,0,SnapshotTime);
+	StartSec2 = new SelectInput("id_SnapshotStartSec2",0,59,0,SnapshotTime);
+
+	EndHour2 = new SelectInput("id_SnapshotEndHour2",23,23,0,SnapshotTime);
+	EndMin2 = new SelectInput("id_SnapshotEndMin2",59,59,0,SnapshotTime);
+	EndSec2 = new SelectInput("id_SnapshotEndSec2",59,59,0,SnapshotTime);
+
+	StartHour3 = new SelectInput("id_SnapshotStartHour3",0,23,0,SnapshotTime);
+	StartMin3 = new SelectInput("id_SnapshotStartMin3",0,59,0,SnapshotTime);
+	StartSec3 = new SelectInput("id_SnapshotStartSec3",0,59,0,SnapshotTime);
+
+	EndHour3 = new SelectInput("id_SnapshotEndHour3",23,23,0,SnapshotTime);
+	EndMin3 = new SelectInput("id_SnapshotEndMin3",59,59,0,SnapshotTime);
+	EndSec3 = new SelectInput("id_SnapshotEndSec3",59,59,0,SnapshotTime);
+	time = new TimeTable('id_TimeTable');
+	time.ClearAll();
+	
+	map = GetNetMap();
+	InitLang();
+	InitPlanTime();	
+	InitPageParam();
+	BindEvent('id_SnapshotCopyTo','onmousedown',CopyTo,null);
+	BindEvent('id_SnapshotSubmit','onmousedown',submit,null);
+	BindEvent('id_SnapshotInterval','onchange',SnapshotCon,null);
+	BindEvent('id_button0','onmousedown',funbutton,'id_button0');
+	BindEvent('id_button1','onmousedown',funbutton,'id_button1');
+	BindEvent('id_button2','onmousedown',funbutton,'id_button2');
+	BindEvent('id_button3','onmousedown',funbutton,'id_button3');
+	BindEvent('id_button4','onmousedown',funbutton,'id_button4');
+	BindEvent('id_button5','onmousedown',funbutton,'id_button5');
+	BindEvent('id_button6','onmousedown',funbutton,'id_button6');	
+}
+)
+
+</script> 
+
+<body>   
+<div class="ContentBg SnapshotDiv" style="min-width:950px;">
+	<div style="height:100%;margin:auto;width:950px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_SnapshotEnable"><script>InitCheckBox('id_SnapshotEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtSnapshotEnable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtSnap" id="id_txtSnapshotInterval">Interval:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SnapshotInterval" value="admin"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(5-600)</div>	
+		<div style="clear:both;height:15px;"></div>
+		 
+		<div id="id_TimeTable" style="float:left;" oncontextmenu="return false"></div>
+		<div style="float:left;width:200px;height:227px;">
+			<div style="width:28px;height:16px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button0">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button1">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button2">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button3">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button4">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button5">设置</div>
+			<div style="width:28px;height:9px;"></div>
+			<div class="DivAllBtn InputSetByLable" id="id_button6">设置</div>
+		</div>
+		<div style="clear:both;"></div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SnapshotPara0Enable"><script>InitCheckBox('id_SnapshotPara0Enable','flase',SnapshotTime)</script></div>
+		<div class="DivLable" id="id_SnapshotPara1" style="float:left;margin-left:10px;">Para1:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_SnapshotStartTime1">Start Time</div> -->
+		<div style="float:left;margin-left:20px;">
+		<div id="id_SnapshotStartHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartSec0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_SnapshotEndTime1">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_SnapshotEndHour0"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndMin0"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndSec0"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+			
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SnapshotPara1Enable"><script>InitCheckBox('id_SnapshotPara1Enable','flase',SnapshotTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SnapshotPara2">Para2:</div>
+	
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_SnapshotStartTime2">Start Time</div> -->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_SnapshotStartHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartSec1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_SnapshotEndTime2">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_SnapshotEndHour1"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndMin1"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndSec1"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_SnapshotPara2Enable"><script>InitCheckBox('id_SnapshotPara2Enable','flase',SnapshotTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SnapshotPara3">Para3:</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_SnapshotStartTime3">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_SnapshotStartHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartSec2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_SnapshotEndTime3">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_SnapshotEndHour2"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndMin2"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndSec2"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_SnapshotPara3Enable"><script>InitCheckBox('id_SnapshotPara3Enable','flase',SnapshotTime)</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_SnapshotPara4">Para4:</div>	
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:90px;" id="id_SnapshotStartTime4">Start Time</div>-->
+		
+		<div style="float:left;margin-left:20px;">
+		<div id="id_SnapshotStartHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotStartSec3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable StartSpaceEndLable" style="float:left;margin-left:20px;">-</div>
+		<div style="clear:both"></div>
+		</div>
+		
+	<!--	<div class="DivLable StartTimeLable" style="float:left;margin-left:50px;" id="id_SnapshotEndTime4">End Time</div>-->
+		<div style="float:left;margin-left:10px;">
+		<div id="id_SnapshotEndHour3"  class="DivTime" ></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndMin3"  class="DivTime" style="margin-left:0px;"></div>
+		<div class="DivLable " style="float:left;margin-left:0px;">:</div>
+		<div id="id_SnapshotEndSec3"  class="DivTime" style="margin-left:0px;"></div>	
+		<div style="clear:both"></div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+				
+		<div class="DivAllBtn CopyButton" style="float:left;" id="id_SnapshotCopyTo">All</div>
+		
+
+		<div class="DivCheckBox" style="float:left;margin-left:20px;"id="id_Snapshotday0Enable"><script>InitCheckBox('id_Snapshotday0Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday0">Sunday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Snapshotday1Enable"><script>InitCheckBox('id_Snapshotday1Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday1">Monday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Snapshotday2Enable"><script>InitCheckBox('id_Snapshotday2Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft"  id="id_txtSnapshotday2">Tuesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft" id="id_Snapshotday3Enable"><script>InitCheckBox('id_Snapshotday3Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday3">Wednesday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Snapshotday4Enable"><script>InitCheckBox('id_Snapshotday4Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday4">Thursday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Snapshotday5Enable"><script>InitCheckBox('id_Snapshotday5Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday5">Friday</div>
+		
+		<div class="DivCheckBox WeekMarignLeft"id="id_Snapshotday6Enable"><script>InitCheckBox('id_Snapshotday6Enable','false',null)</script></div>
+		<div class="DivLable TimeSelect MarignLeft" id="id_txtSnapshotday6">Saturday</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_SnapshotSubmit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+</html>  

@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.SnmpDiv{
+	left:0px;
+	right:0px;
+	height:340px;
+}
+
+
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtSnmpPage{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg SnmpDiv" style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_snmpV1"><script>InitCheckBox('id_snmpV1','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtSnmpV1">SNMP v1</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_snmpV2"><script>InitCheckBox('id_snmpV2','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtSnmpV2">SNMP v2</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSnmpPage" id="id_txtSnmpPort" >SNMP Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SnmpPort" value="admin"  maxlength=5></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSnmpPage" id="id_txtSnmpReadCommunity">Read Community:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SnmpRead" value="admin" maxlength=10></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSnmpPage" id="id_txtSnmpWriteCommunity">Write Community:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SnmpWrite" value="admin" maxlength=10></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSnmpPage" id="id_txtSnmpTrapAddress">Trap Address:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_TripAddress" value="admin" maxlength=16></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtSnmpPage" id="id_txtSnmpTrapPort">Trap Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_TripPort" value="admin" maxlength=5></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtSnmpPort',str_SnmpPort);
+	SetLang('id_txtSnmpReadCommunity',str_SnmpRead);
+	SetLang('id_txtSnmpWriteCommunity',str_SnmpWrite);	
+	SetLang('id_txtSnmpTrapAddress',str_TrapAddress);
+	SetLang('id_txtSnmpTrapPort',str_TrapPort);
+	SetLang('id_submit',str_btnSnapSave);
+};
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("SNMPStatus",null,"/ISAPI/Network/SNMP","POST");
+	if(resp.success == false){
+		alert("recv SNMPStatus  msg fail");
+		return;
+	}
+
+	var map = resp.data;
+	<!-- console.log( JSON.stringify(map)); -->
+	SetCheckBox('id_snmpV1',TranslationStrAndBool(map.enabled.ver1));
+	SetCheckBox('id_snmpV2',TranslationStrAndBool(map.enabled.ver2));
+	$("#id_SnmpPort")[0].value = map.snmpport;
+	$("#id_SnmpRead")[0].value = map.readpublic;
+	$("#id_SnmpWrite")[0].value = map.writepublic;
+	$("#id_TripAddress")[0].value = map.trapaddress;
+	$("#id_TripPort")[0].value = map.trapport;
+}
+
+function submit()
+{
+	var str_idsnmpV1, str_idsnmpV2;
+	SnmpPortCon();
+	TripPortCon();
+	if(GetCheckBoxValue('id_snmpV1') == "false"){
+		str_idsnmpV1 = "0";
+	}else{
+		str_idsnmpV1 = "1";
+	}
+	
+	if(GetCheckBoxValue('id_snmpV2') == "false"){
+		str_idsnmpV2 = "0";
+	}else{
+		str_idsnmpV2 = "1";
+	}
+
+	var msg = [
+				{"xtype":"enabled","items":
+					[
+						{"xtype":"ver1","text":str_idsnmpV1},
+						{"xtype":"ver2","text":str_idsnmpV2}
+					]
+				},
+				{"xtype":"readpublic","text":$("#id_SnmpRead")[0].value},
+				{"xtype":"writepublic","text":$("#id_SnmpWrite")[0].value},
+				{"xtype":"trapaddress","text":$("#id_TripAddress")[0].value},
+				{"xtype":"snmpport","text":$("#id_SnmpPort")[0].value},
+				{"xtype":"trapport","text":$("#id_TripPort")[0].value}
+			];
+	
+	var resp = $.sendMsg("SNMPStatus",msg,"/ISAPI/Network/SNMP","PUT");
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+	
+}
+
+function SnmpPortCon()
+{
+	if($('#id_SnmpPort')[0].value < 1){
+		$('#id_SnmpPort')[0].value = 1;
+	}
+	if($('#id_SnmpPort')[0].value > 65535){
+		$('#id_SnmpPort')[0].value = 65535;
+	}
+}
+
+function TripPortCon()
+{
+	if($('#id_TripPort')[0].value < 1){
+		$('#id_TripPort')[0].value = 1;
+	}
+	if($('#id_TripPort')[0].value > 65535){
+		$('#id_TripPort')[0].value = 65535;
+	}
+}
+
+$(function(){
+	InitLang();
+	OnlyNumber('id_TripPort');
+	BindEvent('id_submit','onmousedown',submit,null);
+	BindEvent('id_SnmpPort','onchange',SnmpPortCon,null);
+	BindEvent('id_TripPort','onchange',TripPortCon,null);
+	InitPageParam();
+});
+</script> 
+</html>  

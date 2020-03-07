@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Cmd Test</title>
+	<script src="HTTPAPITest.js"></script>
+</head>
+
+<body>   
+<div  style="width:70px;height:30px;float:left;margin-top:5px;" ></div> 
+<!-- <input style="width:100px;height:30px;float:left;" value="POST" id="id_postmothod"></input>-->
+<select style="width:100px;height:30px;float:left;" id="id_postmothod">
+<option value="POST">获取</option>
+<option value="PUT">设置</option>
+</select>
+<div  style="width:40px;height:30px;float:left;margin-top:5px;">URL:</div><input style="width:600px;height:30px;float:left;" value="/ISAPI/DeviceInfo" id="id_url"></input>
+<div style="clear:both;width:1px; height:1px;"></div>
+<textarea style="width:450px;height:600px;margin-left:70px;"  id="id_content"></textarea>
+<textarea style="width:450px;height:600px;margin-left:20px;"  id="id_recvmsg"></textarea>
+<div style="clear:both;width:1px; height:1px;"></div>
+<input type="button" value="发送" style="width:70px;height:30px;margin-left:70px;" onclick="msgsend()"></input>
+</body> 
+
+<script  type="text/javascript">
+function SetSelected(id,value)
+{	
+	for(var i=0; i<document.getElementById(id).options.length; i++)
+	{
+		if(document.getElementById(id).options[i].value == value)
+		{
+			document.getElementById(id).options[i].selected = true;
+			break;
+		}
+	}
+}
+
+function GetSelectedValue(id)
+{
+	for(var i=0; i<document.getElementById(id).options.length; i++)
+	{
+		if(document.getElementById(id).options[i].selected==true)
+		{
+			return {obj:document.getElementById(id).options[i],value:document.getElementById(id).options[i].value};
+		}
+	}
+}
+
+
+function msgsend()
+{	
+	var xml = document.getElementById('id_content').value;
+	//var mothod = document.getElementById('id_postmothod').value;
+	var url = document.getElementById('id_url').value;
+	var selectMothod = GetSelectedValue('id_postmothod');
+	var mothod = selectMothod.value;
+	xml = '<?xml version="1.0" encoding="utf-8"?>' + xml;
+	//alert(xml);
+	//alert(mothod);
+	//alert(url);
+	//alert(xml);
+	url = url+"?ID=test123";
+	$.ajax({
+				url: url,
+				async: false,
+				type:mothod,
+				timeout:1000,
+				dataType:"text",
+				data: xml
+			}).done(function(data) {
+				//alert("收到回复");
+				//alert(data);
+				var end = data.length;
+				var index = data.indexOf(">");
+				var value = data.substring(index+1,end);
+				document.getElementById('id_recvmsg').value = value;
+			}).fail(function(){
+				alert("发送失败");
+			})		
+}
+</script> 
+  
+</html>  

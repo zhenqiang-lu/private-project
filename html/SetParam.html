@@ -1,0 +1,1212 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css">
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+.ClassTreeBack{
+	left:0px;
+	background:#c8c8c8;
+	bottom:0px;
+	top:59px;
+	position:absolute;
+	width:228px;
+}
+
+.MainMunu{
+	text-align:left;
+	line-height: 43px;
+	font-family:arial;
+	font-size:16px;
+	color:#323232;
+	width:99%;
+	height:43px;
+	cursor: pointer;
+}
+
+.MainMunuIco{
+	text-align:left;
+	line-height: 43px;
+	font-family:arial;
+	font-size:16px;
+	color:#323232;
+	width:20%;
+	height:43px;
+	float:left;
+	cursor: pointer;
+}
+
+.SubMunu{
+	text-align:left;
+	line-height: 43px;
+	font-family:arial;
+	font-size:15px;
+	color:#323232;
+	width:80%;
+	height:43px;
+	cursor: pointer;
+	background:#b4b4b4;
+	padding-left:20%;
+}
+
+.SubMunu:hover{
+	background:#646464;
+}
+
+.SubMunuSelect{
+	background:#dc0000;
+	color:#ffffff;
+}
+
+.subMunuTap{
+	height:36px;
+	padding-left:10px;
+	padding-right:10px;
+	background:#dcdcdc;
+	float:left;
+	font-family:arial;
+	line-height: 43px;
+	font-size:15px;
+	color:#323232;
+}
+
+.subMunuTap:hover{
+	background:#646464;
+}
+
+.subMunuTapSelect{
+	background:#dc0000;
+	color:#ffffff;
+}
+.DivNavigationSelect{
+	background:#dc0000;
+}
+</style>
+
+<body>   
+<div class="ClassTreeBack" id="id_TreeBack" style="left:0px;background:#c8c8c8;bottom:0px;top:0px;position:absolute;width:228px;"></div>
+<div style="left:228px;background:#dcdcdc;bottom:0px;top:0px;position:absolute;width:8px;"></div>
+<div style="left:236px;right:0px;background:#dcdcdc;bottom:0px;top:0px;position:absolute;min-width:880px;">
+	<div id="id_TreeSubTap"></div>
+	<iframe style="background:#dcdcdc;width:99%;height:90%;" frameborder="no"   id="id_iframeMain"></iframe>
+</div>
+</body> 
+<script  type="text/javascript"> 
+var idlistIE={"MainTag":[
+						{
+							"id":"id_localConfig",
+							"txt":str_LocalPara,
+							"iconPath":"url(./img/normal.png) 0px -303px",
+							"selectype":true,
+						 	"SubTag":[				
+										{
+											"id":"id_filePath",
+											"selectype":true, 
+											"path":"FilePath.html",
+											"txt":str_PathPara
+										}/*,
+										{	
+											"id":"id_localRecordSchedule",
+											"selectype":false,
+											"path":"",
+											"txt":str_LocalRecordSchel
+										}*/
+									]
+						},
+						{
+							"id":"id_ConfigMedia",
+							"txt":str_configMedia,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -100px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_VideoSet",
+											"selectype":true,
+											"path":"VideoSetPage.html",
+											"txt":str_VedioSet
+										},
+										{
+											"id":"id_PrivateMask",
+											"selectype":false, 
+											"path":"PrivateMask.html",
+											"txt":str_Privacy
+										},
+										{	
+											"id":"id_ImageSet",
+											"selectype":false, 
+											"path":"ImageSet.html", 
+											"txt": str_UserImage
+										},									
+										{
+											"id":"id_ROI",
+											"selectype":false, 
+											"path":"ROI.html",
+											"txt":str_ROI
+										},
+										{
+											"id":"id_Osd",
+											"selectype":false, 
+											"path":"OSD.html",
+											"txt":str_OSD
+										}								
+									]
+						},
+						{
+							"id":"id_NetWork",
+							"txt":str_NetSet,
+							"iconPath":"url(./img/normal.png) -150px -303px",
+							"selectype":false,
+						 	"SubTag":[	
+										{	
+											"id":"id_Configuration",
+											"selectype":true,
+											"path":"NetWorkPage.html",
+											"txt":str_NetWorkParaSet
+										},{	
+											"id":"id_PPPOE",
+											"selectype":false,
+											"path":"PPPOESetPage.html",
+											"txt":str_pppoeSet
+										},
+										{	
+											"id":"id_DDNSSetPage",
+											"selectype":false,
+											"path":"DDNSSetPage.html",
+											"txt":str_DDNSSet
+										},
+										{	
+											"id":"id_Email",
+											"selectype":false,
+											"path":"EmailSetPage.html",
+											"txt":str_EmailSet
+										},
+										{	
+											"id":"id_Ftp",
+											"selectype":false,
+											"path":"FtpSetPage.html",
+											"txt":str_FTPSet
+										},
+										{	
+											"id":"id_Bonjour",
+											"selectype":false,
+											"path":"Bonjour.html",
+											"txt":"Bonjour"
+										},
+										{	
+											"id":"id_Snmp",
+											"selectype":false,
+											"path":"SnmpPage.html",
+											"txt":str_Snmp
+										},
+										{	
+											"id":"id_upnp",
+											"selectype":false,
+											"path":"Upnp.html",
+											"txt":str_BasicUPNP
+										},
+										{	
+											"id":"id_Https",
+											"selectype":false,
+											"path":"Https.html",
+											"txt":str_https
+										},
+										{	
+											"id":"id_P2p",
+											"selectype":false,
+											"path":"P2pPage.html",
+											"txt":str_P2P
+										},
+										{	
+											"id":"id_IpFilter",
+											"selectype":false,
+											"path":"Ipfilter.html",
+											"txt":str_IPfilter
+										},
+										{	
+											"id":"id_RtspInfo",
+											"selectype":false,
+											"path":"RtspInfo.html",
+											"txt":"RTSP"
+										}
+									]
+						},
+						{
+							"id":"id_AlarmTree",
+							"txt":str_alarm,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -200px -303px",
+						 	"SubTag":[				
+										{	
+											"id":"id_Motion",
+											"selectype":true,
+											"path":"MotionPage.html",
+											"txt":str_MotionSet
+										},	
+										{	
+											"id":"id_VideoBlind",
+											"selectype":false,
+											"path":"VideoBlindPage.html",
+											"txt":str_VideoBlind
+										},
+										{	
+											"id":"id_Alarm",
+											"selectype":false,
+											"path":"AlarmPage.html",
+											"txt":str_AlarmSet
+										}
+									]
+						},
+						{
+							"id":"id_Recoding",
+							"txt":str_Recording,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -300px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_RemoteRecord",
+											"selectype":true,
+											"path":"RemoteRecord.html",
+											"txt":str_RemotionRecord
+										},
+										{	
+											"id":"id_SDCardManage",
+											"selectype":false,
+											"path":"SDCardManage.html",
+											"txt":str_SDManage
+										},
+										{	
+											"id":"id_Snapshot",
+											"selectype":false,
+											"path":"SnapPage.html",
+											"txt":str_SnapSet
+										},
+										{	
+											"id":"id_Destination",
+											"selectype":false,
+											"path":"Destination.html",
+											"txt":str_Destination
+										},
+										{	
+											"id":"id_NasSetPage",
+											"selectype":false,
+											"path":"NasSetPage.html",
+											"txt":str_NASSet
+										}	
+										
+									]
+						},
+						{
+							"id":"id_System",
+							"txt":str_System,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -400px -303px",
+						 	"SubTag":[	
+										{
+											"id":"id_SystemManage",
+											"selectype":true,
+											"path":"DefaultIE.html",
+											"txt":str_DefaultLeft
+										},
+										{
+											//"id":"id_System_1",
+											"id":"id_BasicInfor",
+											"selectype":false, 
+											//"path":"filePath.html", //BaseInforPage.html
+											"path":"BaseInforPage.html", 
+											"txt":str_BasicSet
+										},
+										{
+											"id":"id_SetTimePage",
+											"selectype":false,
+											"path":"SetTime.html",
+											"txt":str_LocalSetTime
+										},
+										{
+											"id":"id_UsrAccount",
+											"selectype":false,
+											"path":"Account.html",
+											"txt":str_UserManage
+										}											
+									 ]
+						}
+					]
+		};
+		
+var idlistMac={"MainTag":[
+						{
+							"id":"id_ConfigMedia",
+							"txt":str_configMedia,
+							"selectype":true,
+							"iconPath":"url(./img/normal.png) -100px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_VideoSet",
+											"selectype":true,
+											"path":"VideoSetPage.html",
+											"txt":str_VedioSet
+										},
+										{
+											"id":"id_PrivateMask",
+											"selectype":false, 
+											"path":"PrivateMask.html",
+											"txt":str_Privacy
+										},
+										{	
+											"id":"id_ImageSet",
+											"selectype":false, 
+											"path":"ImageSet.html", 
+											"txt": str_UserImage
+										},									
+										{
+											"id":"id_ROI",
+											"selectype":false, 
+											"path":"ROI.html",
+											"txt":str_ROI
+										},
+										{
+											"id":"id_Osd",
+											"selectype":false, 
+											"path":"OSD.html",
+											"txt":str_OSD
+										}								
+									]
+						},
+						{
+							"id":"id_NetWork",
+							"txt":str_NetSet,
+							"iconPath":"url(./img/normal.png) -150px -303px",
+							"selectype":false,
+						 	"SubTag":[	
+										{	
+											"id":"id_Configuration",
+											"selectype":true,
+											"path":"NetWorkPage.html",
+											"txt":str_NetWorkParaSet
+										},{	
+											"id":"id_PPPOE",
+											"selectype":false,
+											"path":"PPPOESetPage.html",
+											"txt":str_pppoeSet
+										},
+										{	
+											"id":"id_DDNSSetPage",
+											"selectype":false,
+											"path":"DDNSSetPage.html",
+											"txt":str_DDNSSet
+										},
+										{	
+											"id":"id_Email",
+											"selectype":false,
+											"path":"EmailSetPage.html",
+											"txt":str_EmailSet
+										},
+										{	
+											"id":"id_Ftp",
+											"selectype":false,
+											"path":"FtpSetPage.html",
+											"txt":str_FTPSet
+										},
+										{	
+											"id":"id_Bonjour",
+											"selectype":false,
+											"path":"Bonjour.html",
+											"txt":"Bonjour"
+										},
+										{	
+											"id":"id_Snmp",
+											"selectype":false,
+											"path":"SnmpPage.html",
+											"txt":str_Snmp
+										},
+										{	
+											"id":"id_upnp",
+											"selectype":false,
+											"path":"Upnp.html",
+											"txt":str_BasicUPNP
+										},
+										{	
+											"id":"id_Https",
+											"selectype":false,
+											"path":"Https.html",
+											"txt":str_https
+										},
+										{	
+											"id":"id_P2p",
+											"selectype":false,
+											"path":"P2pPage.html",
+											"txt":str_P2P
+										},
+										{	
+											"id":"id_IpFilter",
+											"selectype":false,
+											"path":"Ipfilter.html",
+											"txt":str_IPfilter
+										},
+										{	
+											"id":"id_RtspInfo",
+											"selectype":false,
+											"path":"RtspInfo.html",
+											"txt":"RTSP"
+										}
+									]
+						},
+						{
+							"id":"id_AlarmTree",
+							"txt":str_alarm,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -200px -303px",
+						 	"SubTag":[				
+										{	
+											"id":"id_Motion",
+											"selectype":true,
+											"path":"MotionPage.html",
+											"txt":str_MotionSet
+										},	
+										{	
+											"id":"id_VideoBlind",
+											"selectype":false,
+											"path":"VideoBlindPage.html",
+											"txt":str_VideoBlind
+										},
+										{	
+											"id":"id_Alarm",
+											"selectype":false,
+											"path":"AlarmPage.html",
+											"txt":str_AlarmSet
+										}
+									]
+						},
+						{
+							"id":"id_Recoding",
+							"txt":str_Recording,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -300px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_RemoteRecord",
+											"selectype":true,
+											"path":"RemoteRecord.html",
+											"txt":str_RemotionRecord
+										},
+										{	
+											"id":"id_SDCardManage",
+											"selectype":false,
+											"path":"SDCardManage.html",
+											"txt":str_SDManage
+										},
+										{	
+											"id":"id_Snapshot",
+											"selectype":false,
+											"path":"SnapPage.html",
+											"txt":str_SnapSet
+										},
+										{	
+											"id":"id_Destination",
+											"selectype":false,
+											"path":"Destination.html",
+											"txt":str_Destination
+										},
+										{	
+											"id":"id_NasSetPage",
+											"selectype":false,
+											"path":"NasSetPage.html",
+											"txt":str_NASSet
+										}	
+										
+									]
+						},
+						{
+							"id":"id_System",
+							"txt":str_System,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -400px -303px",
+						 	"SubTag":[	
+										{
+											"id":"id_SystemManage",
+											"selectype":true,
+											"path":"Default.html",
+											"txt":str_DefaultLeft
+										},
+										{
+											//"id":"id_System_1",
+											"id":"id_BasicInfor",
+											"selectype":false, 
+											//"path":"filePath.html", //BaseInforPage.html
+											"path":"BaseInforPage.html", 
+											"txt":str_BasicSet
+										},
+										{
+											"id":"id_SetTimePage",
+											"selectype":false,
+											"path":"SetTime.html",
+											"txt":str_LocalSetTime
+										},
+										{
+											"id":"id_UsrAccount",
+											"selectype":false,
+											"path":"Account.html",
+											"txt":str_UserManage
+										}											
+									 ]
+						}
+					]
+		};
+
+var idlistprivilegeIE={"MainTag":[
+						{
+							"id":"id_localConfig",
+							"txt":str_LocalPara,
+							"iconPath":"url(./img/normal.png) 0px -303px",
+							"selectype":true,
+						 	"SubTag":[				
+										{
+											"id":"id_filePath",
+											"selectype":true, 
+											"path":"FilePath.html",
+											"txt":str_PathPara
+										}/*,
+										{	
+											"id":"id_localRecordSchedule",
+											"selectype":false,
+											"path":"",
+											"txt":str_LocalRecordSchel
+										}*/
+									]
+						},
+						{
+							"id":"id_ConfigMedia",
+							"txt":str_configMedia,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -100px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_VideoSet",
+											"selectype":true,
+											"path":"VideoSetPage.html",
+											"txt":str_VedioSet
+										},
+										{
+											"id":"id_PrivateMask",
+											"selectype":false, 
+											"path":"PrivateMask.html",
+											"txt":str_Privacy
+										},
+										{	
+											"id":"id_ImageSet",
+											"selectype":false, 
+											"path":"ImageSet.html", 
+											"txt": str_UserImage
+										},									
+										{
+											"id":"id_ROI",
+											"selectype":false, 
+											"path":"ROI.html",
+											"txt":str_ROI
+										},
+										{
+											"id":"id_Osd",
+											"selectype":false, 
+											"path":"OSD.html",
+											"txt":str_OSD
+										}								
+									]
+						},
+						{
+							"id":"id_NetWork",
+							"txt":str_NetSet,
+							"iconPath":"url(./img/normal.png) -150px -303px",
+							"selectype":false,
+						 	"SubTag":[	
+										{	
+											"id":"id_Configuration",
+											"selectype":true,
+											"path":"NetWorkPage.html",
+											"txt":str_NetWorkParaSet
+										},{	
+											"id":"id_PPPOE",
+											"selectype":false,
+											"path":"PPPOESetPage.html",
+											"txt":str_pppoeSet
+										},
+										{	
+											"id":"id_DDNSSetPage",
+											"selectype":false,
+											"path":"DDNSSetPage.html",
+											"txt":str_DDNSSet
+										},
+										{	
+											"id":"id_Email",
+											"selectype":false,
+											"path":"EmailSetPage.html",
+											"txt":str_EmailSet
+										},
+										{	
+											"id":"id_Ftp",
+											"selectype":false,
+											"path":"FtpSetPage.html",
+											"txt":str_FTPSet
+										},
+										{	
+											"id":"id_Bonjour",
+											"selectype":false,
+											"path":"Bonjour.html",
+											"txt":"Bonjour"
+										},
+										{	
+											"id":"id_Snmp",
+											"selectype":false,
+											"path":"SnmpPage.html",
+											"txt":str_Snmp
+										},
+										{	
+											"id":"id_upnp",
+											"selectype":false,
+											"path":"Upnp.html",
+											"txt":str_BasicUPNP
+										},
+										{	
+											"id":"id_Https",
+											"selectype":false,
+											"path":"Https.html",
+											"txt":str_https
+										},
+										{	
+											"id":"id_P2p",
+											"selectype":false,
+											"path":"P2pPage.html",
+											"txt":str_P2P
+										},
+										{	
+											"id":"id_IpFilter",
+											"selectype":false,
+											"path":"Ipfilter.html",
+											"txt":str_IPfilter
+										},
+										{	
+											"id":"id_RtspInfo",
+											"selectype":false,
+											"path":"RtspInfo.html",
+											"txt":"RTSP"
+										}
+									]
+						},
+						{
+							"id":"id_AlarmTree",
+							"txt":str_alarm,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -200px -303px",
+						 	"SubTag":[				
+										{	
+											"id":"id_Motion",
+											"selectype":true,
+											"path":"MotionPage.html",
+											"txt":str_MotionSet
+										},	
+										{	
+											"id":"id_VideoBlind",
+											"selectype":false,
+											"path":"VideoBlindPage.html",
+											"txt":str_VideoBlind
+										},
+										{	
+											"id":"id_Alarm",
+											"selectype":false,
+											"path":"AlarmPage.html",
+											"txt":str_AlarmSet
+										}
+									]
+						},
+						{
+							"id":"id_Recoding",
+							"txt":str_Recording,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -300px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_RemoteRecord",
+											"selectype":true,
+											"path":"RemoteRecord.html",
+											"txt":str_RemotionRecord
+										},
+										{	
+											"id":"id_SDCardManage",
+											"selectype":false,
+											"path":"SDCardManage.html",
+											"txt":str_SDManage
+										},
+										{	
+											"id":"id_Snapshot",
+											"selectype":false,
+											"path":"SnapPage.html",
+											"txt":str_SnapSet
+										},
+										{	
+											"id":"id_Destination",
+											"selectype":false,
+											"path":"Destination.html",
+											"txt":str_Destination
+										},
+										{	
+											"id":"id_NasSetPage",
+											"selectype":false,
+											"path":"NasSetPage.html",
+											"txt":str_NASSet
+										}	
+										
+									]
+						},
+						{
+							"id":"id_System",
+							"txt":str_System,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -400px -303px",
+						 	"SubTag":[	
+										{
+											"id":"id_SystemManage",
+											"selectype":true,
+											"path":"Default.html",
+											"txt":str_DefaultLeft
+										},
+										{
+											//"id":"id_System_1",
+											"id":"id_BasicInfor",
+											"selectype":false, 
+											//"path":"filePath.html", //BaseInforPage.html
+											"path":"BaseInforPage.html", 
+											"txt":str_BasicSet
+										},
+										{
+											"id":"id_SetTimePage",
+											"selectype":false,
+											"path":"SetTime.html",
+											"txt":str_LocalSetTime
+										}										
+									 ]
+						}
+					]
+		};
+		
+var idlistprivilegeMac={"MainTag":[
+						{
+							"id":"id_ConfigMedia",
+							"txt":str_configMedia,
+							"selectype":true,
+							"iconPath":"url(./img/normal.png) -100px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_VideoSet",
+											"selectype":true,
+											"path":"VideoSetPage.html",
+											"txt":str_VedioSet
+										},
+										{
+											"id":"id_PrivateMask",
+											"selectype":false, 
+											"path":"PrivateMask.html",
+											"txt":str_Privacy
+										},
+										{	
+											"id":"id_ImageSet",
+											"selectype":false, 
+											"path":"ImageSet.html", 
+											"txt": str_UserImage
+										},									
+										{
+											"id":"id_ROI",
+											"selectype":false, 
+											"path":"ROI.html",
+											"txt":str_ROI
+										},
+										{
+											"id":"id_Osd",
+											"selectype":false, 
+											"path":"OSD.html",
+											"txt":str_OSD
+										}								
+									]
+						},
+						{
+							"id":"id_NetWork",
+							"txt":str_NetSet,
+							"iconPath":"url(./img/normal.png) -150px -303px",
+							"selectype":false,
+						 	"SubTag":[	
+										{	
+											"id":"id_Configuration",
+											"selectype":true,
+											"path":"NetWorkPage.html",
+											"txt":str_NetWorkParaSet
+										},
+										{	
+											"id":"id_PPPOE",
+											"selectype":false,
+											"path":"PPPOESetPage.html",
+											"txt":str_pppoeSet
+										},
+										{	
+											"id":"id_DDNSSetPage",
+											"selectype":false,
+											"path":"DDNSSetPage.html",
+											"txt":str_DDNSSet
+										},
+										{	
+											"id":"id_Email",
+											"selectype":false,
+											"path":"EmailSetPage.html",
+											"txt":str_EmailSet
+										},
+										{	
+											"id":"id_Ftp",
+											"selectype":false,
+											"path":"FtpSetPage.html",
+											"txt":str_FTPSet
+										},
+										{	
+											"id":"id_Bonjour",
+											"selectype":false,
+											"path":"Bonjour.html",
+											"txt":"Bonjour"
+										},
+										{	
+											"id":"id_Snmp",
+											"selectype":false,
+											"path":"SnmpPage.html",
+											"txt":str_Snmp
+										},
+										{	
+											"id":"id_upnp",
+											"selectype":false,
+											"path":"Upnp.html",
+											"txt":str_BasicUPNP
+										},
+										{	
+											"id":"id_Https",
+											"selectype":false,
+											"path":"Https.html",
+											"txt":str_https
+										},
+										{	
+											"id":"id_P2p",
+											"selectype":false,
+											"path":"P2pPage.html",
+											"txt":str_P2P
+										},
+										{	
+											"id":"id_IpFilter",
+											"selectype":false,
+											"path":"Ipfilter.html",
+											"txt":str_IPfilter
+										},
+										{	
+											"id":"id_RtspInfo",
+											"selectype":false,
+											"path":"RtspInfo.html",
+											"txt":"RTSP"
+										}
+									]
+						},
+						{
+							"id":"id_AlarmTree",
+							"txt":str_alarm,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -200px -303px",
+						 	"SubTag":[				
+										{	
+											"id":"id_Motion",
+											"selectype":true,
+											"path":"MotionPage.html",
+											"txt":str_MotionSet
+										},	
+										{	
+											"id":"id_VideoBlind",
+											"selectype":false,
+											"path":"VideoBlindPage.html",
+											"txt":str_VideoBlind
+										},
+										{	
+											"id":"id_Alarm",
+											"selectype":false,
+											"path":"AlarmPage.html",
+											"txt":str_AlarmSet
+										}
+									]
+						},
+						{
+							"id":"id_Recoding",
+							"txt":str_Recording,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -300px -303px",
+						 	"SubTag":[	
+										{	
+											"id":"id_RemoteRecord",
+											"selectype":true,
+											"path":"RemoteRecord.html",
+											"txt":str_RemotionRecord
+										},
+										{	
+											"id":"id_SDCardManage",
+											"selectype":false,
+											"path":"SDCardManage.html",
+											"txt":str_SDManage
+										},
+										{	
+											"id":"id_Snapshot",
+											"selectype":false,
+											"path":"SnapPage.html",
+											"txt":str_SnapSet
+										},
+										{	
+											"id":"id_Destination",
+											"selectype":false,
+											"path":"Destination.html",
+											"txt":str_Destination
+										},
+										{	
+											"id":"id_NasSetPage",
+											"selectype":false,
+											"path":"NasSetPage.html",
+											"txt":str_NASSet
+										}	
+										
+									]
+						},
+						{
+							"id":"id_System",
+							"txt":str_System,
+							"selectype":false,
+							"iconPath":"url(./img/normal.png) -400px -303px",
+						 	"SubTag":[	
+										{
+											"id":"id_SystemManage",
+											"selectype":true,
+											"path":"Default.html",
+											"txt":str_DefaultLeft
+										},
+										{
+											//"id":"id_System_1",
+											"id":"id_BasicInfor",
+											"selectype":false, 
+											//"path":"filePath.html", //BaseInforPage.html
+											"path":"BaseInforPage.html", 
+											"txt":str_BasicSet
+										},
+										{
+											"id":"id_SetTimePage",
+											"selectype":false,
+											"path":"SetTime.html",
+											"txt":str_LocalSetTime
+										}											
+									 ]
+						}
+					]
+		};
+		
+var idlist;
+function MenuOnclick(Jlist)
+{
+	ResetAllMenu();
+	Jlist.selectype = true;
+	UpdateMenu();
+	UpdateSubMenu();
+	UpdateSubTap();
+}
+
+function SubMenuOnclick(Jlist)
+{
+	ReseSubMenu();
+	Jlist.selectype = true;
+	UpdateSubMenu();
+	UpdateSubTap();
+}
+
+function SubTapOnclick(Jlist)
+{
+	var id = Jlist.id+'_SubTap';
+	ReseSubMenu();
+	Jlist.selectype = true;
+	UpdateSubMenu();
+	UpdateSubTap();
+}
+
+function CreateOneMainMenu(Jlist)  
+{
+	var addstr = '<div class="MainMunu" id="'+Jlist.id+'"><div class="MainMunuIco" style="background:'+Jlist.iconPath+'"></div>'+Jlist.txt+'</div>';
+	addstr += '<div id="'+Jlist.id+'include" style="display:none;"></div>';
+	$("#id_TreeBack").append(addstr); 
+	BindEvent(Jlist.id,"onclick",MenuOnclick,Jlist);
+}
+
+function CreateOneSubMenu(Jlist,mainId)
+{
+	var addstr = '<div class="SubMunu" id="'+Jlist.id+'">'+Jlist.txt+'</div>';
+	$("#"+mainId+"include").append(addstr); 
+	BindEvent(Jlist.id,"onclick",SubMenuOnclick,Jlist);
+}
+
+function CreateOneSubTap(Jlist,mainId)
+{
+	var id = Jlist.id+'_SubTap';
+	var addstr = '<div class="subMunuTap" style="display:none;"  id="'+id+'">'+Jlist.txt+'</div>';
+	$("#id_TreeSubTap").append(addstr); 
+	BindEvent(id,"onclick",SubTapOnclick,Jlist);
+}
+
+//main menu
+
+function ResetAllMenu()
+{
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		idlist.MainTag[i].selectype = false;
+	}
+}
+
+
+function UpdateMenu()
+{
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		if(idlist.MainTag[i].selectype == true){
+			document.getElementById(idlist.MainTag[i].id+"include").style.display = "block";
+		}else{
+			document.getElementById(idlist.MainTag[i].id+"include").style.display = "none";
+		}
+	}
+}
+//sub menu
+function ReseSubMenu()
+{
+	var Jlist;
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		if(idlist.MainTag[i].selectype == true){
+			Jlist = idlist.MainTag[i];
+			break;
+		}
+	}
+	if(Jlist == null){
+		return false;
+	}
+
+	for(var i = 0; i < Jlist.SubTag.length;i++){
+		Jlist.SubTag[i].selectype = false;
+	}
+}
+
+function UpdateSubMenu()
+{
+	var Jlist;
+	var ret;
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		if(idlist.MainTag[i].selectype == true){
+			Jlist = idlist.MainTag[i];
+			break;
+		}
+	}
+	if(Jlist == null){
+		return false;
+	}
+	for(var i = 0; i < Jlist.SubTag.length;i++){
+		if(Jlist.SubTag[i].selectype == true){
+			$("#"+Jlist.SubTag[i].id).addClass("SubMunuSelect");
+			ret = Jlist.SubTag[i];
+		}else{
+			$("#"+Jlist.SubTag[i].id).removeClass("SubMunuSelect");
+		}
+	}
+	document.getElementById("id_iframeMain").src = ret.path;
+	//alert(1);
+	//document.getElementById("id_iframeMain").src = ret.path;
+}
+//sub tap
+function UpdateSubTap()
+{
+	var Jlist;
+	//找到匹配对象
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		if(idlist.MainTag[i].selectype == true){
+			Jlist = idlist.MainTag[i];
+			break;
+		}
+	}
+	if(Jlist == null){
+		return false;
+	}
+	//reset 所有TAP
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		for(var j = 0; j < idlist.MainTag[i].SubTag.length;j++){
+			document.getElementById(idlist.MainTag[i].SubTag[j].id+"_SubTap").style.display = "none";
+		}
+	}
+	//打开对应的TAP并选中
+	for(var i = 0; i < Jlist.SubTag.length;i++){
+		if(Jlist.SubTag[i].selectype == true){
+			$("#"+Jlist.SubTag[i].id+"_SubTap").addClass("subMunuTapSelect");
+		}else{
+			$("#"+Jlist.SubTag[i].id+"_SubTap").removeClass("subMunuTapSelect");
+		}
+		document.getElementById(Jlist.SubTag[i].id+"_SubTap").style.display = "block";
+	}
+}
+			
+function InitMenu()
+{
+	
+	for(var i = 0; i < idlist.MainTag.length;i++){
+		CreateOneMainMenu(idlist.MainTag[i]);
+		for(var j = 0; j < idlist.MainTag[i].SubTag.length;j++){
+			CreateOneSubMenu(idlist.MainTag[i].SubTag[j],idlist.MainTag[i].id);
+			CreateOneSubTap(idlist.MainTag[i].SubTag[j],idlist.MainTag[i].id);
+		}
+	}
+	UpdateMenu();
+	UpdateSubMenu();
+	UpdateSubTap();
+}		
+
+
+$(function() {//页面初始化	
+	var username,password;
+	username = $.GetCookie('usrname');
+	password = $.GetCookie('password');
+	//console.log('username = '+username +'password = '+password);
+	var msg = [{"xtype":"username","text":username},
+					{"xtype":"password","text":password}];
+	var resp = $.sendMsg("UserCheck",msg,"/ISAPI/Security/Login","PUT");
+	var map = resp.data;
+	//console.log('UserCheck map = '+JSON.stringify(map));
+	//console.log('priviligge = '+map.privilege);
+	
+	if(map.privilege == '1')
+		idlist = idlistprivilegeMac;
+	else
+		idlist = idlistMac;
+	if (!!window.ActiveXObject || "ActiveXObject" in window){
+		if(map.privilege == '1')
+			idlist = idlistprivilegeIE;
+		else
+			idlist = idlistIE;
+		for(var i = 0; i < idlist.MainTag.length;i++){
+			for(var j = 0; j < idlist.MainTag[i].SubTag.length;j++){
+				if(idlist.MainTag[i].SubTag[j].path == 'ImageSet.html'){
+					idlist.MainTag[i].SubTag[j].path = 'ImageSetIE.html';
+				} 
+			}
+		}
+	}
+	InitMenu();
+});
+
+</script>  
+</html>  

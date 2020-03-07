@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+
+<style type="text/css">
+.StorageDiv{
+	left:0px;
+	right:0px;
+	height:450px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+.DivInputIpv4Param{
+	width:50px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.StoragetxtNature{
+	width:175px;
+	float:left;
+}
+
+.StoragetxtAction{
+	width:320px;
+	float:left;
+}
+
+</style> 
+
+
+<body>   
+<div class="ContentBg StorageDiv" style="min-width:800px;">
+	<div style="height:100%;margin:auto;width:800px;">	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivCheckBox" style="float:left;"id="id_StorageOffRecord"><script>InitCheckBox('id_StorageOffRecord','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtStorageOffRecord">Offline Record</div>
+		
+		<div class="DivCheckBox" style="float:left; margin-left:50px;"id="id_StorageAutoUpload"><script>InitCheckBox('id_StorageAutoUpload','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtStorageAutoUpload">Auto Upload</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable StoragetxtNature" id="id_txtStorageSize">Size:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_StorageSize" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable StoragetxtNature" id="id_txtStorageUsed">Used:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_StorageUsed" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable StoragetxtNature" id="id_txtStorageAvailable">Available:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_StorageAvailable" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:200px;" id="id_StorageRefresh">Refresh</div>
+		<div class="DivButton" style="float:left;margin-left:20px;" id="id_StorageFormat">Format</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable StoragetxtNature" id="id_txtStorageOverwrite">Overwrite:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_StorageOverwrite">On</div>
+		<div class="DivContentSelectIco" id="id_StorageOverwrite_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_StorageOverwrite_option" style="margin-top:0px;" id="id_txtStorageOverwriteOn">On</div>
+		<div class="ClassContentSelectOption" name="id_StorageOverwrite_option" style="margin-top:24px;" id="id_txtStorageOverwriteOff">Off</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+
+		<div class="DivLable StoragetxtNature" id="id_txtStorageStream">Stream:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_StorageStream">Main</div>
+		<div class="DivContentSelectIco" id="id_StorageStream_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_StorageStream_option" style="margin-top:0px;" id="id_txtStorageStreamMain"></div>
+		<div class="ClassContentSelectOption" name="id_StorageStream_option" style="margin-top:24px;" id="id_txtStorageStreamSub"></div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable StoragetxtNature" id="id_txtRecordMode">RecordMode:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_RecordMode">Fixed Size</div>
+		<div class="DivContentSelectIco" id="id_RecordMode_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_RecordMode_option" style="margin-top:0px;" id="id_txtRecordModeSize">Fixed Size</div>
+		<div class="ClassContentSelectOption" name="id_RecordMode_option" style="margin-top:24px;" id="id_txtRecordModeTime">Fixed Time</div>
+		</div>
+		
+		<div id="RecordTimeDis">
+        <div style="clear:both;height:15px;"></div>
+        <div class="DivLable StoragetxtNature" id="id_txtMotionDetectionRecordTime" >Record Time:</div>
+		<div style="float:left"> 
+		<input class="DivInput DivInputAtLoacalRecord" id="id_StorageRecordTime" ></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(Sec)(100-600)</div>			
+		</div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable StoragetxtNature" id="id_txtRecordType">RecordType:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_RecordType">ivd</div>
+		<div class="DivContentSelectIco" id="id_RecordType_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_RecordType_option" style="margin-top:0px;" id="id_txtRecordTypeivd">ivd</div>
+		<div class="ClassContentSelectOption" name="id_RecordType_option" style="margin-top:24px;" id="id_txtRecordTypemp4">mp4</div>
+		</div>
+		<!-- <div class="ClassContentSelectOption DivInputMotionRecordIco" name="id_MotionDetectionRecordTime_option" style="margin-top:0px;">100</div>
+		<div class="ClassContentSelectOption DivInputMotionRecordIco" name="id_MotionDetectionRecordTime_option" style="margin-top:24px;">300</div>
+		<div class="ClassContentSelectOption DivInputMotionRecordIco" name="id_MotionDetectionRecordTime_option" style="margin-top:48px;">600</div>
+		</div> -->
+		<!-- <div class="DivLable StoragetxtAction" id="id_txtStorageAction" style="float:left;margin-left:10px;">Enable or Disable auto overwrite</div> -->
+		<div style="clear:both;height:15px;"></div>
+			
+		<div class="DivButton" style="float:left;margin-left:250px;" id="id_StorageSubmit">Save</div>
+
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>   
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtStorageOffRecord',str_SDBreakRedord);
+	SetLang('id_txtStorageAutoUpload',str_SDUp); 
+	SetLang('id_txtStorageSize',str_SDCount);
+	SetLang('id_txtStorageUsed',str_SDValiable);
+	SetLang('id_txtStorageAvailable',str_SDNotValiable);
+	SetLang('id_StorageRefresh',str_SDSelect);
+	SetLang('id_StorageFormat',str_SDFormat);
+	SetLang('id_txtStorageOverwrite',str_SDFull);
+	// SetLang('id_txtStorageAction',str_SDimformation);
+	SetLang('id_StorageOverwrite',str_SDCricle);
+	SetLang('id_txtStorageOverwriteOn',str_SDCricle);
+	SetLang('id_txtStorageOverwriteOff',str_SDStop);
+	//SetLang('id_txtStorageStream',str_SDStream);
+	SetLang('id_StorageStream',str_MainStream);
+	SetLang('id_txtStorageStreamMain',str_MainStream);
+	SetLang('id_txtStorageStreamSub',str_SubStream);
+	SetLang('id_txtMotionDetectionRecordTime',str_MotionAlarmRecord);
+	SetLang('id_StorageSubmit',str_btnSnapSave);
+	SetLang('id_txtRecordModeSize',str_Size);
+	SetLang('id_txtRecordModeTime',str_Time);
+	SetLang('id_txtRecordMode',str_btnRecordByType);
+	SetLang('id_txtRecordType',str_btnRecordType);
+
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	
+	var resp = $.sendMsg("QuerySDCardStat",null,"/ISAPI/Sdcard/QuerySDCardStat","POST");
+	if(resp.success == false){
+		alert("recv QuerySDCardStat msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	$("#id_StorageSize")[0].value = map.totoalsizekbyte + "(M)";
+	$("#id_StorageUsed")[0].value = map.usedkbyte + "(M)";
+	$("#id_StorageAvailable")[0].value = map.availablekbyte + "(M)";
+	
+	var totalSpace = map.totoalsizekbyte;
+	if (totalSpace >= 0 && totalSpace <= 1023){
+		$("#id_StorageSize")[0].value = totalSpace + "(M)";
+	}
+	else{
+		var GtotalSpace = (totalSpace / 1024).toFixed(2) +"(G)";
+		$("#id_StorageSize")[0].value = GtotalSpace;
+	}
+	
+	
+	var usedSpace = map.usedkbyte;
+	if (usedSpace >= 0 && usedSpace <= 1023){
+		$("#id_StorageUsed")[0].value = usedSpace + "(M)";
+	}
+	else{
+		var GusedSpace = (usedSpace / 1024).toFixed(2) +"(G)";
+		$("#id_StorageUsed")[0].value = GusedSpace;
+	}
+	
+	
+	var availableSpace = map.availablekbyte;	
+	if (availableSpace >= 0 && availableSpace <= 1023){
+		$("#id_StorageAvailable")[0].value = availableSpace + "(M)";
+	}
+	else{
+		var GavailableSpace = (availableSpace / 1024).toFixed(2) + "(G)";
+		$("#id_StorageAvailable")[0].value = GavailableSpace;
+	}
+	//console.log("totalSpace1="+$("#id_StorageSize")[0].value +"totalSpace2"+totalSpace);
+	//console.log("totalSpace22="+$("#id_StorageUsed")[0].value+"totalSpace3"+usedSpace);
+	//console.log("totalSpace4="+$("#id_StorageAvailable")[0].value+"totalSpace5"+availableSpace);
+	var resp = $.sendMsg("SDStorage",null,"/ISAPI/Sdcard/SDStorage","POST");
+	if(resp.success == false){
+		alert("recv SDStorage msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log(JSON.stringify(map));
+	SetSelectionOptID('id_StorageOverwrite',map.opertype);
+	SetSelectionOptID('id_StorageStream',map.recordselect);
+	SetSelectionOptID('id_RecordType',map.recordtype);
+	SetSelectionOptID('id_RecordMode',map.recordmode);
+	
+	if (GetSelectionOption('id_RecordMode')== 0) {
+		document.getElementById("RecordTimeDis").style.display="none";
+	}
+	else{
+		document.getElementById("RecordTimeDis").style.display="block";
+	}
+	
+	//console.log('111= '+map.recordtime);
+	$("#id_StorageRecordTime")[0].value = map.recordtime;
+	//console.log('111= '+map.recordtime);
+	//SetSelectionOptID('id_StorageStream',map.RecordSelect)
+}
+
+function submit()
+{
+
+	/*var msg = [
+				{"xtype":"opertype","text":"1"}
+			];
+	var resp = $.sendMsg("SDOperation",msg,"/ISAPI/Sdcard/SDOperation","PUT");
+    console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert("设置成功");
+	}*/	
+
+    //SD卡空间	
+	var strSDMode;
+	if(GetSelectionVal('id_StorageOverwrite') == str_SDCricle){
+		strSDMode = "0";
+	}else{
+		strSDMode = "1";
+	}
+
+    //码流
+	var strSDStream;
+	if (GetSelectionVal('id_StorageStream')==str_MainStream) {
+		strSDStream="0";
+	}
+	else{
+		strSDStream="1";
+	}   
+	var strRecordMode;
+	if (GetSelectionVal('id_RecordMode')==str_Size) {
+		strRecordMode="0";
+	}
+	else{
+		strRecordMode="1";
+	}  
+	var strRecordType;
+	if (GetSelectionVal('id_RecordType')=='ivd') {
+		strRecordType="0";
+	}
+	else{
+		strRecordType="1";
+	}  
+    //报警记录时间
+    var strRecondTime;
+    strRecondTime=document.getElementById('id_StorageRecordTime').value;
+    //alert(strRecondTime);
+
+	var msgback = [
+					{"xtype":"opertype","text":strSDMode},
+					{"xtype":"RecordSelect","text":strSDStream},
+					{"xtype":"RecordMode","text":strRecordMode},
+					{"xtype":"RecordTime","text":strRecondTime},
+					{"xtype":"RecordType","text":strRecordType}
+				];
+
+	var resp = $.sendMsg("SDStorage",msgback,"/ISAPI/Sdcard/SDStorage","PUT");
+    //console.log(JSON.stringify(msgback));
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}	
+}
+
+function StorageRefresh(){
+	InitPageParam();
+}
+
+function StorageFormat(){
+	if (confirm(str_ConfirmContinue)==true){ 
+		var msgback = [
+					{"xtype":"opertype","text":'1'},
+					{"xtype":"RecordSelect","text":'1'},
+					{"xtype":"RecordTime","text":'100'}
+				];
+		var resp = $.sendMsg("SDOperation",msgback,"/ISAPI/Sdcard/SDOperation","PUT");
+		//console.log(JSON.stringify(msgback));
+		if(resp.success == false){
+			alert("submit msg fail");
+		}else{
+			alert(str_fromatSuc);
+		}			
+	}else{ 
+		return false; 
+	} 
+}
+
+function StorageRecordTime()
+{
+	if($('#id_StorageRecordTime')[0].value < 100){
+		$('#id_StorageRecordTime')[0].value = 100;
+	}
+	if($('#id_StorageRecordTime')[0].value > 600){
+		$('#id_StorageRecordTime')[0].value = 600;
+	}
+}
+
+function RecordMode()
+{
+	if (GetSelectionOption('id_RecordMode')== 0) {
+		document.getElementById("RecordTimeDis").style.display="none";
+	}
+	else{
+		document.getElementById("RecordTimeDis").style.display="block";
+	}  
+}
+
+$(function(){
+	InitUdfSelect('id_StorageOverwrite');
+	InitUdfSelect('id_StorageStream');
+	InitUdfSelect('id_RecordType');
+	InitUdfSelect('id_RecordMode',RecordMode);
+	InitLang();
+	InitPageParam();
+	BindEvent('id_StorageSubmit','onmousedown',submit,null);
+	BindEvent('id_StorageRefresh','onmousedown',StorageRefresh,null);
+	BindEvent('id_StorageFormat','onmousedown',StorageFormat,null);
+	BindEvent('id_StorageRecordTime','onchange',StorageRecordTime,null);
+})
+
+</script> 
+
+</html>  

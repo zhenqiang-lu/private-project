@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.DDnsDiv{
+	left:0px;
+	right:0px;
+	height:300px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtDDNS{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg DDnsDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;" id="id_DDNSEnable"><script>InitCheckBox('id_DDNSEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtDDNSEnable">Enable</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtDDNS" id="id_txtDDNSProvider">Provider:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_Provider" >DynDDNS</div>
+		<div class="DivContentSelectIco" id="id_Provider_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_Provider_option" style="margin-top:0px;">3322.org</div>
+		<div class="ClassContentSelectOption" name="id_Provider_option" style="margin-top:24px;">DynDDNS</div>
+		<div class="ClassContentSelectOption" name="id_Provider_option" style="margin-top:48px;">Noip</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+
+		<div class="DivLable txtDDNS" id="id_txtDDNSServer">Server:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DDNSServer" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtDDNS" id="id_txtDDNSHost">Host:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DDNSHost" value="admin"></input>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtDDNS" id="id_txtDDNSUsername">Username:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DDNSUsername" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtDDNS" id="id_txtDDNSPassword">Password:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_DDNSPassword" value="admin" type="password"></input>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtDDNSEnable',str_DDNSEnable);
+	SetLang('id_txtDDNSProvider',str_DDNSPro);
+	SetLang('id_txtDDNSServer',str_DDNSServer); 
+	SetLang('id_txtDDNSHost',str_DDNSRealm);
+	SetLang('id_txtDDNSUsername',str_DDNSNum);
+	SetLang('id_txtDDNSPassword',str_DDNSPwd);
+	SetLang('id_submit',str_DDNSbtnSeave);
+}
+</script>
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("DDNSStatus",null,"/ISAPI/Network/DDNS","POST");
+	if(resp.success == false){
+		alert("recv DDNSStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	<!-- console.log( JSON.stringify(map)); -->
+	SetCheckBox('id_DDNSEnable',TranslationStrAndBool(map.enabled));
+	SetSelectionVal('id_Provider',map.ddnstype);
+	$("#id_DDNSServer")[0].value = map.ddnsservername;
+	$("#id_DDNSHost")[0].value = map.ddnsuser;
+	$("#id_DDNSUsername")[0].value = map.ddnsname;
+	$("#id_DDNSPassword")[0].value = map.ddnspassword;
+}
+
+function submit()
+{	
+	var str_idDDNSEnable;
+	if(GetCheckBoxValue('id_DDNSEnable') == "false"){
+		str_idDDNSEnable = "0";
+	}else{
+		str_idDDNSEnable = "1";
+		if (confirm(str_ConfirmContinue)==false){return false;}	
+	}
+	
+	
+	
+	var msg = [
+				{"xtype":"enabled","text":str_idDDNSEnable},
+				{"xtype":"ddnstype","text":GetSelectionVal('id_Provider')},
+				{"xtype":"ddnsservername","text":$("#id_DDNSServer")[0].value},
+				{"xtype":"ddnsuser","text":$("#id_DDNSHost")[0].value},
+				{"xtype":"ddnsname","text":$("#id_DDNSUsername")[0].value},
+				{"xtype":"ddnspassword","text":$("#id_DDNSPassword")[0].value}
+			 ];
+			 
+	var resp = $.sendMsg("DDNSStatus",msg,"/ISAPI/Network/DDNS","PUT");
+    //console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}	
+}
+
+$(function(){
+	InitUdfSelect('id_Provider');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+})
+</script>   
+</html>  

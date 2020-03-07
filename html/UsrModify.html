@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/Login.js"></script>
+	
+</head>
+<script  type="text/javascript"> 
+document.write(GetLanguagePathStr());
+</script> 
+<style type="text/css">
+
+.DivLable{
+	text-align:left;
+	line-height: 23px;
+	font-family:arial;
+	font-style:regular;
+	font-size:14px;
+	color:#323232;
+	height:23px;
+	cursor: pointer;
+	float:left;
+	width:130px;
+	margin-left:25px;
+}
+.DivInputAtLoacal{
+	width:180px;
+	float:left;
+}
+</style>
+
+<body>   
+<div class="DivLable" id="id_txtusrname">Username:</div>
+<input class="DivInput DivInputAtLoacal" value="admin" id="id_usrname">
+<div style="clear:both; width:100px;height:5px;"></div>
+<div >
+	<div class="DivLable" id="id_Fun" >权限:</div>
+	<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_Manage" style="width:156px;">管理员</div>
+	<div class="DivContentSelectIco" id="id_Manage_selectico"></div>
+	<div style="clear:both"></div>
+	<div class="ClassContentSelectOption" name="id_Manage_option"  id="id_txtRoot" style="margin-top:0px;width:180px;">超级用户</div>
+	<div class="ClassContentSelectOption" name="id_Manage_option"  id="id_txtadmin" style="margin-top:24px;width:180px;">管理员</div>
+	<div class="ClassContentSelectOption" name="id_Manage_option"  id="id_txtOpt" style="margin-top:48px;width:180px;">操作者</div>
+	</div>
+</div>
+<div style="clear:both; width:100px;height:5px;"></div>
+<div >
+	<div class="DivLable" id="id_txtpassword">Password:</div>
+	<input class="DivInput DivInputAtLoacal" type="password" id="id_password" value="admin" maxlength="16">
+</div>
+<div style="clear:both; width:100px;height:5px;"></div>
+<div >
+	<div class="DivLable" id="id_txtConfirmPassword">Confirm Password:</div>
+	<input class="DivInput DivInputAtLoacal" type="password" value="admin" id="id_ConfirmPassword" maxlength="16">
+</div>
+<div style="clear:both; width:100px;height:5px;"></div>
+<div >
+	<div class="DivButton" style="margin-left:100px;float:left;margin-top:7px;" id="id_Save" >保存</div>
+	<div class="DivButton" style="margin-left:30px;float:left;margin-top:7px;" id="id_exit" >退出</div>
+</div>
+</body> 
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+//	SetLang('id_txtNum',str_NetLink);
+	SetLang('id_txtusrname',str_User);
+	SetLang('id_Fun',str_UserLevel);
+	
+	SetLang('id_txtRoot',str_UserMana);
+	SetLang('id_Manage',str_Userweihu);
+	SetLang('id_txtadmin',str_Userweihu);
+	SetLang('id_txtOpt',str_Useryiban);
+	
+	SetLang('id_txtpassword',strUserPwd);
+	SetLang('id_txtConfirmPassword',str_Comfrim);
+	SetLang('id_Save',str_EventBtn);
+	SetLang('id_exit',str_uiexit);
+};
+</script> 
+ <script  type="text/javascript"> 
+
+$(function (){
+	InitLang();
+	InitUdfSelect('id_Manage');
+	BindEvent("id_Save","onmousedown",Save,null);
+	BindEvent("id_exit","onmousedown",Close,null);
+	$("#id_usrname")[0].value = parent.modifyUsrname;
+	$("#id_password")[0].value = '';
+	$("#id_ConfirmPassword")[0].value = '';
+	// parent.group
+	SetSelectionVal('id_Manage',parent.group);
+}
+);
+
+function Close()
+{
+	//parent.location.reload();
+	//window.close();
+	//location.close();
+	parent.PageClose();
+}
+
+function Save()
+{
+	if($("#id_password")[0].value != $("#id_ConfirmPassword")[0].value){
+		alert(str_PassWordNotMach);
+		$("#id_ConfirmPassword")[0].value = "";
+		$("#id_password")[0].value = "";
+		return;
+	}
+	 var msg=[
+			{xtype:"ReplacedUserName",text:""+parent.modifyUsrname},
+			{xtype:"UserName",text:""+$("#id_usrname")[0].value},
+			{xtype:"PassWord",text:""+$("#id_password")[0].value},
+			{xtype:"Privilege",text:""+GetSelectOptNum('id_Manage')}
+	];	
+	
+	if (parent.modifyUsrname != "")
+	{
+		var resp = $.sendMsg("UserManagment",msg,"/ISAPI/UserManagement/UsrConfig","PUT");
+	}
+	else
+	{
+		var resp = $.sendMsg("AddUsr",msg,"/ISAPI/UserManagement/AddUsr","PUT");
+	}
+	
+	//console.log(JSON.stringify(msg));
+	if(resp.success == false){
+		alert("modify  fail");
+	}
+//	parent.location.reload();
+//	parent.location.reload();
+	//window.close();
+	parent.UpdateUsrTab();
+	parent.PageClose();
+	return ;
+}
+
+
+
+</script>
+</html>  

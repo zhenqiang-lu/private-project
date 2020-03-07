@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.HttpsDiv{
+	left:0px;
+	right:0px;
+	height:240px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtHttps{
+	width:160px;
+	float:left;
+}
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg HttpsDiv"  style="min-width:700px;">
+	<div style="height:100%;margin:auto;width:700px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_HttpsEnable"><script>InitCheckBox('id_HttpsEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtHttpsEnable">Enable</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtHttps" id="id_txtHttpsPort">Https Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_HttpsPort" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtHttps" style="float:left;" id="id_StrInstruction">Instruction:</div>
+		<div class="DivLable" style="float:left;width:500px;">rtsp://IP:PORT/H264?channel=1&subtype=A&unicast=true&proto=Onvif/video</div>
+		<div style="clear:both;height:25px;"></div>
+		<div class="DivLable" style="float:left;width:500px;margin-left:160px;">A:0(Main Steam) 1(Sub Stream)</div>
+		<div class="DivLable txtHttps" style="float:left;width:800px;" id="id_SubStream"></div>
+	</div>
+</div>
+</body>   
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtHttpsEnable',str_BasicEnable);
+	SetLang('id_txtHttpsPort',str_nRtspPort);
+	SetLang('id_submit',str_Save);
+	SetLang('id_StrInstruction',str_Instruction);
+	
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+function GetRtspUrl(StreamTye)   
+{  
+	var ip = GetIp();
+	if(ip == null){
+		return ;
+	}
+	var resp = $.sendMsg("ExtServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		//alert("recv ThirdServer msg fail");
+		return;  
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+
+	var mrl;
+	
+	var port = Number(map.option_3.port);
+	mrl = 'rtsp://'+ip+':' +port+'/H264?channel=1&subtype='+StreamTye+'&unicast=true&proto=Onvif/video';
+	//console.log(mrl);
+	return mrl;
+}
+
+function InitPageParam()
+{
+	//document.getElementById("id_MainStream").innerHTML = GetRtspUrl(0);
+	//document.getElementById("id_MainStream").innerHTML = GetRtspUrl(1);
+	var resp = $.sendMsg("ExtServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		alert("recv ThirdServer msg fail");
+		return;
+	}
+	var map = resp.data;
+	$("#id_HttpsPort")[0].value = map.option_3.port;
+}
+
+function submit()
+{	
+	
+	if($("#id_HttpsPort")[0].value > 65536 || $("#id_HttpsPort")[0].value < 0){
+		$("#id_HttpsPort")[0].value = 554;
+	}
+	
+	var str_idHttpsEnable;
+	if(GetCheckBoxValue('id_HttpsEnable') == "false"){
+		str_idHttpsEnable = "0";
+	}else{
+		str_idHttpsEnable = "1";
+	}
+	
+	var Portmsg = [
+					{"xtype":"option_1","items":
+						[
+							{"xtype":"servertype","text":"3"},
+							{"xtype":"enabled","text":str_idHttpsEnable},
+							{"xtype":"port","text":$("#id_HttpsPort")[0].value}
+						]
+					}
+				];
+	
+	var resp = $.sendMsg("ExtServer",Portmsg,"/ISAPI/Network/ExtServerParam","PUT");
+	if(resp.success == false){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+$(function(){
+	InitLang();
+	BindEvent('id_submit','onmousedown',submit,null);
+	InitPageParam();
+})
+</script> 
+</html>  

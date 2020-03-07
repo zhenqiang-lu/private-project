@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/network.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.ConfigurationDiv{
+	left:0px;
+	right:0px;
+	height:770px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+.DivInputIpv4Param{
+	width:50px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtNetWork{
+	width:160px;
+	float:left;
+}
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg ConfigurationDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">	
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtNetWork" id="id_txtNetWorkMaxConnection">Max connection:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_MaxConnection" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkDHCP">DHCP:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_Dhcp">Disable</div>
+		<div class="DivContentSelectIco" id="id_Dhcp_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_Dhcp_option" style="margin-top:0px;" id="id_txtDisable">Disable</div>
+		<div class="ClassContentSelectOption" name="id_Dhcp_option" style="margin-top:24px;" id="id_txtEnable">Enable</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4Address">IPV4 Address:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4Address" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4Subnet">IPV4 Subnet:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4Subnet" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4Gateway">IPV4 Gateway:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4Gateway" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4DNS1">IPV4 DNS1:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4DNS1" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4DNS2">IPV4 DNS2:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4DNS2" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV4MacAddr">IPV4 MacAddr:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv4MacAddr" value="admin" readonly="readonly"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV6Address">IPV6 Address:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv6Address" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+			
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV6Gateway">IPV6 Gateway:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv6Gateway" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV6DNS1">IPV6 DNS1:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv6DNS1" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkIPV6DNS2">IPV6 DNS2:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_Ipv6DNS2" value="admin"></input>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkDatePort">Data Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_NetWorkDataPort" value="60001"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkMediaPort">Media Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_NetWorkMediaPort" value="60002"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkHttpPort">Http Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" maxlength="5" id="id_NetWorkHttpPort" value="80"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkOnvifPort">Onvif Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" maxlength="5" id="id_NetWorkOnvifPort" value="85"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkRtspPort">Rtsp Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" maxlength="5" id="id_NetWorkRtspPort" value="554"></input>
+		<div class="DivLable" style="float:left;margin-left:10px;">(1-65535)</div>	
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivLable txtNetWork" id="id_txtNetWorkRtspAut">RTSP Authentication</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_RtspAut">Disable</div>
+		<div class="DivContentSelectIco" id="id_RtspAut_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_RtspAut_option" style="margin-top:0px;" id="id_txtRtspAutDisable">Disable</div>
+		<div class="ClassContentSelectOption" name="id_RtspAut_option" style="margin-top:24px;" id="id_txtRtspAutEnable">Enable</div>
+		</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div class="DivButton" style="float:left;margin-left:300px;" id="id_submit">Save</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body> 
+
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtNetWorkMaxConnection',str_NetLink);
+	SetLang('id_txtNetWorkDHCP',str_NetDHCP);
+	SetLang('id_txtNetWorkRtspAut',str_RtspAut);
+	SetLang('id_txtDisable',str_NetDHCPDisable);
+	SetLang('id_Dhcp',str_NetDHCPDisable);
+	SetLang('id_txtEnable',str_NetDHCPEnable);
+	SetLang('id_txtRtspAutDisable',str_NetDHCPDisable);
+	SetLang('id_RtspAut',str_NetDHCPDisable);	
+	SetLang('id_txtRtspAutEnable',str_NetDHCPEnable);
+	SetLang('id_txtNetWorkIPV4Address',str_NetIpAddress);	
+	SetLang('id_txtNetWorkIPV4Subnet',str_NetSubnet);
+	SetLang('id_txtNetWorkIPV4Gateway',str_NetGetway);
+	SetLang('id_txtNetWorkIPV4DNS1',str_NetMainDNS);
+	SetLang('id_txtNetWorkIPV4DNS2',str_NetSubDns);
+	SetLang('id_txtNetWorkIPV4MacAddr',str_NetMacAddr);
+	SetLang('id_txtNetWorkIPV6Address',str_IPv6_Address);
+	SetLang('id_txtNetWorkIPV6Gateway',str_IPv6_Gateway);
+	SetLang('id_txtNetWorkIPV6DNS1',str_IPv6_NetMainDNS);
+	SetLang('id_txtNetWorkIPV6DNS2',str_IPv6_NetSubDNS);
+	SetLang('id_txtNetWorkDatePort',str_NetImforport);
+	SetLang('id_txtNetWorkMediaPort',str_NetMediaPort);
+	SetLang('id_txtNetWorkHttpPort',str_NethttpPort);
+	SetLang('id_txtNetWorkOnvifPort',str_nOnvifPort);
+	SetLang('id_txtNetWorkRtspPort',str_nRtspPort);
+	SetLang('id_submit',str_Save);
+};
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("NetworkConfig",null,"/ISAPI/Network/NetworkConfig","POST");
+	if(resp.success == false){
+		alert("recv NetworkConfig  msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log( JSON.stringify(map));
+	
+	$("#id_MaxConnection")[0].value = map.netlink.maxlink;
+	SetSelectionOptID('id_Dhcp',map.netlink.dhcp);
+	SetSelectionOptID('id_RtspAut',map.netlink.rtspauthentication);
+	$("#id_Ipv4Address")[0].value = map.netlink.ipv4.ipaddr;
+	$("#id_Ipv4Subnet")[0].value = map.netlink.ipv4.subnetmask;
+	$("#id_Ipv4Gateway")[0].value = map.netlink.ipv4.gateway;
+	$("#id_Ipv4DNS1")[0].value = map.netlink.ipv4.dns1;
+	$("#id_Ipv4DNS2")[0].value = map.netlink.ipv4.dns2;
+	$("#id_Ipv4MacAddr")[0].value = map.netlink.macaddress;
+	$("#id_Ipv6Address")[0].value = map.netlink.ipv6.ipaddr;
+	$("#id_Ipv6Gateway")[0].value = map.netlink.ipv6.gateway;
+	$("#id_Ipv6DNS1")[0].value = map.netlink.ipv6.dns1;
+	$("#id_Ipv6DNS2")[0].value = map.netlink.ipv6.dns2;
+	
+	
+	var resp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(resp.success == false){
+		alert("recv ThirdServer msg fail");
+		return;
+	}
+	var map = resp.data;
+	$("#id_NetWorkDataPort")[0].value = map.option_4.port;
+	$("#id_NetWorkMediaPort")[0].value = map.option_5.port;
+	$("#id_NetWorkHttpPort")[0].value = map.option_1.port;
+	$("#id_NetWorkOnvifPort")[0].value = map.option_2.port;
+	$("#id_NetWorkRtspPort")[0].value = map.option_3.port;
+	//console.log( JSON.stringify(map));
+}
+
+function submit()
+{	 
+	var str_idDhcp;
+	var str_idRtspAut;
+	
+	//console.log('id_Dhcp ='+GetSelectionVal('id_Dhcp'));
+	//console.log('id_Dhcp ='+str_NetDHCPDisable);
+	NetWorkHttpPort();
+	NetWorkOnvifPort();
+	NetWorkRtspPort();
+	$("#id_Ipv4DNS1")[0].value = NetWorkDDnsCheck($("#id_Ipv4DNS1")[0].value);
+	$("#id_Ipv4DNS2")[0].value = NetWorkDDnsCheck($("#id_Ipv4DNS2")[0].value);
+	$("#id_Ipv4Address")[0].value = NetWorkDDnsCheck($("#id_Ipv4Address")[0].value);
+	$("#id_Ipv4Subnet")[0].value = NetWorkDDnsCheck($("#id_Ipv4Subnet")[0].value);
+	$("#id_Ipv4Gateway")[0].value = NetWorkDDnsCheck($("#id_Ipv4Gateway")[0].value);
+	//alert($("#id_Ipv4Gateway")[0].value);
+	var IPresp = $.sendMsg("NetworkConfig",null,"/ISAPI/Network/NetworkConfig","POST");
+	if(IPresp.success == false){
+		alert("recv NetworkConfig  msg fail");
+		return;
+	}
+	var IPmap = IPresp.data;
+	if($("#id_Ipv4DNS1")[0].value == ""){
+		$("#id_Ipv4DNS1")[0].value =  IPmap.netlink.ipv4.dns1;
+		//$("#id_Ipv4DNS1")[0].value = "123"
+	} 
+	if($("#id_Ipv4DNS2")[0].value == ""){
+		$("#id_Ipv4DNS2")[0].value =  IPmap.netlink.ipv4.dns2;
+	}
+	if($("#id_Ipv4Address")[0].value == ""){
+		$("#id_Ipv4Address")[0].value =  IPmap.netlink.ipv4.ipaddr;
+	}
+	if($("#id_Ipv4Subnet")[0].value == ""){
+		$("#id_Ipv4Subnet")[0].value =  IPmap.netlink.ipv4.subnetmask;
+	}
+	if($("#id_Ipv4Gateway")[0].value == ""){
+		$("#id_Ipv4Gateway")[0].value =  IPmap.netlink.ipv4.gateway;
+	}
+
+	var portresp = $.sendMsg("ThirdServer",null,"/ISAPI/Network/ExtServerParam","POST");
+	if(portresp.success == false){
+		alert("recv ThirdServer msg fail");
+		return;
+	}
+	var portmap = portresp.data;
+	if(portmap.option_1.port != $("#id_NetWorkHttpPort")[0].value)
+	{
+		if (confirm(str_ConfirmContinue)==false){return false;}	
+	}
+	
+	if(GetSelectionVal('id_Dhcp') == str_NetDHCPDisable)
+	{
+		str_idDhcp = "0";
+	}
+	else
+	{
+		str_idDhcp = "1";
+	}
+	
+	if(GetSelectionVal('id_RtspAut') == str_NetDHCPDisable)
+	{
+		str_idRtspAut = "0";
+	}
+	else
+	{
+		str_idRtspAut = "1";
+	}
+	
+	var Portmsg = [
+					{"xtype":"option_1","items":
+						[
+							{"xtype":"servertype","text":"1"},
+							{"xtype":"enabled","text":"1"},
+							{"xtype":"port","text":$("#id_NetWorkHttpPort")[0].value}
+						]
+					},
+					{"xtype":"option_2","items":
+						[
+							{"xtype":"servertype","text":"2"},
+							{"xtype":"enabled","text":"1"},
+							{"xtype":"port","text":$("#id_NetWorkOnvifPort")[0].value}
+						]
+					},
+					{"xtype":"option_3","items":
+						[
+							{"xtype":"servertype","text":"3"},
+							{"xtype":"enabled","text":"1"},
+							{"xtype":"port","text":$("#id_NetWorkRtspPort")[0].value}
+						]
+					},
+					{"xtype":"option_4","items":
+						[
+							{"xtype":"servertype","text":"4"},
+							{"xtype":"enabled","text":"1"},
+							{"xtype":"port","text":$("#id_NetWorkDataPort")[0].value}
+						]
+					},
+					{"xtype":"option_5","items":
+						[
+							{"xtype":"servertype","text":"5"},
+							{"xtype":"enabled","text":"1"},
+							{"xtype":"port","text":$("#id_NetWorkMediaPort")[0].value}
+						]
+					}
+				];
+
+	
+	var msg = [
+				{"xtype":"netlink","items":
+					[
+						{"xtype":"maxlink","text":$("#id_MaxConnection")[0].value},
+						{"xtype":"dhcp","text":str_idDhcp},
+						{"xtype":"rtspauthentication","text":str_idRtspAut},
+						//{"xtype":"name","text":"Eth0"},
+						{"xtype":"ipv4","items":
+							[
+								{"xtype":"ipaddr","text":$("#id_Ipv4Address")[0].value},
+								{"xtype":"subnetmask","text":$("#id_Ipv4Subnet")[0].value},
+								{"xtype":"gateway","text":$("#id_Ipv4Gateway")[0].value},
+								{"xtype":"dns1","text":$("#id_Ipv4DNS1")[0].value},
+								{"xtype":"dns2","text":$("#id_Ipv4DNS2")[0].value}
+							]
+						},
+						{"xtype":"ipv6","items":
+							[
+								{"xtype":"ipaddr","text":$("#id_Ipv6Address")[0].value},
+								//{"xtype":"ipv6prefixlength","text":"112"},
+								{"xtype":"gateway","text":$("#id_Ipv6Gateway")[0].value},
+								{"xtype":"dns1","text":$("#id_Ipv6DNS1")[0].value},
+								{"xtype":"dns2","text":$("#id_Ipv6DNS2")[0].value}
+							]
+						},
+						{"xtype":"macaddress","text":$("#id_Ipv4MacAddr")[0].value}
+					]
+				}
+			];
+	
+	var resp = $.sendMsg("NetworkConfig",msg,"/ISAPI/Network/NetworkConfig","PUT");
+	
+	
+	if(resp.success == false){
+		alert("submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+	}	
+	var respport = $.sendMsg("ExtServer",Portmsg,"/ISAPI/Network/ExtServerParam","PUT");
+}
+
+function NetWorkDDnsCheck(ip)
+{
+	if(true ==  isValidIP(ip)){
+		return ip;
+	}else{
+		return "";
+	}
+}
+
+function NetWorkHttpPort()
+{
+	if($('#id_NetWorkHttpPort')[0].value < 1){
+		$('#id_NetWorkHttpPort')[0].value = 80;
+	}
+	if($('#id_NetWorkHttpPort')[0].value > 65535){
+		$('#id_NetWorkHttpPort')[0].value = 80;
+	}
+}
+
+function NetWorkOnvifPort()
+{
+	if($('#id_NetWorkOnvifPort')[0].value < 1){
+		$('#id_NetWorkOnvifPort')[0].value = 85;
+	}
+	if($('#id_NetWorkOnvifPort')[0].value > 65535){
+		$('#id_NetWorkOnvifPort')[0].value = 85;
+	}
+}
+
+function NetWorkRtspPort()
+{
+	if($('#id_NetWorkRtspPort')[0].value < 1){
+		$('#id_NetWorkRtspPort')[0].value = 554;
+	}
+	if($('#id_NetWorkRtspPort')[0].value > 65535){
+		$('#id_NetWorkRtspPort')[0].value = 554;
+	}
+}
+
+function NetWorkDataPort()
+{
+	if($('#id_NetWorkDataPort')[0].value < 1){
+		$('#id_NetWorkDataPort')[0].value = 60001;
+	}
+	if($('#id_NetWorkDataPort')[0].value > 65535){
+		$('#id_NetWorkDataPort')[0].value = 60001;
+	}
+}
+
+function NetWorkMediaPort()
+{
+	if($('#id_NetWorkMediaPort')[0].value < 1){
+		$('#id_NetWorkMediaPort')[0].value = 60002;
+	}
+	if($('#id_NetWorkMediaPort')[0].value > 65535){
+		$('#id_NetWorkMediaPort')[0].value = 60002;
+	}
+}
+
+
+
+$(function(){
+	InitUdfSelect('id_Dhcp');
+	InitUdfSelect('id_RtspAut');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+	BindEvent('id_NetWorkHttpPort','onchange',NetWorkHttpPort,null);
+	BindEvent('id_NetWorkOnvifPort','onchange',NetWorkOnvifPort,null);
+	BindEvent('id_NetWorkRtspPort','onchange',NetWorkRtspPort,null);
+	BindEvent('id_NetWorkDataPort','onchange',NetWorkDataPort,null);
+	BindEvent('id_NetWorkMediaPort','onchange',NetWorkMediaPort,null);
+})
+</script>   
+</html>  

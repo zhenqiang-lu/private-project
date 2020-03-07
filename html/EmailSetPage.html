@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.EmailDiv{
+	left:0px;
+	right:0px;
+	height:545px;
+}
+
+
+
+.DivInputAtLoacalRecord{
+	width:280px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtEmailSetPage{
+	width:160px;
+	float:left;
+}
+
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg EmailDiv"  style="min-width:600px;">
+	<div style="height:100%;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageMotionSub">Motion Subject:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_MotionSubject"value="admin" ></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageAlarmSub">Alarm Subject:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_AlarmSubject"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageSMTPServer">SMTP Server:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SmtpServer"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageSMTPPort">SMTP Port:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_SmtpPort"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEncryptionProvider">Encryption:</div>
+		<div style="float:left"> 
+		<div class="ClassContentSelect" id="id_Encryption" >Unencrypted</div>
+		<div class="DivContentSelectIco" id="id_Encryption_selectico"></div>
+		<div style="clear:both"></div>
+		<div class="ClassContentSelectOption" name="id_Encryption_option" style="margin-top:0px;" id="id_txtUnencryptedMode">Unencrypted</div>
+		<div class="ClassContentSelectOption" name="id_Encryption_option" style="margin-top:24px;">SSL</div>
+		<div class="ClassContentSelectOption" name="id_Encryption_option" style="margin-top:48px;">TLS</div>
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageSender">EmailSender:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailSender"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPagePassword" >EmailPassword:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailPassword"value="admin" type="password"></input>
+		
+
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageReceiver1">EmailReceiver:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailReceiver1"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageReceiver2">EmailReceiver:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailReceiver2"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageReceiver3">EmailReceiver:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailReceiver3"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivLable txtEmailSetPage" id="id_txtEmailSetPageReceiver4">EmailReceiver:</div>
+		<input class="DivInput DivInputAtLoacalRecord" id="id_EmailReceiver4"value="admin"></input>
+		
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivButton" style="float:left;margin-left:180px;" id="id_submit">Save</div>
+		<div class="DivButton" style="float:left;margin-left:50px;" id="id_test">Test</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
+</body>
+
+<script  type="text/javascript"> 
+//语言包初始化
+function InitLang(){
+	SetLang('id_txtEmailSetPageMotionSub',str_EmailMotionTittle);
+	SetLang('id_txtEmailSetPageAlarmSub',str_EmailAlarmTittle);	
+	SetLang('id_txtEmailSetPageSMTPServer',str_SMTPserver);
+	SetLang('id_txtEmailSetPageSMTPPort',str_SMTPPort);
+	SetLang('id_txtEncryptionProvider',str_SMTPEncryption);
+	SetLang('id_txtUnencryptedMode',str_SMTPUnencrypted);
+	SetLang('id_txtEmailSetPagePassword',str_EmailPwd);
+	SetLang('id_txtEmailSetPageSender',str_SendEmail);
+	SetLang('id_txtEmailSetPageReceiver1',str_PickUpEmail1);
+	SetLang('id_txtEmailSetPageReceiver2',str_PickUpEmail2);
+	SetLang('id_txtEmailSetPageReceiver3',str_PickUpEmail3);
+	SetLang('id_txtEmailSetPageReceiver4',str_PickUpEmail4);
+	SetLang('id_submit',str_EmailBtn);
+	SetLang('id_test',str_test);
+}
+</script> 
+
+<script  type="text/javascript"> 
+function InitPageParam()
+{
+	var resp = $.sendMsg("EmailStatus",null,"/ISAPI/Network/Email","POST");
+	if(resp.success == false){
+		alert("recv EmailStatus msg fail");
+		return;
+	}
+	var map = resp.data;
+	$("#id_MotionSubject")[0].value = map.motionalarmtitle;
+	$("#id_AlarmSubject")[0].value = map.sensoralarmtitle;
+	$("#id_SmtpServer")[0].value = map.smtpserver;
+	$("#id_SmtpPort")[0].value = map.smtpport;
+	SetSelectionOptID('id_Encryption',map.smtpencryption);
+	$("#id_EmailPassword")[0].value = map.smtppassword;
+	$("#id_EmailSender")[0].value = map.sender;
+	$("#id_EmailReceiver1")[0].value = map.receiver_1;
+	$("#id_EmailReceiver2")[0].value = map.receiver_2;
+	$("#id_EmailReceiver3")[0].value = map.receiver_3;
+	$("#id_EmailReceiver4")[0].value = map.receiver_4;
+}
+
+function submit()
+{
+	var msg = [
+				{"xtype":"motionalarmtitle","text":$("#id_MotionSubject")[0].value},
+				{"xtype":"sensoralarmtitle","text":$("#id_AlarmSubject")[0].value},
+				{"xtype":"smtpserver","text":$("#id_SmtpServer")[0].value},
+				{"xtype":"smtppassword","text":$("#id_EmailPassword")[0].value},
+				{"xtype":"sender","text":$("#id_EmailSender")[0].value},
+				{"xtype":"smtpencryption","text":"" + GetSelectionOption('id_Encryption')},
+				{"xtype":"receiver_1","text":$("#id_EmailReceiver1")[0].value},
+				{"xtype":"receiver_2","text":$("#id_EmailReceiver2")[0].value},
+				{"xtype":"receiver_3","text":$("#id_EmailReceiver3")[0].value},
+				{"xtype":"receiver_4","text":$("#id_EmailReceiver4")[0].value},
+				{"xtype":"smtpport","text":$("#id_SmtpPort")[0].value}
+			];
+	
+	var resp = $.sendMsg("EmailStatus",msg,"/ISAPI/Network/Email","PUT");
+	if(resp.success == false){
+		alert(str_SetFail);
+	}else{
+		alert(str_SetSuccess);
+	}
+}
+
+
+function Test()
+{
+	var msg = [
+				{"xtype":"motionalarmtitle","text":$("#id_MotionSubject")[0].value},
+				{"xtype":"sensoralarmtitle","text":$("#id_AlarmSubject")[0].value},
+				{"xtype":"smtpserver","text":$("#id_SmtpServer")[0].value},
+				{"xtype":"smtppassword","text":$("#id_EmailPassword")[0].value},
+				{"xtype":"sender","text":$("#id_EmailSender")[0].value},
+				{"xtype":"smtpencryption","text":"" + GetSelectionOption('id_Encryption')},
+				{"xtype":"receiver_1","text":$("#id_EmailReceiver1")[0].value},
+				{"xtype":"receiver_2","text":$("#id_EmailReceiver2")[0].value},
+				{"xtype":"receiver_3","text":$("#id_EmailReceiver3")[0].value},
+				{"xtype":"receiver_4","text":$("#id_EmailReceiver4")[0].value},
+				{"xtype":"smtpport","text":$("#id_SmtpPort")[0].value}
+			];
+	
+	var resp = $.sendMsg("TestEmail",msg,"/ISAPI/Network/TestEmail","PUT");
+	var data = resp.data;
+	if(data.statuscode == "1"){
+		alert(str_EmailSuccess);
+		return ;
+	}else{
+		alert(str_EmailFail);
+	}
+}
+
+$(function(){	
+	InitUdfSelect('id_Encryption');
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+	BindEvent('id_test','onmousedown',Test,null);
+})
+</script>    
+</html>  

@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Camera</title>
+	<link rel="stylesheet" href="jquery/css/jquery.ui.all.css" />
+	<link rel="stylesheet" href="css/common.css" />
+	<script src="jquery/jquery-1.9.1.min.js"></script>
+	<script src="jquery/jquery.ui.core.js"></script>
+	<script src="jquery/jquery.ui.widget.js"></script>
+	<script src="jquery/jquery.ui.mouse.js"></script>
+	<script src="jquery/jquery.ui.slider.js"></script>
+	<script src="jquery/json2.js"></script>
+	<script src="js/network.js"></script>
+	<script src="js/common.js"></script>
+</head>
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+</script>
+<style type="text/css">
+.IpFilterDiv{
+	left:0px;
+	right:0px;
+}
+
+
+.DivInputAtLoacalRecord{
+	width:300px;
+	float:left;
+}
+
+#id_txtLocalrecordpath{
+	width:160px;
+	float:left;
+}
+
+.txtIpFilter{
+	width:160px;
+	float:left;
+}
+
+.AddIpFilter{
+	width:300px;
+	height:25px;
+	line-height:25px;
+	background:#858585;
+	float:left; 
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid black;
+	border-top:1px solid black;
+	text-align:center;
+}
+
+.DelIpFilter{
+	width:100px;
+	border-left:0px solid black;
+}
+
+</style> 
+
+
+
+<body>   
+<div class="ContentBg IpFilterDiv"  style="min-width:600px;">
+	<div style="height:auto;margin:auto;width:600px;">
+		<div style="clear:both;height:15px;"></div>
+		<div class="DivCheckBox" style="float:left;"id="id_IpFilterEnable"><script>InitCheckBox('id_IpFilterEnable','true')</script></div>
+		<div class="DivLable" style="float:left;margin-left:10px;" id="id_txtIpFilterEnable">Enable</div>	
+		<div style="clear:both;height:15px;"></div>
+		<input id="ID_IpFilter_Count" name="IpFilter_Count" style="display:none"/>
+		
+		<div style="background:red;" id="ID_IPFILIETER_TABLE">
+		<div class="AddIpFilter">IP</div>
+		<div class="AddIpFilter DelIpFilter" id="id_txtDelIpFilter">Delete</div>	
+		</div>
+		
+		<div style="clear:both;height:15px;"></div>
+		
+		<input class="DivInput DivInputAtLoacalRecord" id="id_IpFilter" value=""></input>
+		<div class="DivButton" style="float:left;margin-left:9px;" id="id_submit">Add</div>
+		<div style="clear:both;height:15px;"></div>
+		
+		<div style="clear:both;height:15px;"></div>
+	</div>
+</div>
+</body>   
+
+<script  type="text/javascript"> 
+//语言包初始化
+document.write(GetLanguagePathStr());
+function InitLang(){
+	SetLang('id_txtIpFilterEnable',str_IPfilter);
+	SetLang('id_txtDelIpFilter',str_IPfilter_DelIP);
+	//SetLang('id_txtDelIpFilter1',str_IPfilter_DelIP);
+	//SetLang('id_txtDelIpFilter2',str_IPfilter_DelIP);
+	SetLang('id_submit',str_Save);
+};
+</script> 
+
+<script  type="text/javascript"> 
+
+var addstr_ip = '<div class="AddIpFilter"';
+var addstr_delip = '<div class="DivButton AddIpFilter DelIpFilter"';
+var idstr = 'ID_IpFilter_';
+var idDelStr = 'ID_IpDel_';
+var IpFilterCount;
+
+function InitPageParam()
+{
+	var resp = $.sendMsg("IPFilter",null,"/ISAPI/Network/IPFilter","POST");
+	if(resp.success == false){
+		alert("recv IPFilter msg fail");
+		return;
+	}
+	var map = resp.data;
+	//console.log('map='+JSON.stringify(map));
+	SetCheckBox('id_IpFilterEnable',TranslationStrAndBool(map.enabled));
+	$("#id_IpFilter")[0].value = '';
+	IpFilterCount = map.count;
+	var i = 0;
+	for(i = 0;i < map.count;i++)
+	{
+		addDiv(i,eval('map.ip_'+i+''));
+	}
+}
+
+function submit()
+{	
+	var i = 0,j = 0;
+	var IpId;
+	var obj = [];
+	var addStr = '';
+	//if($("#id_IpFilter")[0].value != '')
+	//{
+		
+		for(i = 0;i < IpFilterCount;i++)
+		{
+			IpId ='ID_IpFilter_'+i;
+			
+			if(document.getElementById(IpId).innerText == $("#id_IpFilter")[0].value)
+			{
+				return;
+			}
+			else
+			{
+				addStr = '{"xtype":"ip_'+j+'","text":"'+(document.getElementById(IpId).innerText)+'"}';	
+				obj.push(JSON.parse(addStr));
+				j++;
+			}
+		}
+		var IpCount = IpFilterCount;
+		if($("#id_IpFilter")[0].value != '')
+		{
+			var Ip = $("#id_IpFilter")[0].value;
+			addStr = '{"xtype":"ip_'+j+'","text":"'+Ip+'"}';
+			obj.push(JSON.parse(addStr));
+			j++;		
+			IpFilterCount++;
+		}
+		
+		var str_idIpFilterEnable;
+		if(GetCheckBoxValue('id_IpFilterEnable') == "false"){
+			str_idIpFilterEnable = "0";
+		}else{
+			str_idIpFilterEnable = "1";
+		}
+		
+		var msg =	[
+						{"xtype":"enabled","text":str_idIpFilterEnable},
+						{"xtype":"count","text":IpFilterCount.toString()}
+					];
+		
+		msg = msg.concat(obj);
+		var resp = $.sendMsg("IPFilter",msg,"/ISAPI/Network/IPFilter","PUT");		
+		if(resp.success == false ){
+			alert("submit submit msg fail");	
+		}else{
+			alert(str_SetSuccess);
+			for(i = 0; i < IpCount;i++)
+			{
+				var Delid;
+				Delid = idstr+i;;
+				var box = document.getElementById(Delid);  
+				box.parentNode.removeChild(box); 
+				Delid = idDelStr+i;
+				var box1 = document.getElementById(Delid);  
+				box1.parentNode.removeChild(box1); 
+			}
+				InitPageParam();
+			}
+	//}		
+}
+
+function DelDiv(id)
+{
+	var i = 0,j = 0;
+	var addStr = '';
+	var idCount,idCount1;
+	var IpId;
+	var ip = '';
+	if (confirm(str_cofirmDelete)==true){ 
+			
+	}else{ 
+		return false; 
+	} 
+	
+	idCount1 = id.split("IpDel_");
+	idCount = idCount1[1];
+	var obj = [];
+	
+	var IpCount = IpFilterCount;
+	
+	for(i = 0; i < IpFilterCount;i++)
+	{
+		if(i == idCount)
+		{
+			continue;
+		}
+		IpId ='ID_IpFilter_'+i;	
+		addStr = '{"xtype":"ip_'+j+'","text":"'+(document.getElementById(IpId).innerText)+'"}';		
+		obj.push(JSON.parse(addStr));
+		j++;
+	}
+	IpFilterCount--;
+	var str_idIpFilterEnable;
+	if(GetCheckBoxValue('id_IpFilterEnable') == "false"){
+		str_idIpFilterEnable = "0";
+	}else{
+		str_idIpFilterEnable = "1";
+	}
+	
+	var msg =	[
+					{"xtype":"enabled","text":str_idIpFilterEnable},
+					{"xtype":"count","text":IpFilterCount.toString()}
+				];
+	
+	msg = msg.concat(obj);
+	
+	var resp = $.sendMsg("IPFilter",msg,"/ISAPI/Network/IPFilter","PUT");		
+	if(resp.success == false ){
+		alert("submit submit msg fail");
+	}else{
+		alert(str_SetSuccess);
+		for(i = 0; i < IpCount;i++)
+		{
+			var Delid;
+			Delid = idstr+i;;
+			var box = document.getElementById(Delid);  
+			box.parentNode.removeChild(box); 
+			Delid = idDelStr+i;
+			var box1 = document.getElementById(Delid);  
+			box1.parentNode.removeChild(box1); 
+		}
+		InitPageParam();
+	}
+}
+
+function addDiv(num,value)
+{
+	var id;
+	var name;
+	var Delete = 'Delete';
+	id = idstr+num;
+	//name = namestr+num;
+	var addStr = addstr_ip+'id="'+id+'">'+value+'</div>';
+	//var addStr = '<input id="'+id+'" name="'+name+'"'+'value="'+num+'" style="display:none;"/>';
+	$("#ID_IPFILIETER_TABLE").append(addStr); 
+	id = idDelStr+num;
+	addStr = addstr_delip + 'id="'+id+'">'+Delete+'</div>';
+	$("#ID_IPFILIETER_TABLE").append(addStr);
+	SetLang(id.toString(),str_IPfilter_DelIP);
+	BindEvent(id.toString(),'onmousedown',DelDiv,id.toString());
+	//console.log('11111 ='+addStr);
+}
+
+$(function(){
+	InitLang();
+	InitPageParam();
+	BindEvent('id_submit','onmousedown',submit,null);
+})
+</script> 
+</html>  
