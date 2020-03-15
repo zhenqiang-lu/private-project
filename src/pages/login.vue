@@ -2,6 +2,7 @@
   <div>
     <el-input placeholder="用户名" v-model="username"></el-input>
     <el-input placeholder="密码" v-model="password"></el-input>
+    <el-button @click="login" type="primary">登陆</el-button>
   </div>
 </template>
 
@@ -20,7 +21,16 @@
     },
    
     methods: {
-      
+      login() {
+          let sendData = {
+              username: this.username,
+              password: this.password
+          }
+          login(sendData).then(res => {
+              // console.log(res)
+              
+          })
+      }
     }
   };
 </script>
