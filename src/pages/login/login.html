@@ -1,0 +1,17 @@
+<div class="login-page">
+  <div class="top">
+	  <img class="logo-img" src="./assets/image/logo.jpg" >
+	  <el-select @change="getLang" size="mini" v-model="lang">
+		  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+	  </el-select>
+  </div>
+  <div class="login-wrap">
+	  <div class="login-box">
+		  <el-input class="login-input" size="medium" :placeholder=" $t('message.username') " v-model="username"></el-input>
+		  <el-input class="login-input" size="medium" :placeholder="$t('message.password')" v-model="password"></el-input>
+		  <p @click="openMsg" style="text-align: right; font-size: 14px; cursor: pointer;">{{ $t('message.forget') }}</p>
+		  <el-button @click="send" type="success">{{ $t('message.login') }}</el-button>
+	  </div>
+  </div>
+  <p class="login-bottom">版权所有</p>
+</div>

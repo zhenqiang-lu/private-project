@@ -1,0 +1,10 @@
+.net-item-box{
+  margin-top: 10px;
+}
+.net-item-box label{
+  display: inline-block;
+  width: 120px;
+}
+.net-item-box .user-type {
+  width: 80px;
+}

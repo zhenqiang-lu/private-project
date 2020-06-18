@@ -1,0 +1,19 @@
+.defend-item-box{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.filename{
+  display: inline-block;
+  height: 26px;
+  width: 400px;
+  vertical-align: top;
+  border: 1px solid #dadada;
+  border-radius: 4px;
+  cursor: no-drop;
+  line-height: 26px;
+  font-size: 14px;
+  text-indent: 6px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

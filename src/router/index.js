@@ -1,48 +1,82 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-import Login from '@/pages/login.vue'
-import Nav from '@/components/menu.vue'
-import indexPage from '@/pages/index/indexPage.vue'
-
-Vue.use(Router)
-
-const routes = [
-  {
-      path: '/',
-      component: Login
-  },
-  {
-      path: '/login',
-      name: 'login',
-      component: Login
-  },
-  {
-    path: '/nav',
-    component: Nav,
-    children: [
-      {
+define(function(require, exports, module) {
+  module.exports = new VueRouter({
+    routes: [{
         path: '/',
-        component: indexPage,
-        meta: {
-            keepAlive: true // 需要被缓存
-        }
+        component: require('../pages/login/login.js')
       },
       {
-        path: '/nav/index',
-        component: indexPage,
-        meta: {
-            keepAlive: true // 需要被缓存
-        }
+        path: '/login',
+        component: require('../pages/login/login.js')
+      },
+      {
+        path: '/admin',
+        component: require('../components/menu/menu.js'),
+        children: [
+          // {
+          //   path: '/',
+          //   name: 'index',
+          //   component: require('../pages/index/index.js')
+          // },
+          // {
+          //   path: '/admin/index',
+          //   name: 'indexPage',
+          //   component: require('../pages/index/index.js')
+          // },
+          {
+            path: '/admin/systemMsg',
+            name: 'systemMsg',
+            component: require('../pages/system/systemMsg/index.js')
+          },
+          {
+            path: '/admin/systemDefend',
+            name: 'systemDefend',
+            component: require('../pages/system/systemDefend/index.js')
+          },
+          {
+            path: '/admin/systemUser',
+            name: 'systemUser',
+            component: require('../pages/system/systemUser/index.js')
+          },
+          {
+            path: '/admin/netConfig',
+            name: 'netConfig',
+            component: require('../pages/net/netConfig/index.js')
+          },
+          {
+            path: '/admin/netHighConfig',
+            name: 'netHighConfig',
+            component: require('../pages/net/netHighConfig/index.js')
+          },
+          {
+            path: '/admin/audio',
+            name: 'audio',
+            component: require('../pages/media/audio/index.js')
+          },
+          {
+            path: '/admin/pictureShow',
+            name: 'picture',
+            component: require('../pages/picture/pic/index.js')
+          },
+          {
+            path: '/admin/localDisk',
+            name: 'localDisk',
+            component: require('../pages/memory/localDisk/index.js')
+          },
+          {
+            path: '/admin/recordVideo',
+            name: 'recordVideo',
+            component: require('../pages/memory/recordVideo/index.js')
+          },
+          // {
+          //   path: '/navAdmin/indexPage',
+          //   name: 'indexPage',
+          //   component: indexPage,
+          //   meta: {
+          //       keepAlive: false
+          //   }
+          // }
+        ]
       }
     ]
-  }
-];
-
-export default new Router({
-  // mode: 'history', 
-  scrollBehavior: () => ({
-    y: 0
-  }),
-  routes
+  })
 })

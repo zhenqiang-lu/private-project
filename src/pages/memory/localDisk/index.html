@@ -1,0 +1,148 @@
+<div>
+    <el-tabs v-model="activeName">
+        <el-tab-pane label="本地硬盘" name="first">
+            <p class="p-title">
+                <span>硬盘管理</span>
+                <el-button class="right" style="margin: 6px 10px; height: 20px; line-height: 6px;" size="mini" type="danger">格式化</el-button>
+            </p>
+            <el-table :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column align="center" label="磁盘号">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="容量">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="剩余空间">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="状态">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="类型">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="属性">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="进度">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+            </el-table>
+            <p style="margin-top: 10px;" class="p-title">磁盘配额</p>
+            <div class="m-item-box">
+                <label for="">图片容量</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">图片剩余空间</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像容量</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像剩余空间</label>
+                <el-input class="m-input" size="mini" v-model="value">
+                    <span slot="append">%</span>
+                </el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">抓图配额百分比</label>
+                <el-input class="m-input" size="mini" v-model="value">
+                    <span slot="append">%</span>
+                </el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像配额百分比</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div style="text-align: left; margin-top: 10px;">
+                <el-button icon="el-icon-receiving" size="mini" type="success">保存</el-button>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="硬盘管理" name="second">
+            <p class="p-title">
+                <span>硬盘管理</span>
+                <el-button class="right" style="margin: 6px 10px; height: 20px; line-height: 6px;" size="mini" type="danger">格式化</el-button>
+            </p>
+            <el-table :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column align="center" label="磁盘号">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="容量">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="剩余空间">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="状态">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="类型">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="属性">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="进度">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+            </el-table>
+            <p style="margin-top: 10px;" class="p-title">磁盘配额</p>
+            <div class="m-item-box">
+                <label for="">图片容量</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">图片剩余空间</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像容量</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像剩余空间</label>
+                <el-input class="m-input" size="mini" v-model="value">
+                    <span slot="append">%</span>
+                </el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">抓图配额百分比</label>
+                <el-input class="m-input" size="mini" v-model="value">
+                    <span slot="append">%</span>
+                </el-input>
+            </div>
+            <div class="m-item-box">
+                <label for="">录像配额百分比</label>
+                <el-input class="m-input" size="mini" v-model="value"></el-input>
+            </div>
+            <div style="text-align: left; margin-top: 10px;">
+                <el-button icon="el-icon-receiving" size="mini" type="success">保存</el-button>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane border label="网络硬盘" name="third">
+            <p class="p-title">网络硬盘</p>
+            <el-table :data="tableData" tooltip-effect="dark" style="width: 100%">
+                <el-table-column align="center" label="磁盘号">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="服务器地址">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="文件路径">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="类型">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column align="center" label="删除">
+                    <i class="el-icon-error del"></i>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+    </el-tabs>
+</div>

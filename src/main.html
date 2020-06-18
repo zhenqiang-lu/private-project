@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    
+    <script src="./assets/js/sea.js" type="text/javascript" charset="utf-8"></script>
+    <script src="assets/js/seajs-css.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./assets/js/seajs-text.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./assets/js/vue-router.js"></script>
+    <script src="./assets/js/vue-i18n.js"></script>
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <script src="./assets/js/element.js"></script>
+    <script src="./assets/js/axios.min.js"></script>
+    <script type="text/javascript">
+      function isIE() {
+          if(!!window.ActiveXObject || "ActiveXObject" in window){
+            return true;
+          }else{
+            return false;
+      　　 }
+      }
+      if(isIE()) {
+        var secScript = document.createElement("script");
+        secScript.setAttribute("type", "text/javascript");
+        secScript.setAttribute("src", "./assets/js/polyfill.min.js");
+        document.getElementsByTagName("HEAD")[0].appendChild(secScript);
+      }
+    </script>
+    <!-- <script src = "./assets/js/polyfill.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="./style/common.css"/>
+    
+  </head>
+  
+  <body>
+    <div id="app"></div>
+    <script type="text/javascript">
+      seajs.use('./main.js') //入口
+    </script>
+  </body>
+</html>

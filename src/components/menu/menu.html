@@ -1,0 +1,29 @@
+<div class="view-box">
+  <el-container style="height: 100%;">
+    <el-header style="text-align: left; color: white; background: #545c64;">管理系统后台</el-header>
+    <el-container>
+      <el-aside width="160px" style="overflow: hidden; background-color: #545c64">
+        <el-menu :unique-opened="true" :default-active="num" class="el-menu-vertical-demo" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">
+          <template v-for="(item, index) in menuList">
+            <el-submenu class="menu-li" v-if="item.children && item.children.length > 0" :index="item.num">
+              <template slot="title">
+                <i :class="item.icon"></i>
+                <span>{{ item.name }}</span>
+              </template>
+              <template v-for="(item2, index2) in item.children">
+                <el-menu-item :index="item2.num" class="menu-li" @click="goPage(item2)" >{{ item2.name }}</el-menu-item>
+              </template>
+            </el-submenu>
+            <el-menu-item class="menu-li" @click="goPage(item)" v-else :index="item.num">
+              <i :class="item.icon"></i>
+              <span slot="title">{{ item.name }}</span>
+            </el-menu-item>
+          </template>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
+  </el-container>
+</div>

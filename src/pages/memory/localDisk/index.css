@@ -1,0 +1,14 @@
+.m-item-box .m-input {
+  width: 460px;
+}
+.m-item-box {
+  margin-top: 16px;
+}
+.m-item-box label {
+  display: inline-block;
+  width: 120px;
+}
+.del {
+  font-size: 22px;
+  color: #F56C6C;
+}

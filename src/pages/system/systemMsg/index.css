@@ -1,0 +1,18 @@
+.basic-item-box label{
+  display: inline-block;
+  width: 100px;
+}
+.basic-item-box .msg-input{
+  width: 500px;
+}
+.basic-item-box{
+  margin-top: 10px;
+}
+.basic-item-box .mini-select{
+  width: 100px;
+}
+.log-label{
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+}

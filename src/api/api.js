@@ -1,11 +1,22 @@
-import axios from './request'
-import qs from 'qs'
+// import axios from './request'
+// // import qs from 'qs'
 
-// 登录
-export function login(data) {
-  return axios({
-    url: '/ITS/Security/Login',
-    method: 'post',
-    data: data
-  })
-}
+define(function(require, exports, module) {
+  
+  exports.login = function(data) {
+    return axios({
+      url: '/ITS/Security/Login',
+      method: 'post',
+      data: data
+    })
+  }
+  
+  exports.list = function(data) {
+    return axios({
+      url: '/api/user/list',
+      method: 'post',
+      data: data
+    })
+  }
+  
+})

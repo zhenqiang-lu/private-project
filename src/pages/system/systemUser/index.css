@@ -1,0 +1,16 @@
+.user-btn{
+  margin-top: 5px; 
+  line-height: 10px; 
+  margin-right: 8px; 
+  height: 24px;
+}
+.dialog-item-box label{
+  display: inline-block;
+  width: 120px;
+}
+.dialog-item-box .dialog-item-input{
+  width: 200px;
+}
+.dialog-item-input{
+  margin-bottom: 10px;
+}

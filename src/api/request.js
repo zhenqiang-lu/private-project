@@ -6,7 +6,6 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(config => {
-    console.log(config)
   return config
 }, error => {
   console.log(error)
@@ -16,13 +15,13 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     const res = response.data;
-    if(res.code === 0) {
-        
+    if (res.code !== 0) {
+      if(res.error == 0) {
+        return response.data
+      }
+    } else {
       return response.data;
-    }else{
-      console.log('失败')
     }
-    
   },
   error => {
     console.log(error)
