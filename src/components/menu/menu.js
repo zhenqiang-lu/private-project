@@ -21,15 +21,15 @@ define(function(require, exports, module) {
             '            <el-submenu class="menu-li" v-if="item.children && item.children.length > 0" :index="item.num">',
             '              <template slot="title">',
             '                <i :class="item.icon"></i>',
-            '                <span>{{ item.name }}</span>',
+            '                <span>{{ $t("menu." + item.name) }}</span>',
             '              </template>',
             '              <template v-for="(item2, index2) in item.children">',
-            '                <el-menu-item :index="item2.num" class="menu-li" @click="goPage(item2)" >{{ item2.name }}</el-menu-item>',
+            '                <el-menu-item :index="item2.num" class="menu-li" @click="goPage(item2)" >{{ $t("menu." + item2.name) }}</el-menu-item>',
             '              </template>',
             '            </el-submenu>',
             '            <el-menu-item class="menu-li" @click="goPage(item)" v-else :index="item.num">',
             '              <i :class="item.icon"></i>',
-            '              <span slot="title">{{ item.name }}</span>',
+            '              <span slot="title">{{ $t("menu." + item.name) }}</span>',
             '            </el-menu-item>',
             '          </template>',
             '        </el-menu>',
@@ -54,12 +54,12 @@ define(function(require, exports, module) {
                     //   icon: 'el-icon-house'
                     // },
                     {
-                        name: '系统',
+                        name: 'system',
                         num: '2',
                         icon: 'el-icon-setting',
                         children: [{
                                 path: '/admin/systemMsg',
-                                name: '系统设置',
+                                name: 'setting',
                                 num: '2-1',
                                 children: false
                                 // children: [
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
                                 // ]
                             },
                             {
-                                name: '系统维护',
+                                name: 'defend',
                                 num: '2-2',
                                 path: '/admin/systemDefend',
                                 children: false
@@ -104,7 +104,7 @@ define(function(require, exports, module) {
                                 // ]
                             },
                             {
-                                name: '用户管理',
+                                name: 'user',
                                 num: '2-3',
                                 path: '/admin/systemUser',
                                 children: false,
@@ -126,11 +126,11 @@ define(function(require, exports, module) {
                         ]
                     },
                     {
-                        name: '网路',
+                        name: 'net',
                         num: '3',
                         icon: 'el-icon-s-platform',
                         children: [{
-                                name: '基本配置',
+                                name: 'basic',
                                 num: '3-1',
                                 children: false,
                                 path: '/admin/netConfig',
@@ -156,7 +156,7 @@ define(function(require, exports, module) {
                                 // ]
                             },
                             {
-                                name: '高级配置',
+                                name: 'high',
                                 num: '3-2',
                                 children: false,
                                 path: '/admin/netHighConfig',
@@ -184,11 +184,11 @@ define(function(require, exports, module) {
                         ]
                     },
                     {
-                        name: '音视频',
+                        name: 'media',
                         num: '4',
                         icon: 'el-icon-video-camera',
                         children: [{
-                                name: '音视频',
+                                name: 'media',
                                 path: '/admin/audio',
                                 num: '4-1',
                                 children: false
@@ -202,22 +202,22 @@ define(function(require, exports, module) {
                         ]
                     },
                     {
-                        name: '图像',
+                        name: 'picture',
                         num: '5',
                         icon: 'el-icon-picture-outline',
                         children: [{
-                            name: '显示设置',
+                            name: 'show',
                             path: '/admin/pictureShow',
                             num: '5-1',
                             children: false
                         }]
                     },
                     {
-                        name: '存储',
+                        name: 'memory',
                         num: '6',
                         icon: 'el-icon-s-order',
                         children: [{
-                                name: '计划配置',
+                                name: 'plan',
                                 num: '6-1',
                                 children: false,
                                 path: '/admin/recordVideo',
@@ -237,7 +237,7 @@ define(function(require, exports, module) {
                                 // ]
                             },
                             {
-                                name: '存储管理',
+                                name: 'disk',
                                 num: '6-2',
                                 path: '/admin/localDisk',
                                 children: false

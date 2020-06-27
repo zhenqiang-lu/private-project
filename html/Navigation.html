@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -147,7 +147,7 @@ $(function(){
 
 <script  type="text/javascript"> 
 var NavigationPath = [
-{"id":"id_NavigationloginOut","path":"index.html"},
+// {"id":"id_NavigationloginOut","path":"index.html"},
 {"id":"id_NavigationBackUp","path":"BackUp.html"},
 {"id":"id_NavigationPreview","path":"Preview.html"},
 {"id":"id_NavigationSettings","path":"SetParam.html"}
@@ -182,10 +182,10 @@ function NavigationOnclick(id)
 	}
 	
 	
-	if(id == "id_NavigationloginOut"){	
-		self.location='index.html';
-		return ;
-	}
+	// if(id == "id_NavigationloginOut"){	
+	// 	self.location='index.html';
+	// 	return ;
+	// }
 	for(var i = 0;i < NavigationPath.length;i++){
 		if(NavigationPath[i].id == id){
 			//var plugin = document.getElementById('id_NavigationContent').contentWindow.document.getElementById('vlc');

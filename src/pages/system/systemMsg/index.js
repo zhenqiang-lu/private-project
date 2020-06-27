@@ -1,47 +1,42 @@
 define(function(require, exports, module) {
     require('./index.css');
+    var isEmpty = require('../../../tools/tools.js').isEmpty;
+    var basic = require('../../../api/api.js').basic;
+
     module.exports = Vue.component('index', {
         template: ['<div>',
             '  <el-tabs v-model="activeName">',
-            '    <el-tab-pane label="基本信息" name="first">',
+            '    <el-tab-pane :label="$t(\'basic.basic\')" name="first">',
             '      <div class="basic-item-box">',
-            '        <label for="">设备名称</label>',
+            '        <label for="">{{ $t(\'basic.deviceName\') }}</label>',
             '        <el-input class="msg-input" size="mini" v-model="basicMsg.deviceName"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">设备编号</label>',
+            '        <label for="">{{ $t(\'basic.deviceNum\') }}</label>',
             '        <el-input class="msg-input" size="mini" v-model="basicMsg.deviceNum"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">设备型号</label>',
+            '        <label for="">{{ $t(\'basic.deviceType\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.deviceType"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">设备序列号</label>',
+            '        <label for="">{{ $t(\'basic.serialNumber\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.serialNumber"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">硬件版本</label>',
+            '        <label for="">{{ $t(\'basic.hardwareVersion\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.hardwareVersion"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">软件版本</label>',
+            '        <label for="">{{ $t(\'basic.softwareVersion\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.softwareVersion"></el-input>',
             '      </div>',
             '      <div class="basic-item-box">',
-            '        <label for="">web版本</label>',
+            '        <label for="">{{ $t(\'basic.webVersion\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.webVersion"></el-input>',
             '      </div>',
-            '      <div class="basic-item-box">',
-            '        <label for="">通道个数</label>',
-            '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.channelNumber"></el-input>',
-            '      </div>',
-            '      <div class="basic-item-box">',
-            '        <label for="">硬盘个数</label>',
-            '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.diskNumber"></el-input>',
-            '      </div>',
             '      <div style="text-align: left; margin-top: 10px;">',
-            '        <el-button icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
+            '        <el-button @click="saveBasicMsg" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '      </div>',
             '    </el-tab-pane>',
             '    <el-tab-pane label="时间配置" name="second">',
@@ -137,14 +132,12 @@ define(function(require, exports, module) {
                 activeName: 'first',
                 basicMsg: {
                     deviceName: '',
-                    deviceNum: '',
-                    deviceType: '',
-                    serialNumber: '',
-                    hardwareVersion: '',
-                    softwareVersion: '',
-                    webVersion: '',
-                    channelNumber: '',
-                    diskNumber: ''
+                    deviceNum: 'deviceNum',
+                    deviceType: 'deviceType',
+                    serialNumber: '2',
+                    hardwareVersion: '1',
+                    softwareVersion: '1',
+                    webVersion: '1',
                 },
                 timeConfig: {
                     timeZone: '',
@@ -179,8 +172,30 @@ define(function(require, exports, module) {
             }
         },
         methods: {
+            saveBasicMsg: function() {
+                var _this = this;
+                if(isEmpty(_this.basicMsg)) {
+                    _this.$message.error("请完善基本信息")
+                    return
+                }
+                basic(_this.basicMsg).then(function(res) {
+                    if (res.success != true) {
+                        _this.$message.error("保存失败")
+                        return;
+                    } else {
+                        var data = res.data;
+                        if (data.statuscode == "200") {
+                            _this.$message.success("保存成功")
+                        }
+                    }
+                }).catch(function(res) {
+                    _this.$message.error("保存失败")
+                    return;
+                })
+
+            },
             saveDST: function() {
-                console.log(this.daylightSavingTime)
+
             }
         }
     })

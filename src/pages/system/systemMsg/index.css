@@ -4,6 +4,7 @@
 }
 .basic-item-box .msg-input{
   width: 500px;
+  vertical-align: top;
 }
 .basic-item-box{
   margin-top: 10px;

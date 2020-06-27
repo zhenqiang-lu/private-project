@@ -1,4 +1,4 @@
-﻿//普通的SELECT
+//普通的SELECT
 function SetSelected(id,value)
 {	
 	for(var i=0; i<document.getElementById(id).options.length; i++)
@@ -1728,7 +1728,7 @@ function GetLanguagePathStr()
 {
 	if( ($.GetCookie('usrname') == '' || $.GetCookie('usrname') == 'undefined' || $.GetCookie('usrname') == undefined)/* && 
 		($.GetCookie('password') == '' || $.GetCookie('password') == 'undefined' || $.GetCookie('password') == undefined)*/){
-		self.location='index.html';
+		// self.location='index.html';
 		return;
 	}
 	var language = $.GetCookie('language');
