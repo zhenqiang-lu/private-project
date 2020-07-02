@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
   module.exports = {
-    en: require('./en.js'),
-    zh: require('./zh.js')
+    english: require('./en.js'),
+    chinese: require('./zh.js')
   }
 })
