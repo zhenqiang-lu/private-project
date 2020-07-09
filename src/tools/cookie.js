@@ -9,15 +9,13 @@ define(function (require, exports, module) {
     }
 
     exports.setCookie = function (name, value) {
-       
-        var str = name + "=" + value + "&amp;";
+        var str = name + "=" + value +";path=/";
         document.cookie = str;
-        console.log(document.cookie, str)
         return;
     }
 
     exports.getCookie = function (name) {
-        var arrstr = document.cookie.split("&amp; ");
+        var arrstr = document.cookie.split("; ");
         if (!arrstr) {
             return null;
         }

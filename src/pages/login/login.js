@@ -2,6 +2,7 @@ define(function (require, exports, module) {
     var login = require('../../api/api.js').login;
     var setCookie = require('../../tools/cookie.js').setCookie;
     var getCookie = require('../../tools/cookie.js').getCookie;
+    var randomWord = require('../../tools/tools.js').randomWord;
     require('./login.css');
     module.exports = Vue.component('login', {
         template: ['<div class="login-page">',
@@ -39,7 +40,9 @@ define(function (require, exports, module) {
             }
         },
         created: function () {
-            // this.getLang();
+            if (!getCookie('sessionid')) {
+                setCookie('sessionid', randomWord(false, 18))
+            }
         },
         methods: {
             getLang: function () {
@@ -68,6 +71,8 @@ define(function (require, exports, module) {
                 }
                 if (sendData.username === "admin" && sendData.password === "123456") {
                     _this.$message.success("登录成功")
+                    setCookie('username', sendData.username);
+                    setCookie('password', sendData.password);
                     this.$router.push({
                         path: '/admin/systemMsg',
                         query: {
@@ -84,7 +89,7 @@ define(function (require, exports, module) {
                         var data = res.data;
                         if (data.statuscode == "200") {
                             sessionStorage.setItem('user', this.username)
-                            setCookie('usrname', _this.usrname);
+                            setCookie('username', _this.username);
                             setCookie('password', _this.password);
                             if (data.sessionid != null) {
                                 setCookie('sessionid', data.sessionid);
