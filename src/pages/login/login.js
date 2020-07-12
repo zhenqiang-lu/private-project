@@ -41,7 +41,7 @@ define(function (require, exports, module) {
         },
         created: function () {
             if (!getCookie('sessionid')) {
-                setCookie('sessionid', randomWord(false, 18))
+                setCookie('sessionid', randomWord(false, 6))
             }
         },
         methods: {
@@ -69,34 +69,32 @@ define(function (require, exports, module) {
                     _this.$message.error("请输入用户名和密码")
                     return
                 }
-                if (sendData.username === "admin" && sendData.password === "123456") {
-                    _this.$message.success("登录成功")
-                    setCookie('username', sendData.username);
-                    setCookie('password', sendData.password);
-                    this.$router.push({
-                        path: '/admin/systemMsg',
-                        query: {
-                            num: '2-1'
-                        }
-                    })
-                    return
+                // if (sendData.username === "admin" && sendData.password === "123456") {
+                //     _this.$message.success("登录成功")
+                //     setCookie('username', sendData.username);
+                //     setCookie('password', sendData.password);
+                //     this.$router.push({
+                //         path: '/admin/systemMsg',
+                //         query: {
+                //             num: '2-1'
+                //         }
+                //     })
+                //     return
+                // }
+                if(getCookie('username') && sendData.username !== getCookie('username')) {
+                    setCookie('sessionid', randomWord(false, 6))
                 }
                 login(sendData).then(function (res) {
                     if (res.success != true) {
                         _this.$message.error("登录失败")
                         return;
                     } else {
-                        var data = res.data;
-                        if (data.statuscode == "200") {
-                            sessionStorage.setItem('user', this.username)
-                            setCookie('username', _this.username);
-                            setCookie('password', _this.password);
-                            if (data.sessionid != null) {
-                                setCookie('sessionid', data.sessionid);
-                            } else {
-                                setCookie('sessionid', "Ver1-123");
-                            }
+                        var data = res;
+                        if (data.code == 1000) {
                             _this.$message.error("登录成功")
+                            sessionStorage.setItem('user', this.username)
+                            setCookie('username', sendData.username);
+                            
                             this.$router.push({
                                 path: '/admin/systemMsg',
                                 query: {
