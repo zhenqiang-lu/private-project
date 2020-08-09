@@ -1,7 +1,13 @@
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     require('./index.css');
     var isEmpty = require('../../../tools/tools.js').isEmpty;
+    // 引入请求接口
     var basic = require('../../../api/api.js').basic;
+    var getBasic = require('../../../api/api.js').getBasic;
+    var getTimeConfig = require('../../../api/api.js').getTimeConfig;
+    var timeConfig = require('../../../api/api.js').timeConfig;
+    var getDaylightSavingTime = require('../../../api/api.js').getDaylightSavingTime;
+    var daylightSavingTime = require('../../../api/api.js').daylightSavingTime;
 
     module.exports = Vue.component('index', {
         template: ['<div>',
@@ -43,7 +49,7 @@ define(function(require, exports, module) {
             '      <div class="basic-item-box">',
             '        <label for="">时区</label>',
             '        <el-select class="msg-input" size="mini" v-model="timeConfig.timeZone">',
-            '          <el-option label="北京" value="beijing"></el-option>',
+            '          <el-option v-for="(item, index) in timeZones" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '      </div>',
             '      <el-radio-group style="margin: 20px 0;" v-model="timeConfig.timingType">',
@@ -79,7 +85,7 @@ define(function(require, exports, module) {
             '        </div>',
             '      </div>',
             '      <div style="text-align: left; margin-top: 20px;">',
-            '        <el-button icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
+            '        <el-button @click="saveTimeConfig" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '      </div>',
             '    </el-tab-pane>',
             '    <el-tab-pane label="夏令时" name="third">',
@@ -87,37 +93,37 @@ define(function(require, exports, module) {
             '      <div class="basic-item-box">',
             '        <label for="">开始时间</label>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.month">',
-            '          <el-option label="一月" value="January"></el-option>',
+            '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.order">',
-            '          <el-option label="首个" value="first"></el-option>',
+            '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.day">',
-            '          <el-option label="星期日" value="Sunday"></el-option>',
+            '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.num">',
-            '          <el-option label="02" value="2"></el-option>',
+            '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '      </div>',
             '      <div class="basic-item-box">',
             '        <label for="">结束时间</label>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.month">',
-            '          <el-option label="一月" value="January"></el-option>',
+            '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.order">',
-            '          <el-option label="末个" value="last"></el-option>',
+            '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.day">',
-            '          <el-option label="星期日" value="Sunday"></el-option>',
+            '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.num">',
-            '          <el-option label="03" value="3"></el-option>',
+            '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '      </div>',
             '      <div class="basic-item-box">',
             '        <label for="">偏移时间</label>',
             '        <el-select style="width: 416px" size="mini" v-model="daylightSavingTime.offsetTime">',
-            '          <el-option label="30分钟" value="30"></el-option>',
+            '          <el-option v-for="(item, index) in times" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '      </div>',
             '      <div style="text-align: left; margin-top: 10px;">',
@@ -127,17 +133,68 @@ define(function(require, exports, module) {
             '  </el-tabs>',
             '</div>'
         ].join(""),
-        data: function() { // 数据
+        data: function () { // 数据
             return {
+                // name 在页面显示的值  value 是传给请求的值
+                timeZones: [
+                    { name: "北京", value: "beijing" },
+                    { name: "华盛顿", value: "USA" }
+                ],
+                months: [
+                    { name: "一月", value: "January" },
+                    { name: "二月", value: "February" },
+                    { name: "三月", value: "March" },
+                    { name: "四月", value: "April" },
+                    { name: "五月", value: "May" },
+                    { name: "六月", value: "June" },
+                    { name: "七月", value: "July" },
+                    { name: "八月", value: "August" },
+                    { name: "九月", value: "September" },
+                    { name: "十月", value: "October" },
+                    { name: "十一月", value: "November" },
+                    { name: "十二月", value: "December" }
+                ],
+                whichs: [
+                    { name: "首个", value: "first" },
+                    { name: "末个", value: "last" }
+                ],
+                week: [
+                    { name: "周一", value: "Monday" },
+                    { name: "周二", value: "Tuesday" },
+                    { name: "周三", value: "Wednesday" },
+                    { name: "周四", value: "Thursday" },
+                    { name: "周五", value: "Friday" },
+                    { name: "周六", value: "Saturday" },
+                    { name: "周日", value: "Sunday" }
+                ],
+                nums: [
+                    { name: "01", value: 0 },
+                    { name: "02", value: 1 },
+                    { name: "03", value: 2 },
+                    { name: "04", value: 3 },
+                    { name: "05", value: 4 },
+                    { name: "06", value: 5 },
+                    { name: "07", value: 6 }
+                ],
+                //偏移时间
+                times: [
+                    { name: "1分钟", value: 1 },
+                    { name: "3分钟", value: 3 },
+                    { name: "5分钟", value: 5 },
+                    { name: "10分钟", value: 10 },
+                    { name: "15分钟", value: 15 },
+                    { name: "30分钟", value: 30 },
+                    { name: "60分钟", value: 60 }
+                ],
                 activeName: 'first',
                 basicMsg: {
                     deviceName: '',
-                    deviceNum: 'deviceNum',
+                    deviceNum: '',
                     deviceType: 'deviceType',
-                    serialNumber: '2',
-                    hardwareVersion: '1',
-                    softwareVersion: '1',
-                    webVersion: '1',
+                    serialNumber: '',
+                    hardwareVersion: '',
+                    softwareVersion: '',
+                    webVersion: '',
                 },
                 timeConfig: {
                     timeZone: '',
@@ -171,31 +228,105 @@ define(function(require, exports, module) {
                 }
             }
         },
+
+        created: function() {
+            //获取基本信息
+            this.getBasic();
+            //获取时间配置
+            this.getTimeConfig();
+            //获取夏令时
+            this.getDaylightSavingTime();
+        },
+
         methods: {
-            saveBasicMsg: function() {
+            getBasic: function () {
                 var _this = this;
-                if(isEmpty(_this.basicMsg)) {
+                getBasic({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.basicMsg = data.data
+                    }else{
+                        _this.$message.error("基本信息获取失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("基本信息请求失败")
+                    return;
+                })
+            },
+            getTimeConfig: function () {
+                var _this = this;
+                getTimeConfig({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.timeConfig = data.data
+                    }else{
+                        _this.$message.error("时间配置获取失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("时间配置请求失败")
+                    return;
+                })
+            },
+            getDaylightSavingTime: function () {
+                var _this = this;
+                getDaylightSavingTime({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.daylightSavingTime = data.data
+                    }else{
+                        _this.$message.error("夏令时获取失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("夏令时请求失败")
+                    return;
+                })
+            },
+            saveBasicMsg: function () {
+                var _this = this;
+                if (isEmpty(_this.basicMsg)) {
                     _this.$message.error("请完善基本信息")
                     return
                 }
-                basic(_this.basicMsg).then(function(res) {
-                    if (res.success != true) {
+                basic(_this.basicMsg).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("保存成功")
+                    }else{
                         _this.$message.error("保存失败")
-                        return;
-                    } else {
-                        var data = res.data;
-                        if (data.statuscode == "200") {
-                            _this.$message.success("保存成功")
-                        }
                     }
-                }).catch(function(res) {
-                    _this.$message.error("保存失败")
+                }).catch(function (res) {
+                    _this.$message.error("请求失败")
                     return;
                 })
 
             },
-            saveDST: function() {
-
+            saveTimeConfig: function () {
+                var _this = this;
+                timeConfig(_this.timeConfig).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("保存成功")
+                    }else{
+                        _this.$message.error("保存失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("请求失败")
+                    return;
+                })
+            },
+            saveDST: function () {
+                var _this = this;
+                daylightSavingTime(_this.daylightSavingTime).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("保存成功")
+                    }else{
+                        _this.$message.error("保存失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("请求失败")
+                    return;
+                })
             }
         }
     })
