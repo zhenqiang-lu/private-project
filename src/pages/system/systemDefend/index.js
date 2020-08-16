@@ -1,12 +1,16 @@
 define(function(require, exports, module) {
     require('./index.css');
+    // 引入请求接口
+    var restart = require('../../../api/systemDefend.js').restart;
+    var reset = require('../../../api/systemDefend.js').reset;
+
     module.exports = Vue.component('index', {
         template: ['<div>',
             '  <el-tabs v-model="activeName">',
             '    <el-tab-pane label="升级维护" name="first">',
             '      <p class="p-title">重启</p>',
             '      <div class="defend-item-box">',
-            '        <el-button  size="mini" type="primary">重新启动</el-button>',
+            '        <el-button @click="restart" size="mini" type="primary">重新启动</el-button>',
             '        <label for="">重新启动设备</label>',
             '      </div>',
             '      <p class="p-title">恢复默认值</p>',
@@ -15,7 +19,7 @@ define(function(require, exports, module) {
             // '        <label for="">简单恢复设备参数</label>',
             // '      </div>',
             '      <div class="defend-item-box">',
-            '        <el-button size="mini" type="primary">恢复出场</el-button>',
+            '        <el-button @click="reset" size="mini" type="primary">恢复出场</el-button>',
             '        <label for="">恢复设备参数到出厂设置</label>',
             '      </div>',
             '      <p class="p-title">信息导出</p>',
@@ -119,6 +123,34 @@ define(function(require, exports, module) {
             }
         },
         methods: {
+            restart: function () {
+                var _this = this;
+                restart({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("重启成功")
+                    }else{
+                        _this.$message.error("重启失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("重启请求失败")
+                    return;
+                })
+            },
+            reset: function () {
+                var _this = this;
+                reset({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("恢复出厂成功")
+                    }else{
+                        _this.$message.error("恢复出厂失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("恢复出厂请求失败")
+                    return;
+                })
+            },
             handleCurrentChange: function(n) {
 
             },
