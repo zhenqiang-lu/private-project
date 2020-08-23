@@ -3,7 +3,12 @@ define(function(require, exports, module) {
     // 引入请求接口
     var restart = require('../../../api/systemDefend.js').restart;
     var reset = require('../../../api/systemDefend.js').reset;
-
+    var equipment = require('../../../api/systemDefend.js').equipment;
+    var diagnosis = require('../../../api/systemDefend.js').diagnosis;
+    var equipmentImport = require('../../../api/systemDefend.js').equipmentImport;
+    var upgradeFile = require('../../../api/systemDefend.js').upgradeFile;
+    var logList = require('../../../api/systemDefend.js').logList;
+    
     module.exports = Vue.component('index', {
         template: ['<div>',
             '  <el-tabs v-model="activeName">',
@@ -14,28 +19,24 @@ define(function(require, exports, module) {
             '        <label for="">重新启动设备</label>',
             '      </div>',
             '      <p class="p-title">恢复默认值</p>',
-            // '      <div class="defend-item-box">',
-            // '        <el-button  size="mini" type="primary">简单恢复</el-button>',
-            // '        <label for="">简单恢复设备参数</label>',
-            // '      </div>',
             '      <div class="defend-item-box">',
             '        <el-button @click="reset" size="mini" type="primary">恢复出场</el-button>',
             '        <label for="">恢复设备参数到出厂设置</label>',
             '      </div>',
             '      <p class="p-title">信息导出</p>',
             '      <div class="defend-item-box">',
-            '        <el-button  size="mini" type="primary">设备参数</el-button>',
+            '        <el-button @click="getEquipment" size="mini" type="primary">设备参数</el-button>',
             '      </div>',
             '      <div class="defend-item-box">',
-            '        <el-button  size="mini" type="primary">诊断信息</el-button>',
+            '        <el-button @click="getDiagnosis" size="mini" type="primary">诊断信息</el-button>',
             '        <label for="">下载运行日志，系统信息，硬件信息等</label>',
             '      </div>',
             '      <p class="p-title">参数导入</p>',
             '      <div class="defend-item-box">',
             '        <label style="display: inline-block; width: 120px;" for="">设备参数</label>',
-            '        <span class="filename">{{ filename.file1 }}</span>',
+            '        <span class="filename">{{ filename.file1.name }}</span>',
             '        <el-button size="mini" type="warning" @click="previewFile(\'file1\')">浏览</el-button>',
-            '        <el-button size="mini" type="warning">导入</el-button>',
+            '        <el-button @click="importEquipmentParams" size="mini" type="warning">导入</el-button>',
             '      </div>',
             '      <div class="defend-item-box">',
             '        <label style="display: inline-block; width: 120px;" for="">状态</label>',
@@ -45,9 +46,9 @@ define(function(require, exports, module) {
             '        <el-select style="width: 120px; height: 30px;" size="mini" v-model="defend.upgrade">',
             '          <el-option label="升级文件" value="upgrade"></el-option>',
             '        </el-select>',
-            '        <span class="filename">{{ filename.file2 }}</span>',
+            '        <span class="filename">{{ filename.file2.name }}</span>',
             '        <el-button size="mini" type="warning" @click="previewFile(\'file2\')">浏览</el-button>',
-            '        <el-button size="mini" type="warning">导入</el-button>',
+            '        <el-button  @click="importUpdateFile" size="mini" type="warning">导入</el-button>',
             '      </div>',
             '      <div class="defend-item-box">',
             '        <label style="display: inline-block; width: 120px;" for="">状态</label>',
@@ -59,13 +60,17 @@ define(function(require, exports, module) {
             '        <el-col :span="10">',
             '          <label class="log-label" for="">主类型：</label>',
             '          <el-select style="width: 220px;" size="mini" v-model="log.mainType">',
-            '            <el-option label="30分钟" value="30"></el-option>',
+            '            <el-option label="type1" value="type1"></el-option>',
+            '            <el-option label="type2" value="type2"></el-option>',
+            '            <el-option label="type3" value="type3"></el-option>',
             '          </el-select>',
             '        </el-col>',
             '        <el-col :span="10">',
             '          <label class="log-label" for="">次类型：</label>',
             '          <el-select style="width: 220px;" size="mini" v-model="log.secondType">',
-            '            <el-option label="30分钟" value="30"></el-option>',
+            '            <el-option label="type1" value="type1"></el-option>',
+            '            <el-option label="type2" value="type2"></el-option>',
+            '            <el-option label="type3" value="type3"></el-option>',
             '          </el-select>',
             '        </el-col>',
             '      </el-row>',
@@ -78,7 +83,7 @@ define(function(require, exports, module) {
             '          <el-date-picker v-model="log.endTime" size="mini" type="datetime" placeholder="选择日期时间"></el-date-picker></el-col>',
             '        </el-col>',
             '        <el-col :span="4">',
-            '          <el-button type="success" size="mini">查找</el-button>',
+            '          <el-button @click="getLogs" type="success" size="mini">查找</el-button>',
             '        </el-col>',
             '      </el-row>',
             '      <p style="margin-top: 10px;" class="p-title">日志列表 <el-button class="right" style="margin-top: 5px; line-height: 10px; margin-right: 8px; height: 24px;" type="primary" size="mini" >导出</el-button></p>',
@@ -100,7 +105,7 @@ define(function(require, exports, module) {
             return {
                 activeName: 'first',
                 defend: {
-                    upgrade: ''
+                    upgrade: 'upgrade'
                 },
                 filename: {
                     file1: '',
@@ -111,9 +116,7 @@ define(function(require, exports, module) {
                     secondType: '',
                     startTime: '',
                     endTime: '',
-                    tableData: [{
-                        name: 'name'
-                    }]
+                    tableData: []
                 },
                 pager: {
                     currentPage: 2,
@@ -122,7 +125,27 @@ define(function(require, exports, module) {
                 }
             }
         },
+        created: function () {
+            this.getLogs()
+        },
         methods: {
+            getLogs: function () {
+                var _this = this;
+                var params = Object.assign({}, _this.log);
+                params.tableData = undefined;
+                logList(params).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("获取日志列表成功")
+                        _this.log.tableData = data.data
+                    }else{
+                        _this.$message.error("获取日志列表失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("获取日志列表请求失败")
+                    return;
+                })
+            },
             restart: function () {
                 var _this = this;
                 restart({}).then(function (res) {
@@ -151,6 +174,66 @@ define(function(require, exports, module) {
                     return;
                 })
             },
+            getEquipment: function () {
+                var _this = this;
+                equipment({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("获取设备参数成功")
+                    }else{
+                        _this.$message.error("获取设备参数失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("获取设备参数请求失败")
+                    return;
+                })
+            },
+            getDiagnosis: function () {
+                var _this = this;
+                diagnosis({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("下载诊断信息成功")
+                    }else{
+                        _this.$message.error("下载诊断信息失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("诊断信息请求失败")
+                    return;
+                })
+            },
+            importEquipmentParams: function () {
+                var _this = this;
+                equipmentImport({
+                    file: _this.filename.file1
+                }).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("设备参数导入成功")
+                    }else{
+                        _this.$message.error("设备参数导入失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("设备参数导入请求失败")
+                    return;
+                })
+            },
+            importUpdateFile: function (name) {
+                var _this = this;
+                upgradeFile({
+                    file: _this.filename.file2
+                }).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.$message.success("升级文件导入成功")
+                    }else{
+                        _this.$message.error("升级文件导入失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("升级文件导入请求失败")
+                    return;
+                })
+            },
             handleCurrentChange: function(n) {
 
             },
@@ -159,11 +242,11 @@ define(function(require, exports, module) {
                 var inputObj = document.createElement('input')
                 inputObj.setAttribute('id', name);
                 inputObj.setAttribute('type', 'file');
-                inputObj.setAttribute("style", 'visibility:hidden');
+                inputObj.setAttribute("style", 'visibility: hidden; position: fixed');
                 document.body.appendChild(inputObj);
                 inputObj.click();
                 inputObj.addEventListener('change', function() {
-                    _this.filename[name] = this.value
+                    _this.filename[name] = this.files[0]
                 })
             }
         }

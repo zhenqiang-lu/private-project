@@ -1,5 +1,8 @@
 define(function(require, exports, module) {
     require('./index.css');
+
+    var usersList = require('../../../api/systemUser.js').usersList;
+
     module.exports = Vue.component('index', {
         template: ['<div>',
             '  <el-tabs v-model="activeName">',
@@ -7,7 +10,7 @@ define(function(require, exports, module) {
             '      <p style="margin-top: 10px;" class="p-title">',
             '        <span>日志列表</span> ',
             '        <span class="right">',
-            '          <el-button class="user-btn" type="primary" size="mini">安全问题</el-button>',
+            // '          <el-button class="user-btn" type="primary" size="mini">安全问题</el-button>',
             '          <el-button @click="addUser" class="user-btn" type="primary" size="mini">添加</el-button>',
             '        </span>',
             '      </p>',
@@ -84,9 +87,7 @@ define(function(require, exports, module) {
                 activeName: 'first',
                 dialogUser: false,
                 allUsers: {
-                    tableData: [{
-                        name: 'name'
-                    }]
+                    tableData: []
                 },
                 onlineUsers: {
                     tableData: [{
@@ -123,7 +124,28 @@ define(function(require, exports, module) {
                 isIndeterminate: true
             }
         },
+        created: function () {
+            //获取用户管理列表
+            this.getUsersList();
+        },
         methods: {
+            getUsersList: function () {
+                var _this = this;
+                usersList({}).then(function (res) {
+                    var data = res.data;
+                    if (data.code == 1000) {
+                        _this.allUsers.tableData = data.data
+                    }else{
+                        _this.$message.error("获取用户管理列表失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("用户管理列表请求失败")
+                    _this.allUsers.tableData = [
+                        {name: '测试', id: 345}
+                    ]
+                    return;
+                })
+            },
             addUser: function() {
                 this.dialogUser = true
             },
