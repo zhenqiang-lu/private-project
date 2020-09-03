@@ -36,7 +36,9 @@ define(function(require, exports, module) {
             '      </el-aside>',
             '      <el-main>',
             '        <router-view></router-view>',
+            '        <p class="login-bottom">2020 Shenzhen XXXX Technology Co, Ltd. All Rights Reserverd.</p>',
             '      </el-main>',
+            
             '    </el-container>',
             '  </el-container>',
             '</div>',

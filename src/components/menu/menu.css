@@ -19,6 +19,13 @@
   background-color: #E9EEF3;
   color: #333;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.el-main>p {
+  text-align: center;
 }
 .menu-li{
   padding-left: 0;

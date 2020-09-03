@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var setCookie = require('../../tools/cookie.js').setCookie;
   var getCookie = require('../../tools/cookie.js').getCookie;
   var randomWord = require('../../tools/tools.js').randomWord;
+  
   require('./login.css');
   module.exports = Vue.component('login', {
     template: ['<div class="login-page">',
@@ -20,7 +21,7 @@ define(function(require, exports, module) {
       '		  <el-button @click="send" type="success">{{ $t(\'message.login\') }}</el-button>',
       '	  </div>',
       '  </div>',
-      '  <p class="login-bottom">版权所有</p>',
+      '  <p class="login-bottom">2020 Shenzhen XXXX Technology Co, Ltd. All Rights Reserverd.</p>',
       '</div>'
     ].join(""),
     data: function() { // 数据

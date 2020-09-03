@@ -4,6 +4,7 @@ define(function (require, exports, module) {
     // 引入请求接口
     var basic = require('../../../api/api.js').basic;
     var getBasic = require('../../../api/api.js').getBasic;
+    var getNameAndNumber = require('../../../api/api.js').getNameAndNumber;
     var getTimeConfig = require('../../../api/api.js').getTimeConfig;
     var timeConfig = require('../../../api/api.js').timeConfig;
     var getDaylightSavingTime = require('../../../api/api.js').getDaylightSavingTime;
@@ -11,8 +12,8 @@ define(function (require, exports, module) {
 
     module.exports = Vue.component('index', {
         template: ['<div>',
-            '  <el-tabs v-model="activeName">',
-            '    <el-tab-pane :label="$t(\'basic.basic\')" name="first">',
+            '  <el-tabs v-model="activeName" @tab-click="tabClick">',
+            '    <el-tab-pane :label="$t(\'basic.basic\')" name="first" >',
             '      <div class="basic-item-box">',
             '        <label for="">{{ $t(\'basic.deviceName\') }}</label>',
             '        <el-input class="msg-input" size="mini" v-model="basicMsg.deviceName"></el-input>',
@@ -45,7 +46,7 @@ define(function (require, exports, module) {
             '        <el-button @click="saveBasicMsg" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '      </div>',
             '    </el-tab-pane>',
-            '    <el-tab-pane label="时间配置" name="second">',
+            '    <el-tab-pane label="时间配置" name="second" v-on:click="getBasic">',
             '      <div class="basic-item-box">',
             '        <label for="">时区</label>',
             '        <el-select class="msg-input" size="mini" v-model="timeConfig.timeZone">',
@@ -230,21 +231,52 @@ define(function (require, exports, module) {
         },
 
         created: function() {
-            //获取基本信息
+            // //获取基本信息
             this.getBasic();
-            //获取时间配置
-            this.getTimeConfig();
-            //获取夏令时
-            this.getDaylightSavingTime();
+            // //获取时间配置
+            // this.getTimeConfig();
+            // //获取夏令时
+            // this.getDaylightSavingTime();
         },
 
         methods: {
+            tabClick:function(tab,event){
+               // console.log(tab,event)
+                if(tab.name=='first'){
+                     //获取基本信息
+                      this.getBasic();
+                }else if(tab.name=='second'){
+                    //获取时间配置
+                    this.getTimeConfig();
+                }else{
+                     //获取夏令时
+                     this.getDaylightSavingTime();
+                }
+            },
             getBasic: function () {
                 var _this = this;
+                getNameAndNumber({}).then(function (res) {
+                    var data = res.data;
+                    console.log(data)
+                    if (data.code == 1000) {
+                        _this.basicMsg.deviceName = data.data.Name
+                        _this.basicMsg.deviceNum = data.data.Num
+                    }else{
+                        _this.$message.error("设备名称和设备编号获取失败")
+                    }
+                }).catch(function (res) {
+                    _this.$message.error("设备名称和设备编号请求失败")
+                    return;
+                })
                 getBasic({}).then(function (res) {
                     var data = res.data;
+                    console.log(data)
                     if (data.code == 1000) {
-                        _this.basicMsg = data.data
+                        _this.basicMsg.deviceType = data.data.Type
+                        _this.basicMsg.serialNumber = data.data.ID
+                        _this.basicMsg.hardwareVersion = data.data.SW
+                        _this.basicMsg.softwareVersion = data.data.HW
+                        _this.basicMsg.webVersion = data.data.Web
                     }else{
                         _this.$message.error("基本信息获取失败")
                     }
@@ -254,6 +286,7 @@ define(function (require, exports, module) {
                 })
             },
             getTimeConfig: function () {
+                console.log(111)
                 var _this = this;
                 getTimeConfig({}).then(function (res) {
                     var data = res.data;
