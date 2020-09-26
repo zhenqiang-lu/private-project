@@ -110,7 +110,7 @@ define(function(require, exports, module) {
             '            <label for="">抓图数量</label>',
             '            <el-input class="basic-input" disabled size="mini" v-model="test"></el-input>',
             '          </div>',
-            '          <div style="text-align: left; margin-top: 10px;">',
+            '          <div style="text-align: center; margin-top: 10px;">',
             '            <el-button icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '          </div>',
             '        </el-tab-pane>',

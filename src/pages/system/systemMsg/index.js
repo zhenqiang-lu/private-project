@@ -2,13 +2,13 @@ define(function (require, exports, module) {
     require('./index.css');
     var isEmpty = require('../../../tools/tools.js').isEmpty;
     // 引入请求接口
-    var basic = require('../../../api/api.js').basic;
-    var getBasic = require('../../../api/api.js').getBasic;
-    var getNameAndNumber = require('../../../api/api.js').getNameAndNumber;
-    var getTimeConfig = require('../../../api/api.js').getTimeConfig;
-    var timeConfig = require('../../../api/api.js').timeConfig;
-    var getDaylightSavingTime = require('../../../api/api.js').getDaylightSavingTime;
-    var daylightSavingTime = require('../../../api/api.js').daylightSavingTime;
+    var basic = require('../../../api/system.js').basic;
+    var getBasic = require('../../../api/system.js').getBasic;
+    var getNameAndNumber = require('../../../api/system.js').getNameAndNumber;
+    var getTimeConfig = require('../../../api/system.js').getTimeConfig;
+    var timeConfig = require('../../../api/system.js').timeConfig;
+    var getDaylightSavingTime = require('../../../api/system.js').getDaylightSavingTime;
+    var daylightSavingTime = require('../../../api/system.js').daylightSavingTime;
 
     module.exports = Vue.component('index', {
         template: ['<div>',
@@ -42,7 +42,7 @@ define(function (require, exports, module) {
             '        <label for="">{{ $t(\'basic.webVersion\') }}</label>',
             '        <el-input class="msg-input" disabled size="mini" v-model="basicMsg.webVersion"></el-input>',
             '      </div>',
-            '      <div style="text-align: left; margin-top: 10px;">',
+            '      <div style="text-align: center; margin-top: 10px;">',
             '        <el-button @click="saveBasicMsg" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '      </div>',
             '    </el-tab-pane>',
@@ -72,7 +72,7 @@ define(function (require, exports, module) {
             '            <span slot="append">分钟</span>',
             '          </el-input>',
             '        </div>',
-            '        <el-button type="warning" size="mini">测试</el-button>',
+            '        <el-button style="margin-top: 10px" type="warning" size="mini">测试</el-button>',
             '      </div>',
             '      <div v-else>',
             '        <div class="basic-item-box">',
@@ -85,52 +85,52 @@ define(function (require, exports, module) {
             '          <el-checkbox v-model="timeConfig.hand.isSync">与计算机时间同步</el-checkbox>',
             '        </div>',
             '      </div>',
-            '      <div style="text-align: left; margin-top: 20px;">',
+            '      <div style="text-align: center; margin-top: 20px;">',
             '        <el-button @click="saveTimeConfig" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
             '      </div>',
             '    </el-tab-pane>',
-            '    <el-tab-pane label="夏令时" name="third">',
-            '      <el-checkbox v-model="daylightSavingTime.enable">启用夏令时</el-checkbox>',
-            '      <div class="basic-item-box">',
-            '        <label for="">开始时间</label>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.month">',
-            '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.order">',
-            '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.day">',
-            '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.num">',
-            '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '      </div>',
-            '      <div class="basic-item-box">',
-            '        <label for="">结束时间</label>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.month">',
-            '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.order">',
-            '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.day">',
-            '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.num">',
-            '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '      </div>',
-            '      <div class="basic-item-box">',
-            '        <label for="">偏移时间</label>',
-            '        <el-select style="width: 416px" size="mini" v-model="daylightSavingTime.offsetTime">',
-            '          <el-option v-for="(item, index) in times" :key="index" :label="item.name" :value="item.value"></el-option>',
-            '        </el-select>',
-            '      </div>',
-            '      <div style="text-align: left; margin-top: 10px;">',
-            '        <el-button @click="saveDST" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
-            '      </div>',
-            '    </el-tab-pane>',
+            // '    <el-tab-pane label="夏令时" name="third">',
+            // '      <el-checkbox v-model="daylightSavingTime.enable">启用夏令时</el-checkbox>',
+            // '      <div class="basic-item-box">',
+            // '        <label for="">开始时间</label>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.month">',
+            // '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.order">',
+            // '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.day">',
+            // '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.startTime.num">',
+            // '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '      </div>',
+            // '      <div class="basic-item-box">',
+            // '        <label for="">结束时间</label>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.month">',
+            // '          <el-option v-for="(item, index) in months" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.order">',
+            // '          <el-option v-for="(item, index) in whichs" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.day">',
+            // '          <el-option v-for="(item, index) in week" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '        <el-select class="mini-select" size="mini" v-model="daylightSavingTime.endTime.num">',
+            // '          <el-option v-for="(item, index) in nums" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '      </div>',
+            // '      <div class="basic-item-box">',
+            // '        <label for="">偏移时间</label>',
+            // '        <el-select style="width: 416px" size="mini" v-model="daylightSavingTime.offsetTime">',
+            // '          <el-option v-for="(item, index) in times" :key="index" :label="item.name" :value="item.value"></el-option>',
+            // '        </el-select>',
+            // '      </div>',
+            // '      <div style="text-align: center; margin-top: 10px;">',
+            // '        <el-button @click="saveDST" icon="el-icon-receiving" size="mini" type="success">保存</el-button>',
+            // '      </div>',
+            // '    </el-tab-pane>',
             '  </el-tabs>',
             '</div>'
         ].join(""),
@@ -286,7 +286,6 @@ define(function (require, exports, module) {
                 })
             },
             getTimeConfig: function () {
-                console.log(111)
                 var _this = this;
                 getTimeConfig({}).then(function (res) {
                     var data = res.data;
@@ -316,11 +315,15 @@ define(function (require, exports, module) {
             },
             saveBasicMsg: function () {
                 var _this = this;
-                if (isEmpty(_this.basicMsg)) {
-                    _this.$message.error("请完善基本信息")
+                var sendData = {
+                    deviceName: _this.basicMsg.deviceName,
+                    deviceNum:  _this.basicMsg.deviceNum
+                }
+                if (isEmpty(sendData)) {
+                    _this.$message.error("请填写设备名称和设备编号")
                     return
                 }
-                basic(_this.basicMsg).then(function (res) {
+                basic(sendData).then(function (res) {
                     var data = res.data;
                     if (data.code == 1000) {
                         _this.$message.success("保存成功")

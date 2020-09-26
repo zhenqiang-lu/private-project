@@ -16,9 +16,10 @@
 }
 
 .el-main {
+  position: relative;
   background-color: #E9EEF3;
   color: #333;
-  text-align: left;
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -26,6 +27,12 @@
 
 .el-main>p {
   text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  line-height: 40px;
 }
 .menu-li{
   padding-left: 0;
@@ -33,4 +40,18 @@
 }
 .view-box .el-menu{
   border-right: none;
+}
+
+.collapse-icon {
+  margin-left: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.width160 {
+  width: 180px;
+}
+
+.width64 {
+  width: 64px;
 }

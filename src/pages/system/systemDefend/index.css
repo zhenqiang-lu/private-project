@@ -1,6 +1,7 @@
 .defend-item-box{
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: left;
 }
 .filename{
   display: inline-block;

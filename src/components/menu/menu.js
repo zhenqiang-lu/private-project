@@ -3,8 +3,10 @@ define(function(require, exports, module) {
     module.exports = Vue.component('Menu', {
         template: ['<div class="view-box">',
             '  <el-container style="height: 100%;">',
-            '    <el-header style="text-align: left; color: white; background: #545c64;">',
-            '      管理系统后台',
+            '    <el-header style="text-align: left; color: white; background: #567; padding-left: 0">',
+            '      <p :class="isCollapse ? style.width64 : style.width160 " style="text-align: center; display: inline-block; background: #404d59">{{ isCollapse ? "后台" : "后台管理系统" }}</p>',
+            '      <i @click="flodFunc(true)"v-if="!isCollapse" class="el-icon-s-fold collapse-icon"></i>',
+            '      <i @click="flodFunc(false)" v-else class="el-icon-s-unfold collapse-icon"></i>',
             '      <el-dropdown style="color: white; float: right" trigger="click">',
             '        <span class="el-dropdown-link">',
             '          {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>',
@@ -15,8 +17,8 @@ define(function(require, exports, module) {
             '      </el-dropdown>',
             '    </el-header>',
             '    <el-container>',
-            '      <el-aside width="160px" style="overflow: hidden; background-color: #545c64">',
-            '        <el-menu :unique-opened="true" :default-active="num" class="el-menu-vertical-demo" text-color="#fff" background-color="#545c64" active-text-color="#ffd04b">',
+            '      <el-aside width="auto" style="overflow: hidden; background-color: #20262d">',
+            '        <el-menu :class="isCollapse ? style.width64 : style.width160 " :collapse="isCollapse" :unique-opened="true" :default-active="num" class="el-menu-vertical-demo" text-color="#fff" background-color="#20262d" active-text-color="#FFFFFF">',
             '          <template v-for="(item, index) in menuList">',
             '            <el-submenu class="menu-li" v-if="item.children && item.children.length > 0" :index="item.num">',
             '              <template slot="title">',
@@ -35,7 +37,7 @@ define(function(require, exports, module) {
             '        </el-menu>',
             '      </el-aside>',
             '      <el-main>',
-            '        <router-view></router-view>',
+            '        <router-view style="    background-color: white;padding: 20px;border-radius: 10px;box-shadow: 0 0 0 10px #EDEDED;"></router-view>',
             '        <p class="login-bottom">2020 Shenzhen XXXX Technology Co, Ltd. All Rights Reserverd.</p>',
             '      </el-main>',
             
@@ -45,6 +47,11 @@ define(function(require, exports, module) {
         ].join(""),
         data: function() { // 数据
             return {
+                style: {
+                    width64: "width64",
+                    width160: "width160"
+                },
+                isCollapse: false,
                 username: "admin",
                 num: this.$route.query.num || "1",
                 menuList: [
@@ -280,6 +287,9 @@ define(function(require, exports, module) {
                         num: data.num
                     }
                 })
+            },
+            flodFunc: function() {
+                this.isCollapse = !this.isCollapse
             },
             logout: function() {
                 // sessionStorage.clear();

@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-  var login = require('../../api/api.js').login;
+  var login = require('../../api/login.js').login;
   var setCookie = require('../../tools/cookie.js').setCookie;
   var getCookie = require('../../tools/cookie.js').getCookie;
   var randomWord = require('../../tools/tools.js').randomWord;

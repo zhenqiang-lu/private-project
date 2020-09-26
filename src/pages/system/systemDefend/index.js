@@ -1,13 +1,13 @@
 define(function(require, exports, module) {
     require('./index.css');
     // 引入请求接口
-    var restart = require('../../../api/systemDefend.js').restart;
-    var reset = require('../../../api/systemDefend.js').reset;
-    var equipment = require('../../../api/systemDefend.js').equipment;
-    var diagnosis = require('../../../api/systemDefend.js').diagnosis;
-    var equipmentImport = require('../../../api/systemDefend.js').equipmentImport;
-    var upgradeFile = require('../../../api/systemDefend.js').upgradeFile;
-    var logList = require('../../../api/systemDefend.js').logList;
+    var restart = require('../../../api/system.js').restart;
+    var reset = require('../../../api/system.js').reset;
+    var equipment = require('../../../api/system.js').equipment;
+    var diagnosis = require('../../../api/system.js').diagnosis;
+    var equipmentImport = require('../../../api/system.js').equipmentImport;
+    var upgradeFile = require('../../../api/system.js').upgradeFile;
+    var logList = require('../../../api/system.js').logList;
     
     module.exports = Vue.component('index', {
         template: ['<div>',

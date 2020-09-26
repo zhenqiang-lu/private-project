@@ -37,5 +37,6 @@
   margin-bottom: 20px;
 }
 .login-bottom{
-  padding-top: 10px;
+  line-height: 28px;
+  background-color: white;
 }

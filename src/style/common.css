@@ -35,3 +35,28 @@ body {
 .el-tabs__item {
   font-size: 16px;
 }
+.el-tabs__nav-scroll {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+}
+
+.el-collapse-item__header {
+  padding-left: 20px;
+}
+
+.el-tabs__active-bar {
+  background-color: #567;
+}
+
+.el-tabs__item.is-active {
+  color: #567;
+}
+
+.el-submenu [class^=el-icon-] {
+  margin-right: 15px;
+}
+
+.el-submenu .el-menu-item {
+  text-indent: 24px;
+}
