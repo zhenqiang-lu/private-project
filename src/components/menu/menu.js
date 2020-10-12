@@ -18,7 +18,7 @@ define(function(require, exports, module) {
             '    </el-header>',
             '    <el-container>',
             '      <el-aside width="auto" style="overflow: hidden; background-color: #20262d">',
-            '        <el-menu :class="isCollapse ? style.width64 : style.width160 " :collapse="isCollapse" :unique-opened="true" :default-active="num" class="el-menu-vertical-demo" text-color="#fff" background-color="#20262d" active-text-color="#FFFFFF">',
+            '        <el-menu :collapse-transition="false" :class="isCollapse ? style.width64 : style.width160 " :collapse="isCollapse" :unique-opened="true" :default-active="num" class="el-menu-vertical-demo" text-color="#999999" background-color="#20262d" active-text-color="#FFFFFF">',
             '          <template v-for="(item, index) in menuList">',
             '            <el-submenu class="menu-li" v-if="item.children && item.children.length > 0" :index="item.num">',
             '              <template slot="title">',

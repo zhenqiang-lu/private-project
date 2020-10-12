@@ -89,7 +89,7 @@ define(function(require, exports, module) {
             '      </div>',
             '      <div class="net-item-box">',
             '        <label for="">用户名</label>',
-            '        <el-input class="net-input" size="mini" v-model="platform.SIP"></el-input>',
+            '        <el-input style="width: 325px" class="net-input" size="mini" v-model="platform.SIP"></el-input>',
             '        <el-checkbox v-model="integrate.enable">匿名登录</el-checkbox>',
             '      </div>',
             '      <div class="net-item-box">',

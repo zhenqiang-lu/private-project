@@ -25,4 +25,9 @@ define(function (require, exports, module) {
     return str;
   }
 
+  exports.toDate = function (time) {
+    
+    return str;
+  }
+
 })

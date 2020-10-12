@@ -806,7 +806,7 @@ var str_SDStream="Stream";
 var str_RtspAut="RTSP Authentication";
 var str_SMTPEncryption="Encryption Method:";
 var str_SMTPUnencrypted="Unencrypted";
-//ÓãÑÛPTZ
+//ï¿½ï¿½ï¿½ï¿½PTZ
 var str_ptzfisheye = "FishEye";
 var str_ptzfisheye180 = "180Panorama";
 var str_ptzfisheye360 = "360Panorama";

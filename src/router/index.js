@@ -25,17 +25,17 @@ define(function(require, exports, module) {
           {
             path: '/admin/systemMsg',
             name: 'systemMsg',
-            component: require('../pages/system/systemMsg/index.js')
+            component: require('../pages/system/Msg/index.js')
           },
           {
             path: '/admin/systemDefend',
             name: 'systemDefend',
-            component: require('../pages/system/systemDefend/index.js')
+            component: require('../pages/system/Defend/index.js')
           },
           {
             path: '/admin/systemUser',
             name: 'systemUser',
-            component: require('../pages/system/systemUser/index.js')
+            component: require('../pages/system/User/index.js')
           },
           {
             path: '/admin/netConfig',
