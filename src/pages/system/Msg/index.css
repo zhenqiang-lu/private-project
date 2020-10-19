@@ -17,3 +17,12 @@
   width: 80px;
   text-align: right;
 }
+
+.jbs {
+  width: 564px;
+  margin: 20px auto 0px;
+  text-align: left;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-image: linear-gradient(to right, #EDEDED, #FFFFFF);
+}

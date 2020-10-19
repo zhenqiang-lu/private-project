@@ -9,7 +9,7 @@ define(function (require, exports, module) {
     },
     //导航
     menu: {
-      system: "系统",
+      system: "系统管理",
       net: "网络",
       media: "音视频",
       picture: "图像",

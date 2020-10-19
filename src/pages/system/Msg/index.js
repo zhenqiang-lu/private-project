@@ -1,14 +1,15 @@
 define(function (require, exports, module) {
     require('./index.css');
     var isEmpty = require('../../../tools/tools.js').isEmpty;
+    var toDate = require('../../../tools/tools.js').toDate;
     // 引入请求接口
     var basic = require('../../../api/system.js').basic;
     var getBasic = require('../../../api/system.js').getBasic;
     var getNameAndNumber = require('../../../api/system.js').getNameAndNumber;
     var getTimeConfig = require('../../../api/system.js').getTimeConfig;
     var timeConfig = require('../../../api/system.js').timeConfig;
-    var getDaylightSavingTime = require('../../../api/system.js').getDaylightSavingTime;
-    var daylightSavingTime = require('../../../api/system.js').daylightSavingTime;
+    // var getDaylightSavingTime = require('../../../api/system.js').getDaylightSavingTime;
+    // var daylightSavingTime = require('../../../api/system.js').daylightSavingTime;
 
     module.exports = Vue.component('index', {
         template: ['<div>',
@@ -53,7 +54,7 @@ define(function (require, exports, module) {
             '          <el-option v-for="(item, index) in timeZones" :key="index" :label="item.name" :value="item.value"></el-option>',
             '        </el-select>',
             '      </div>',
-            '        <div style="width: 750px;margin: 0 auto;text-align: left;"><el-radio v-model="timeConfig.Type" label="1">NTP校时</el-radio></div>',
+            '        <div class="jbs"><el-radio v-model="timeConfig.Type" :label="1">NTP校时</el-radio></div>',
             '      <div>',
             '        <div class="basic-item-box">',
             '          <label for="">服务器地址</label>',
@@ -64,23 +65,23 @@ define(function (require, exports, module) {
             '          <el-input class="msg-input" size="mini" v-model="timeConfig.NTPSPort"></el-input>',
             '        </div>',
             '        <div class="basic-item-box">',
-            '          <label for="">校时时间间隔</label>',
+            '          <label for="">校时间隔</label>',
             '          <el-input class="msg-input" size="mini" v-model="timeConfig.Period">',
             '            <span slot="append">分钟</span>',
             '          </el-input>',
             '        </div>',
-            '        <div style="width: 750px;margin: 20px auto 0;text-align: left;"><el-radio v-model="timeConfig.Type" label="0">手动校时</el-radio></div>',
+            '        <div class="jbs"><el-radio v-model="timeConfig.Type" :label="0">手动校时</el-radio></div>',
             // '        <el-button style="margin-top: 10px" type="warning" size="mini">测试</el-button>',
             '      </div>',
             '      <div>',
-            '        <div class="basic-item-box">',
-            '          <label for="">设备时间</label>',
-            '          <el-input class="msg-input" size="mini" v-model="timeConfig.ManTime"></el-input>',
-            '        </div>',
+            // '        <div class="basic-item-box">',
+            // '          <label for="">设备时间</label>',
+            // '          <el-input disabled class="msg-input" size="mini" v-model="timeConfig.TimeSet"></el-input>',
+            // '        </div>',
             '        <div class="basic-item-box">',
             '          <label for="">设置时间</label>',
-            '          <div style="width: 500px; display: inline-block; text-align: left;"><el-date-picker v-model="timeConfig.TimeSet" value-format="timestamp" size="mini" type="datetime" placeholder="选择日期时间"></el-date-picker>',
-            '          <el-checkbox @change="changeSync" v-model="isSync">与计算机时间同步</el-checkbox></div>',
+            '          <div style="width: 500px; display: inline-block; text-align: left;"><el-date-picker @focus="dateFocus" @change="selectDate" :disabled="timeConfig.Type === 1 " v-model="timeConfig.MulTime" value-format="timestamp" size="mini" type="datetime" placeholder="选择日期时间"></el-date-picker>',
+            '          <el-checkbox :disabled="timeConfig.Type === 1 " @change="changeSync" v-model="isSync">与计算机时间同步</el-checkbox></div>',
             '        </div>',
             '      </div>',
             '      <div style="text-align: center; margin-top: 20px;">',
@@ -137,40 +138,40 @@ define(function (require, exports, module) {
                 timer: null,
                 // name 在页面显示的值  value 是传给请求的值
                 timeZones: [
-                    { name: "(CST+12:00:00) 日界线西", value: "0" },
-                    { name: "(CST+11:00:00) 中途岛，萨摩亚群岛", value: "1" },
-                    { name: "(CST+10:00:00) 夏威夷", value: "2" },
-                    { name: "(CST+9:00:00) 阿拉斯加", value: "3" },
-                    { name: "(CST+8:00:00) 太平洋时间(美国和加拿大)", value: "4" },
-                    { name: "(CST+7:00:00) 山地时间(美国和加拿大)", value: "5" },
-                    { name: "(CST+6:00:00) 中部时间(美国和加拿大)", value: "6" },
-                    { name: "(CST+5:00:00) 东部时间(美国和加拿大)", value: "7" },
-                    { name: "(CST+4:30:00) 加拉加斯", value: "8" },
-                    { name: "(CST+4:00:00) 大西洋时间(加拿大)", value: "9" },
-                    { name: "(CST+3:30:00) 纽芬兰", value: "10" },
-                    { name: "(CST+3:00:00) 乔治敦、巴西利亚", value: "11" },
-                    { name: "(CST+2:00:00) 中大西洋", value: "12" },
-                    { name: "(CST+1:00:00) 佛得角群岛、亚速尔群岛", value: "13" },
-                    { name: "(CST+0:00:00) 都柏林、爱丁堡、伦敦", value: "14" },
-                    { name: "(CST-1:00:00) 阿姆斯特丹、柏林、罗马、巴黎", value: "15" },
-                    { name: "(CST-2:00:00) 雅典、耶路撒冷", value: "16" },
-                    { name: "(CST-3:00:00) 巴格达、科威特、莫斯科、伊斯坦布尔、圣彼得堡", value: "17" },
-                    { name: "(CST-3:30:00) 德黑兰", value: "18" },
-                    { name: "(CST-4:00:00) 高加索标准时间", value: "19" },
-                    { name: "(CST-4:30:00) 喀布尔", value: "20" },
-                    { name: "(CST-5:00:00) 伊斯兰堡、卡拉奇、塔什干", value: "21" },
-                    { name: "(CST-5:30:00) 马德拉斯、孟买、新德里", value: "22" },
-                    { name: "(CST-5:45:00) 加德满都", value: "23" },
-                    { name: "(CST-6:00:00) 阿拉木图、达卡", value: "24" },
-                    { name: "(CST-6:30:00) 仰光", value: "25" },
-                    { name: "(CST-7:00:00) 曼谷、河内、雅加达、新西伯利亚", value: "26" },
-                    { name: "(CST-8:00:00) 北京、乌鲁木齐、新加坡、珀斯", value: "27" },
-                    { name: "(CST-9:00:00) 首尔、东京、大阪、札幌", value: "28" },
-                    { name: "(CST-9:30:00) 阿德莱德、达尔文", value: "29" },
-                    { name: "(CST-10:00:00) 墨尔本、悉尼、堪培拉、布里斯班、霍巴特", value: "30" },
-                    { name: "(CST-11:00:00) 马加丹、索罗门群岛", value: "31" },
-                    { name: "(CST-12:00:00) 奥克兰、惠灵顿", value: "32" },
-                    { name: "(CST-13:00:00) 努库阿洛法", value: "33" },
+                    { name: "(CST-12:00:00) 日界线西", value: 0 },
+                    { name: "(CST-11:00:00) 中途岛，萨摩亚群岛", value: 1 },
+                    { name: "(CST-10:00:00) 夏威夷", value: 2 },
+                    { name: "(CST-9:00:00) 阿拉斯加", value: 3 },
+                    { name: "(CST-8:00:00) 太平洋时间(美国和加拿大)", value: 4 },
+                    { name: "(CST-7:00:00) 山地时间(美国和加拿大)", value: 5 },
+                    { name: "(CST-6:00:00) 中部时间(美国和加拿大)", value: 6 },
+                    { name: "(CST-5:00:00) 东部时间(美国和加拿大)", value: 7 },
+                    { name: "(CST-4:30:00) 加拉加斯", value: 8 },
+                    { name: "(CST-4:00:00) 大西洋时间(加拿大)", value: 9 },
+                    { name: "(CST-3:30:00) 纽芬兰", value: 10 },
+                    { name: "(CST-3:00:00) 乔治敦、巴西利亚", value: 11 },
+                    { name: "(CST-2:00:00) 中大西洋", value: 12 },
+                    { name: "(CST-1:00:00) 佛得角群岛、亚速尔群岛", value: 13 },
+                    { name: "(CST-0:00:00) 都柏林、爱丁堡、伦敦", value: 14 },
+                    { name: "(CST+1:00:00) 阿姆斯特丹、柏林、罗马、巴黎", value: 15 },
+                    { name: "(CST+2:00:00) 雅典、耶路撒冷", value: 16 },
+                    { name: "(CST+3:00:00) 巴格达、科威特、莫斯科、伊斯坦布尔、圣彼得堡", value: 17 },
+                    { name: "(CST+3:30:00) 德黑兰", value: 18 },
+                    { name: "(CST+4:00:00) 高加索标准时间", value: 19 },
+                    { name: "(CST+4:30:00) 喀布尔", value: 20 },
+                    { name: "(CST+5:00:00) 伊斯兰堡、卡拉奇、塔什干", value: 21 },
+                    { name: "(CST+5:30:00) 马德拉斯、孟买、新德里", value: 22 },
+                    { name: "(CST+5:45:00) 加德满都", value: 23 },
+                    { name: "(CST+6:00:00) 阿拉木图、达卡", value: 24 },
+                    { name: "(CST+6:30:00) 仰光", value: 25 },
+                    { name: "(CST+7:00:00) 曼谷、河内、雅加达、新西伯利亚", value: 26 },
+                    { name: "(CST+8:00:00) 北京、乌鲁木齐、新加坡、珀斯", value: 27 },
+                    { name: "(CST+9:00:00) 首尔、东京、大阪、札幌", value: 28 },
+                    { name: "(CST+9:30:00) 阿德莱德、达尔文", value: 29 },
+                    { name: "(CST+10:00:00) 墨尔本、悉尼、堪培拉、布里斯班、霍巴特", value: 30 },
+                    { name: "(CST+11:00:00) 马加丹、索罗门群岛", value: 31 },
+                    { name: "(CST+12:00:00) 奥克兰、惠灵顿", value: 32 },
+                    { name: "(CST+13:00:00) 努库阿洛法", value: 33 },
                 ],
                 // months: [
                 //     { name: "一月", value: "January" },
@@ -218,7 +219,7 @@ define(function (require, exports, module) {
                 //     { name: "30分钟", value: 30 },
                 //     { name: "60分钟", value: 60 }
                 // ],
-                activeName: 'second',
+                activeName: 'first',
                 basicMsg: {
                     Name: '',
                     Num: '',
@@ -228,15 +229,14 @@ define(function (require, exports, module) {
                     softwareVersion: '',
                     webVersion: '',
                 },
-                isSync:  false,
+                isSync: false,
                 timeConfig: {
-                    TimeSet:  '',
-                    Type: '1',
-                    Zone: '',
+                    Type: 1,
+                    Zone: 13,
                     Period: '',
-                    NTPSAddr:'',
+                    NTPSAddr: '',
                     NTPSPort: '',
-                    ManTime: '',
+                    MulTime: '',
                 },
                 // daylightSavingTime: {
                 //     enable: true,
@@ -257,7 +257,7 @@ define(function (require, exports, module) {
             }
         },
 
-        created: function() {
+        created: function () {
             // //获取基本信息
             this.getBasic();
             // //获取时间配置
@@ -266,26 +266,37 @@ define(function (require, exports, module) {
             // this.getDaylightSavingTime();
         },
         methods: {
-            changeSync() {
+            dateFocus: function() {
+                this.isSync = false;
+                this.changeSync()
+            },
+            selectDate: function() {
+                this.goTime()
+            },
+            changeSync: function () {
                 var _this = this
-                if(this.isSync) {
-                    var timestampLocal = new Date().getTime();
-                    this.timeConfig.TimeSet = timestampLocal;
-                    this.timer = setInterval(function() {
-                        _this.timeConfig.TimeSet += 1000
-                        _this.timeConfig.ManTime = _this.timeConfig.TimeSet
-                        
-                    }, 1000);
-                }else{
+                if (this.isSync) {
+                    _this.timeConfig.MulTime = new Date().getTime()
+                    this.goTime();
+                } else {
                     clearInterval(_this.timer)
+                    this.timeConfig.MulTime = ''
                 }
             },
-            tabClick:function(tab,event){
-               // console.log(tab,event)
-                if(tab.name=='first'){
-                     //获取基本信息
-                      this.getBasic();
-                }else if(tab.name=='second'){
+            goTime: function() {
+                var _this = this
+                clearInterval(this.timer)
+                this.timer = setInterval(function () {
+                    console.log('test')
+                    _this.timeConfig.MulTime += 1000
+                }, 1000);
+            },
+            tabClick: function (tab, event) {
+                // console.log(tab,event)
+                if (tab.name == 'first') {
+                    //获取基本信息
+                    this.getBasic();
+                } else if (tab.name == 'second') {
                     //获取时间配置
                     this.getTimeConfig();
                 }
@@ -302,7 +313,7 @@ define(function (require, exports, module) {
                     if (data.code == 1000) {
                         _this.basicMsg.Name = data.data.Name
                         _this.basicMsg.Num = data.data.Num
-                    }else{
+                    } else {
                         _this.$message.error("设备名称和设备编号获取失败")
                     }
                 }).catch(function (res) {
@@ -318,7 +329,7 @@ define(function (require, exports, module) {
                         _this.basicMsg.hardwareVersion = data.data.SW
                         _this.basicMsg.softwareVersion = data.data.HW
                         _this.basicMsg.webVersion = data.data.Web
-                    }else{
+                    } else {
                         _this.$message.error("基本信息获取失败")
                     }
                 }).catch(function (res) {
@@ -332,7 +343,7 @@ define(function (require, exports, module) {
                     var data = res.data;
                     if (data.code == 1000) {
                         _this.timeConfig = data.data
-                    }else{
+                    } else {
                         _this.$message.error("时间配置获取失败")
                     }
                 }).catch(function (res) {
@@ -358,7 +369,7 @@ define(function (require, exports, module) {
                 var _this = this;
                 var sendData = {
                     Name: _this.basicMsg.Name,
-                    Num:  _this.basicMsg.Num
+                    Num: _this.basicMsg.Num
                 }
                 if (isEmpty(sendData)) {
                     _this.$message.error("请填写设备名称和设备编号")
@@ -368,7 +379,7 @@ define(function (require, exports, module) {
                     var data = res.data;
                     if (data.code == 1000) {
                         _this.$message.success("保存成功")
-                    }else{
+                    } else {
                         _this.$message.error("保存失败")
                     }
                 }).catch(function (res) {
@@ -379,11 +390,11 @@ define(function (require, exports, module) {
             },
             saveTimeConfig: function () {
                 var _this = this;
-                timeConfig( _this.timeConfig).then(function (res) {
+                timeConfig(_this.timeConfig).then(function (res) {
                     var data = res.data;
                     if (data.code == 1000) {
                         _this.$message.success("保存成功")
-                    }else{
+                    } else {
                         _this.$message.error("保存失败")
                     }
                 }).catch(function (res) {
