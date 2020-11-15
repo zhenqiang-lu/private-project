@@ -13,7 +13,8 @@ body {
   float: right;
 }
 .p-title {
-  background: #dfdfdf;
+  /* background: #dfdfdf; */
+  background-image: linear-gradient(to right, #dfdfdf, #ffffff);
   text-align: left;
   padding-left: 10px;
   line-height: 32px;

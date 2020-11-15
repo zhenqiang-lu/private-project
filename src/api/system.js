@@ -65,7 +65,7 @@ define(function (require, exports, module) {
   //重新启动
   exports.restart = function (data) {
     return axios({
-      url: "/ITS/Security/restart",
+      url: "/ITS/System/Reboot",
       method: 'post',
       data: data
     })
@@ -74,7 +74,7 @@ define(function (require, exports, module) {
   //恢复出厂设置
   exports.reset = function (data) {
     return axios({
-      url: "/ITS/Security/reset",
+      url: "/ITS/System/Reset",
       method: 'post',
       data: data
     })

@@ -276,6 +276,9 @@ define(function(require, exports, module) {
                 ]
             }
         },
+        created: function () {
+            sessionStorage.setItem('isCollapse', this.isCollapse)
+        },
         methods: {
             goPage: function(data) {
                 if (data.path === this.$route.path) return
@@ -290,6 +293,7 @@ define(function(require, exports, module) {
             },
             flodFunc: function() {
                 this.isCollapse = !this.isCollapse
+                sessionStorage.setItem('isCollapse', this.isCollapse)
             },
             logout: function() {
                 // sessionStorage.clear();

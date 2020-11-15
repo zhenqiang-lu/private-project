@@ -18,3 +18,20 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.el-dialog{
+  margin-top: 0 !important;
+  box-shadow: 0px 0px 17px #EDEDED;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.toRight1 {
+  /* left: calc(50% - 350px); */
+}
+
+.toRight2 {
+  /* left: calc(50% - 600px); */
+}
